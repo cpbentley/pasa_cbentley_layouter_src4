@@ -1,9 +1,22 @@
+/*
+ * (c) 2018-2019 Charles-Philip Bentley
+ * This code is licensed under MIT license (see LICENSE.txt for details)
+ */
 package pasa.cbentley.layouter.src4.interfaces;
 
+/**
+ * 
+ */
 public interface IBOTypesLayout {
 
+   /**
+    * 
+    */
    public static final int AZ_BOTYPE_FW_A   = 41;
 
+   /**
+    * 
+    */
    public static final int AZ_BOTYPE_FW_Z   = 49;
 
    /**
@@ -29,8 +42,14 @@ public interface IBOTypesLayout {
     */
    public static final int FTYPE_6_LINK     = AZ_BOTYPE_FW_A + 6;
 
+   /**
+    * 
+    */
    public static final int RELATION_1_MIN   = 1;
 
+   /**
+    * 
+    */
    public static final int RELATION_2_MAX   = 2;
 
 }

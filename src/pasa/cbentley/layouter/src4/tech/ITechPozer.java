@@ -1,3 +1,7 @@
+/*
+ * (c) 2018-2019 Charles-Philip Bentley
+ * This code is licensed under MIT license (see LICENSE.txt for details)
+ */
 package pasa.cbentley.layouter.src4.tech;
 
 import pasa.cbentley.byteobjects.src4.tech.ITechByteObject;
@@ -5,13 +9,15 @@ import pasa.cbentley.core.src4.interfaces.C;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 
 /**
- * Pozers compute the position of a <b>RDA</b> (<b>R</b>ectangle<b>D</b>raw<b>A</b>rea) relative to another <b>RDA</b>
- * 
- * @author Charles Bentley
+ * Pozers compute the position of a <b>RDA</b> (<b>R</b>ectangle<b>D</b>raw<b>A</b>rea) relative to another <b>RDA</b>.
  *
+ * @author Charles Bentley
  */
 public interface ITechPozer extends ITechByteObject {
 
+   /**
+    * 
+    */
    public static final int POS_BASIC_SIZE                           = A_OBJECT_BASIC_SIZE + 10;
 
    /**
@@ -29,27 +35,33 @@ public interface ITechPozer extends ITechByteObject {
    public static final int POS_ETALON_0_POINT                       = 0;
 
    /**
-    * Pozer anchor values interpreted relative to parent
+    * Pozer anchor values interpreted relative to parent.
     */
    public static final int POS_ETALON_1_PARENT                      = 1;
 
    /**
-    * Full view
+    * Full view.
     */
    public static final int POS_ETALON_2_VIEWCTX                     = 2;
 
    /**
-    * ID to a {@link ILayoutable}
+    * ID to a {@link ILayoutable}.
     */
    public static final int POS_ETALON_3_LINK                        = 3;
 
    /**
-    * A sizer is defined and will be used instead of {@link ITechPozer#POS_OFFSET_03_ANCHOR_ETALON_POINT_VALUE4}
+    * A sizer is defined and will be used instead of {@link ITechPozer#POS_OFFSET_03_ANCHOR_ETALON_POINT_VALUE4}.
     */
    public static final int POS_ETALON_4_SIZER                       = 4;
 
+   /**
+    * 
+    */
    public static final int POS_ETALON_5_NAV_TOPOLOGY                = 5;
 
+   /**
+    * 
+    */
    public static final int POS_ETALON_6_LAYOUTABLE                  = 6;
 
    /**
@@ -60,7 +72,7 @@ public interface ITechPozer extends ITechByteObject {
    public static final int POS_FLAG_1_SIZER                         = 1;
 
    /**
-    * Size value pulls value towards the center
+    * Size value pulls value towards the center.
     */
    public static final int POS_FUN_0_TOWARDS_CENTER                 = 0;
 
@@ -69,8 +81,14 @@ public interface ITechPozer extends ITechByteObject {
     */
    public static final int POS_FUN_1_AWAY_CENTER                    = 1;
 
+   /**
+    * 
+    */
    public static final int POS_FUN_2_TO_LEFT_TOP                    = 2;
 
+   /**
+    * 
+    */
    public static final int POS_FUN_3_TO_RIGHT_BOT                   = 3;
 
    /**
@@ -92,7 +110,7 @@ public interface ITechPozer extends ITechByteObject {
     * <li> {@link ITechLayout#ETALON_5_LINK}
     * <li> {@link ITechLayout#ETALON_6_POZER_BOX}
     * <li> {@link ITechLayout#ETALON_7_DELEGATE}
-    * <li> {@link ITechLayout#ETALON_4_PARENT}
+    * <li> {@link ITechLayout#ETALON_4_PARENT}.
     */
    public static final int POS_OFFSET_02_ETALON1                    = A_OBJECT_BASIC_SIZE + 1;
 
@@ -131,7 +149,7 @@ public interface ITechPozer extends ITechByteObject {
     *  <li> {@link ITechLayout#VIEW_STRUCT_00_ALL_VISIBLE}
     *  <li> {@link ITechLayout#VIEW_STRUCT_01_INNER_CONTENT}
     *  <li> {@link ITechLayout#VIEW_STRUCT_02_VIEW_PORT}
-    *  <li> {@link ITechLayout#VIEW_STRUCT_03_VIEW_PORT_ARTIFACTS}
+    *  <li> {@link ITechLayout#VIEW_STRUCT_03_VIEW_PORT_ARTIFACTS}.
     */
    public static final int POS_OFFSET_05_ANCHOR_ETALON_STRUCT1      = A_OBJECT_BASIC_SIZE + 4;
 
@@ -141,7 +159,7 @@ public interface ITechPozer extends ITechByteObject {
     * <li> {@link ITechLayout#VIEW_STYLE_00_VIEW_FULL}
     * <li> {@link ITechLayout#VIEW_STYLE_01_VIEW_CONTENT_PAD_BORDER}
     * <li> {@link ITechLayout#VIEW_STYLE_02_VIEW_CONTENT_PAD}
-    * <li> {@link ITechLayout#VIEW_STYLE_03_VIEW_CONTENT}
+    * <li> {@link ITechLayout#VIEW_STYLE_03_VIEW_CONTENT}.
     */
    public static final int POS_OFFSET_06_ANCHOR_ETALON_STYLE1       = A_OBJECT_BASIC_SIZE + 5;
 
@@ -159,7 +177,7 @@ public interface ITechPozer extends ITechByteObject {
     *  <li> {@link ITechLayout#VIEW_STRUCT_00_ALL_VISIBLE}
     *  <li> {@link ITechLayout#VIEW_STRUCT_01_INNER_CONTENT}
     *  <li> {@link ITechLayout#VIEW_STRUCT_02_VIEW_PORT}
-    *  <li> {@link ITechLayout#VIEW_STRUCT_03_VIEW_PORT_ARTIFACTS}
+    *  <li> {@link ITechLayout#VIEW_STRUCT_03_VIEW_PORT_ARTIFACTS}.
     */
    public static final int POS_OFFSET_08_ANCHOR_POZEE_STRUCT1       = A_OBJECT_BASIC_SIZE + 7;
 
@@ -169,7 +187,7 @@ public interface ITechPozer extends ITechByteObject {
     * <li> {@link ITechLayout#VIEW_STYLE_00_VIEW_FULL}
     * <li> {@link ITechLayout#VIEW_STYLE_01_VIEW_CONTENT_PAD_BORDER}
     * <li> {@link ITechLayout#VIEW_STYLE_02_VIEW_CONTENT_PAD}
-    * <li> {@link ITechLayout#VIEW_STYLE_03_VIEW_CONTENT}
+    * <li> {@link ITechLayout#VIEW_STYLE_03_VIEW_CONTENT}.
     */
    public static final int POS_OFFSET_09_ANCHOR_POZEE_STYLE1        = A_OBJECT_BASIC_SIZE + 8;
 

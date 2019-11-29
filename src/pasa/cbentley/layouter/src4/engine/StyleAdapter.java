@@ -1,3 +1,7 @@
+/*
+ * (c) 2018-2019 Charles-Philip Bentley
+ * This code is licensed under MIT license (see LICENSE.txt for details)
+ */
 package pasa.cbentley.layouter.src4.engine;
 
 import pasa.cbentley.core.src4.ctx.UCtx;
@@ -20,20 +24,47 @@ import pasa.cbentley.layouter.src4.interfaces.IStyler;
  */
 public class StyleAdapter implements IStyler {
 
+   /**
+    * 
+    */
    protected int    z_refSize       = -1;
 
+   /**
+    * 
+    */
    protected float  scaleA          = 1;
 
+   /**
+    * 
+    */
    public boolean   gradientPlusOne = false;
 
+   /**
+    * 
+    */
    public boolean   useGradient     = false;
 
+   /**
+    * 
+    */
    public boolean   useFocusStyle   = false;
 
+   /**
+    * 
+    */
    public int       gradientIncr    = 1;
 
+   /**
+    * 
+    */
    private LayouterCtx lac;
 
+   /**
+    * 
+    *
+    * @param lac 
+    * @param scaleA 
+    */
    public StyleAdapter(LayouterCtx lac, float scaleA) {
       this.lac = lac;
       this.scaleA = scaleA;
@@ -52,9 +83,10 @@ public class StyleAdapter implements IStyler {
    }
 
    /**
-    * Gradient step just increase one unit after  a given threshold
-    * @param size
-    * @return
+    * Gradient step just increase one unit after  a given threshold.
+    *
+    * @param size 
+    * @return 
     */
    public int getScaledGradientStep(int size) {
       if (gradientPlusOne) {
@@ -63,32 +95,73 @@ public class StyleAdapter implements IStyler {
       return size;
    }
 
+   /**
+    * 
+    *
+    * @param size 
+    * @return 
+    */
    public int getScaledMargin(int size) {
       return scaleIt(size);
    }
 
+   /**
+    * 
+    *
+    * @param size 
+    * @return 
+    */
    public int getScaledPadding(int size) {
       return scaleIt(size);
    }
 
+   /**
+    * 
+    *
+    * @param size 
+    * @return 
+    */
    public int getScaledSBBGBlockSize(int size) {
       return scaleIt(size);
    }
 
+   /**
+    * 
+    *
+    * @param size 
+    * @return 
+    */
    public int getScaledSBBlockSize(int size) {
       return scaleIt(size);
    }
 
+   /**
+    * 
+    *
+    * @param size 
+    * @return 
+    */
    public int getScaledSBBlockWrapper(int size) {
       return scaleIt(size);
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public boolean haveFocusStyles() {
       if (useFocusStyle) {
       }
       return useFocusStyle;
    }
 
+   /**
+    * 
+    *
+    * @param val 
+    * @return 
+    */
    public boolean isUseGradient(boolean val) {
       if (useGradient) {
          return val;
@@ -107,38 +180,81 @@ public class StyleAdapter implements IStyler {
       return scaleIt(size);
    }
 
+   /**
+    * 
+    *
+    * @param size 
+    * @return 
+    */
    public int getScaledArc(int size) {
       return scaleIt(size);
    }
 
+   /**
+    * 
+    *
+    * @param size 
+    * @return 
+    */
    public int getScaledGridH(int size) {
       return scaleIt(size);
    }
 
+   /**
+    * 
+    *
+    * @param size 
+    * @return 
+    */
    protected int scaleIt(int size) {
       return (int) Math.floor((double) size + 0.5d);
       //return Math.round(((float) size * scaleA));
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public int getCaretWidth() {
       return scaleIt(1);
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public String toString1Line() {
       // TODO Auto-generated method stub
       return null;
    }
 
+   /**
+    * 
+    *
+    * @param dc 
+    */
    public void toString(Dctx dc) {
       // TODO Auto-generated method stub
       
    }
 
+   /**
+    * 
+    *
+    * @param dc 
+    */
    public void toString1Line(Dctx dc) {
       // TODO Auto-generated method stub
       
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public UCtx toStringGetUCtx() {
       // TODO Auto-generated method stub
       return null;

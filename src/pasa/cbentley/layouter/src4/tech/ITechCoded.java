@@ -1,3 +1,7 @@
+/*
+ * (c) 2018-2019 Charles-Philip Bentley
+ * This code is licensed under MIT license (see LICENSE.txt for details)
+ */
 package pasa.cbentley.layouter.src4.tech;
 
 import pasa.cbentley.core.src4.utils.BitUtils;
@@ -19,46 +23,49 @@ import pasa.cbentley.core.src4.utils.BitUtils;
 public interface ITechCoded {
 
    /**
-    * The etalon must be explicitely given
+    * The etalon must be explicitely given.
     */
    public static final int CODED_SIZE_FLAG_ETALON_EXPLICIT = 1 << 20;
 
    /**
     * When coding a perten size, explicitely says that the etalon
-    * should be Height of the font
+    * should be Height of the font.
     */
    public static final int CODED_SIZE_FLAG_ETALON_FONT     = 1 << 21;
 
    /**
     * When coding a percentage size, explicitely says that the etalon
-    * should be Height of the screen
+    * should be Height of the screen.
     */
    public static final int CODED_SIZE_FLAG_ETALON_H        = 1 << 22;
 
+   /**
+    * 
+    */
    public static final int CODED_SIZE_FLAG_ETALON_W        = 1 << 23;
 
    /**
-    *public static final intermediary data is a Maximum value
+    * public static final intermediary data is a Maximum value.
     */
    public static final int CODED_SIZE_FLAG_MAX_DIM         = 1 << 28;
 
    /**
-    * Flag for a 32 bits coded size that has min dimension in pixels
+    * Flag for a 32 bits coded size that has min dimension in pixels.
     */
    public static final int CODED_SIZE_FLAG_MIN_DIM         = 1 << 29;
 
    /**
-    * If flag is set, the coded size should be read as a percent
+    * If flag is set, the coded size should be read as a percent.
     */
    public static final int CODED_SIZE_TYPE_PERCENT         = 1 << 26;
 
    /**
-    * If flag is set, coded size should be read as a permille
+    * If flag is set, coded size should be read as a permille.
     */
    public static final int CODED_SIZE_TYPE_PERMILLE        = 1 << 27;
 
    /**
-    * If flag is set, coded size should be read as a perten
+    * If flag is set, coded size should be read as a perten.
     */
    public static final int CODED_SIZE_TYPE_PERTEN          = 1 << 25;
 
@@ -73,7 +80,7 @@ public interface ITechCoded {
     * 3 bits for 8 modes 
     * <li> {@link ITechLayout#MODE_1_DELEGATE}
     * <li> {@link ITechLayout#MODE_2_RATIO}
-    * <li> {@link ITechLayout#MODE_3_SCALE}
+    * <li> {@link ITechLayout#MODE_3_SCALE}.
     */
    public static final int CODED_BITS_1_MODE               = 2;
 
@@ -83,8 +90,7 @@ public interface ITechCoded {
     * <li> {@link ITechLayout#ETALON_1_PARENT}
     * <li> {@link ITechLayout#ETALON_1_VIEWCONTEXT}
     * <li> {@link ITechLayout#ETALON_3_RATIO}
-    * <li> {@link ITechLayout#ETALON_2_FONT}
-    * 
+    * <li> {@link ITechLayout#ETALON_2_FONT}.
     */
    public static final int CODED_BITS_2_ETALON             = 4;
 
@@ -101,8 +107,7 @@ public interface ITechCoded {
     * <li> {@link ITechLayout#E_FONT_1_DEFINED}
     * <li> {@link ITechLayout#E_FONT_2_SMALL}
     * <li> {@link ITechLayout#E_FONT_3_MEDIUM}
-    * <li> {@link ITechLayout#E_FONT_4_BIG}
-    * 
+    * <li> {@link ITechLayout#E_FONT_4_BIG}.
     */
    public static final int CODED_BITS_3_ETALON_TYPE        = 4;
 
@@ -114,7 +119,7 @@ public interface ITechCoded {
     * <li> {@link ITechLayout#ET_FUN_3_MIN}
     * <li> {@link ITechLayout#ET_FUN_4_MAX}
     * <li> {@link ITechLayout#ET_FUN_5_ADD}
-    * <li> {@link ITechLayout#ET_FUN_6_DIFF}
+    * <li> {@link ITechLayout#ET_FUN_6_DIFF}.
     */
    public static final int CODED_BITS_4_ETALON_FUN         = 4;
 
@@ -126,14 +131,29 @@ public interface ITechCoded {
     */
    public static final int CODED_BITS_5_FLAGS              = 3;
 
+   /**
+    * 
+    */
    public static final int CODED_MASK_0_VALUE              = 0xFFF;
 
+   /**
+    * 
+    */
    public static final int CODED_MASK_1_MODE               = 0x7;
 
+   /**
+    * 
+    */
    public static final int CODED_MASK_2_ETALON             = 0xF;
 
+   /**
+    * 
+    */
    public static final int CODED_MASK_3_ETALON_TYPE        = 0xF;
 
+   /**
+    * 
+    */
    public static final int CODED_MASK_4_ETALON_FUN         = 0xF;
 
    /**
@@ -175,20 +195,32 @@ public interface ITechCoded {
     */
    public static final int CODED_SIZE_FLAG_32_SIGN         = 1 << 31;
 
+   /**
+    * 
+    */
    public static final int CODED_SIZE_SHIFT_0_VALUE        = 0;
 
    /**
     * Four modes
     * <li> {@link ITechLayout#MODE_1_DELEGATE}
     * <li> {@link ITechLayout#MODE_2_RATIO}
-    * <li> {@link ITechLayout#MODE_3_SCALE}
+    * <li> {@link ITechLayout#MODE_3_SCALE}.
     */
    public static final int CODED_SIZE_SHIFT_1_MODE         = CODED_SIZE_SHIFT_0_VALUE + CODED_BITS_0_VALUE;
 
+   /**
+    * 
+    */
    public static final int CODED_SIZE_SHIFT_2_ETALON       = CODED_SIZE_SHIFT_1_MODE + CODED_BITS_1_MODE;
 
+   /**
+    * 
+    */
    public static final int CODED_SIZE_SHIFT_3_ETALON_TYPE  = CODED_SIZE_SHIFT_2_ETALON + CODED_BITS_2_ETALON;
 
+   /**
+    * 
+    */
    public static final int CODED_SIZE_SHIFT_4_ETALON_FUN   = CODED_SIZE_SHIFT_3_ETALON_TYPE + CODED_BITS_3_ETALON_TYPE;
 
 }

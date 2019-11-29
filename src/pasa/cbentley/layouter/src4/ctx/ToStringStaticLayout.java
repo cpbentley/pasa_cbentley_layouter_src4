@@ -1,3 +1,7 @@
+/*
+ * (c) 2018-2019 Charles-Philip Bentley
+ * This code is licensed under MIT license (see LICENSE.txt for details)
+ */
 package pasa.cbentley.layouter.src4.ctx;
 
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
@@ -6,8 +10,17 @@ import pasa.cbentley.layouter.src4.tech.ITechLayout;
 import pasa.cbentley.layouter.src4.tech.ITechPozer;
 import pasa.cbentley.layouter.src4.tech.ITechSizer;
 
+/**
+ * 
+ */
 public class ToStringStaticLayout extends ToStringStaticBase {
 
+   /**
+    * 
+    *
+    * @param fun 
+    * @return 
+    */
    public static String toStringEtalonSizer(int fun) {
       switch (fun) {
          case ITechLayout.ETALON_0_SIZEE_CTX:
@@ -31,6 +44,12 @@ public class ToStringStaticLayout extends ToStringStaticBase {
       }
    }
 
+   /**
+    * 
+    *
+    * @param etalon 
+    * @return 
+    */
    public static String toStringEtalonPozer(int etalon) {
       switch (etalon) {
          case ITechPozer.POS_ETALON_0_POINT:
@@ -48,6 +67,12 @@ public class ToStringStaticLayout extends ToStringStaticBase {
       }
    }
 
+   /**
+    * 
+    *
+    * @param style 
+    * @return 
+    */
    public static String toStringViewStyle(int style) {
       switch (style) {
          case ITechLayout.VIEW_STYLE_00_VIEW_FULL:
@@ -63,6 +88,12 @@ public class ToStringStaticLayout extends ToStringStaticBase {
       }
    }
 
+   /**
+    * 
+    *
+    * @param struct 
+    * @return 
+    */
    public static String toStringViewStruct(int struct) {
       switch (struct) {
          case ITechLayout.VIEW_STRUCT_00_ALL_VISIBLE:
@@ -78,6 +109,12 @@ public class ToStringStaticLayout extends ToStringStaticBase {
       }
    }
 
+   /**
+    * 
+    *
+    * @param fun 
+    * @return 
+    */
    public static String toStringEtalonShort(int fun) {
       switch (fun) {
          case ITechLayout.ETALON_0_SIZEE_CTX:
@@ -93,6 +130,12 @@ public class ToStringStaticLayout extends ToStringStaticBase {
       }
    }
 
+   /**
+    * 
+    *
+    * @param offset 
+    * @return 
+    */
    public static String toStringSizerField(int offset) {
       switch (offset) {
          case ITechSizer.SIZER_OFFSET_01_FLAG:
@@ -110,6 +153,12 @@ public class ToStringStaticLayout extends ToStringStaticBase {
       }
    }
 
+   /**
+    * 
+    *
+    * @param fun 
+    * @return 
+    */
    public static String toStringFun(int fun) {
       switch (fun) {
          case ITechLayout.ET_FUN_0_CTX:
@@ -133,6 +182,12 @@ public class ToStringStaticLayout extends ToStringStaticBase {
       }
    }
 
+   /**
+    * 
+    *
+    * @param unit 
+    * @return 
+    */
    public static String toStringRawUnit(int unit) {
       switch (unit) {
          case ITechLayout.RAW_UNIT_0_PIXEL:
@@ -143,6 +198,12 @@ public class ToStringStaticLayout extends ToStringStaticBase {
       }
    }
 
+   /**
+    * 
+    *
+    * @param mode 
+    * @return 
+    */
    public static String toStringMod(int mode) {
       switch (mode) {
          case ITechLayout.MODE_0_RAW_UNITS:
@@ -160,6 +221,12 @@ public class ToStringStaticLayout extends ToStringStaticBase {
       }
    }
 
+   /**
+    * 
+    *
+    * @param fun 
+    * @return 
+    */
    public static String toStringFunShort(int fun) {
       switch (fun) {
          case ITechLayout.ET_FUN_0_CTX:
@@ -181,6 +248,12 @@ public class ToStringStaticLayout extends ToStringStaticBase {
       }
    }
 
+   /**
+    * 
+    *
+    * @param fun 
+    * @return 
+    */
    public static String toStringSizerProp(int fun) {
       switch (fun) {
          case ITechSizer.SIZER_PROP_00_DRAWN:
@@ -198,6 +271,12 @@ public class ToStringStaticLayout extends ToStringStaticBase {
       }
    }
 
+   /**
+    * 
+    *
+    * @param offset 
+    * @return 
+    */
    public static String toStringPozerField(int offset) {
       switch (offset) {
          case ITechPozer.POS_OFFSET_01_FLAG:
@@ -221,6 +300,12 @@ public class ToStringStaticLayout extends ToStringStaticBase {
       }
    }
 
+   /**
+    * 
+    *
+    * @param fun 
+    * @return 
+    */
    public static String toStringPozerFun(int fun) {
       switch (fun) {
          case ITechPozer.POS_FUN_0_TOWARDS_CENTER:
@@ -232,6 +317,12 @@ public class ToStringStaticLayout extends ToStringStaticBase {
       }
    }
 
+   /**
+    * 
+    *
+    * @param prop 
+    * @return 
+    */
    public static String toStringFontProp(int prop) {
       switch (prop) {
          case ITechLayout.E_FONT_0_DEFAULT:

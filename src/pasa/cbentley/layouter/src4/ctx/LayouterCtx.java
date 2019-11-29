@@ -1,3 +1,7 @@
+/*
+ * (c) 2018-2019 Charles-Philip Bentley
+ * This code is licensed under MIT license (see LICENSE.txt for details)
+ */
 package pasa.cbentley.layouter.src4.ctx;
 
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
@@ -20,37 +24,69 @@ import pasa.cbentley.layouter.src4.tech.ITechLayout;
 
 /**
  * Needs to know reference font pizel size, hdpi scale, Compact/Regular IOS
- * <br>
- * 
- * @author Charles Bentley
+ * <br>.
  *
+ * @author Charles Bentley
  */
 public class LayouterCtx extends ACtx {
 
+   /**
+    * 
+    */
    protected final BOCtx            boc;
 
+   /**
+    * 
+    */
    //#debug
    private IDebugBreaks debugBreaks;
 
    /**
-    * Value is given by the outisde and changed by an event
+    * Value is given by the outisde and changed by an event.
     */
    private int                      dpi;
 
+   /**
+    * 
+    */
    private LayoutFactory            layoutFactory;
 
+   /**
+    * 
+    */
    private LayoutOperator           layoutOperator;
 
+   /**
+    * 
+    */
    private ILayoutRequestListener   layoutRequestListener;
 
+   /**
+    * 
+    */
    protected final BOLayouterModule module;
 
+   /**
+    * 
+    */
    private PozerFactory             pozerFactory;
 
+   /**
+    * 
+    */
    protected final LayoutableRect   sc;
 
+   /**
+    * 
+    */
    private SizerFactory             sizerFactory;
 
+   /**
+    * 
+    *
+    * @param uc 
+    * @param boc 
+    */
    public LayouterCtx(UCtx uc, BOCtx boc) {
       super(uc);
       this.boc = boc;
@@ -58,14 +94,29 @@ public class LayouterCtx extends ACtx {
       module = new BOLayouterModule(this);
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public BOCtx getBOC() {
       return boc;
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public BOLayouterModule getBOModule() {
       return module;
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    //#mdebug
    public IDebugBreaks getDebugBreaks() {
       if (debugBreaks == null) {
@@ -75,18 +126,38 @@ public class LayouterCtx extends ACtx {
    }
    //#enddebug
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public LayoutableRect getDefaultSizeContext() {
       return sc;
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public int getDPI() {
       return dpi;
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public PozerFactory getFactoryPozer() {
       return getPozerFactory();
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public SizerFactory getFactorySizer() {
       return getSizerFactory();
    }
@@ -110,6 +181,11 @@ public class LayouterCtx extends ACtx {
       return null;
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public LayoutFactory getLayoutFactory() {
       if (layoutFactory == null) {
          layoutFactory = new LayoutFactory(this);
@@ -117,6 +193,11 @@ public class LayouterCtx extends ACtx {
       return layoutFactory;
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public LayoutOperator getLayoutOperator() {
       if (layoutOperator == null) {
          layoutOperator = new LayoutOperator(this);
@@ -124,6 +205,11 @@ public class LayouterCtx extends ACtx {
       return layoutOperator;
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public PozerFactory getPozerFactory() {
       if (pozerFactory == null) {
          pozerFactory = new PozerFactory(this);
@@ -131,16 +217,31 @@ public class LayouterCtx extends ACtx {
       return pozerFactory;
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public int getReferenceFontHeightPixels() {
       return 10;
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public ByteObject getRelationMaxNew() {
       ByteObject bo = new ByteObject(boc, IBOTypesBOC.TYPE_019_RELATIONSHIP, ITechRelation.RELATION_BASIC_SIZE);
       bo.set1(ITechRelation.RELATION_OFFSET_02_TYPE1, IBOTypesLayout.RELATION_2_MAX);
       return bo;
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public ByteObject getRelationMinNew() {
       ByteObject bo = new ByteObject(boc, IBOTypesBOC.TYPE_019_RELATIONSHIP, ITechRelation.RELATION_BASIC_SIZE);
       bo.set1(ITechRelation.RELATION_OFFSET_02_TYPE1, IBOTypesLayout.RELATION_2_MAX);
@@ -151,17 +252,22 @@ public class LayouterCtx extends ACtx {
     * Scale is 
     * <li>{@link ITechLayout#SIZE_1_SMALLEST}
     * <li>{@link ITechLayout#SIZE_3_MEDIUM}
-    * <li>{@link ITechLayout#SIZE_5_BIGGEST}
-    * 
-    * @param scale
-    * @param fun
-    * @return
+    * <li>{@link ITechLayout#SIZE_5_BIGGEST}.
+    *
+    * @param scale 
+    * @param fun 
+    * @return 
     */
    public int getScalePixel(int scale, int fun) {
       // TODO Auto-generated method stub
       return 0;
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public SizerFactory getSizerFactory() {
       if (sizerFactory == null) {
          sizerFactory = new SizerFactory(this);
@@ -169,6 +275,11 @@ public class LayouterCtx extends ACtx {
       return sizerFactory;
    }
 
+   /**
+    * 
+    *
+    * @param debugBreaks 
+    */
    //#mdebug
    public void setDebugBreaks(IDebugBreaks debugBreaks) {
       this.debugBreaks = debugBreaks;
@@ -176,7 +287,7 @@ public class LayouterCtx extends ACtx {
    //#enddebug
 
    /**
-    * Called 
+    * Called.
     */
    public void updateConfig() {
       //dpi = dd.getDeviceHost().getIHost().getHostInt(ITechHost.DATA_ID_20_DPI);

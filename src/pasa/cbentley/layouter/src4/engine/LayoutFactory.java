@@ -1,3 +1,7 @@
+/*
+ * (c) 2018-2019 Charles-Philip Bentley
+ * This code is licensed under MIT license (see LICENSE.txt for details)
+ */
 package pasa.cbentley.layouter.src4.engine;
 
 import pasa.cbentley.byteobjects.src4.core.BOAbstractFactory;
@@ -13,16 +17,34 @@ import pasa.cbentley.layouter.src4.tech.ITechLinker;
 import pasa.cbentley.layouter.src4.tech.ITechPozer;
 import pasa.cbentley.layouter.src4.tech.ITechSizer;
 
+/**
+ * 
+ */
 public class LayoutFactory extends BOAbstractFactory implements ITechLinker, IBOTypesLayout, ITechCoded, ITechSizer, ITechPozer, ITechLayout {
 
+   /**
+    * 
+    */
    private final LayouterCtx lac;
 
+   /**
+    * 
+    *
+    * @param lac 
+    */
    public LayoutFactory(LayouterCtx lac) {
       super(lac.getBOC());
       this.lac = lac;
 
    }
 
+   /**
+    * 
+    *
+    * @param type 
+    * @param v 
+    * @return 
+    */
    public ByteObject createLink(int type, int v) {
       ByteObject bo = getBOFactory().createByteObject(FTYPE_6_LINK, LINKER_BASIC_SIZE);
       bo.set1(LINKER_OFFSET_01_TYPE1, type);
@@ -34,6 +56,12 @@ public class LayoutFactory extends BOAbstractFactory implements ITechLinker, IBO
 
    //#enddebug
 
+   /**
+    * 
+    *
+    * @param coded 
+    * @return 
+    */
    public String toString1Line(int coded) {
       if (CodedUtils.isCoded(coded)) {
          int value = coded;
@@ -48,6 +76,12 @@ public class LayoutFactory extends BOAbstractFactory implements ITechLinker, IBO
       }
    }
 
+   /**
+    * 
+    *
+    * @param codedsize 
+    * @return 
+    */
    public String codedSizeToString1Line(int codedsize) {
       String s = null;
       LayoutOperator lo = lac.getLayoutOperator();
@@ -70,6 +104,13 @@ public class LayoutFactory extends BOAbstractFactory implements ITechLinker, IBO
       return s;
    }
    
+   /**
+    * 
+    *
+    * @param coded 
+    * @param bo 
+    * @return 
+    */
    public String toString1Line(int coded, ByteObject bo) {
       if (CodedUtils.isCoded(coded)) {
          int value = coded;

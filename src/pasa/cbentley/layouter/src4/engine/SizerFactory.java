@@ -1,3 +1,7 @@
+/*
+ * (c) 2018-2019 Charles-Philip Bentley
+ * This code is licensed under MIT license (see LICENSE.txt for details)
+ */
 package pasa.cbentley.layouter.src4.engine;
 
 import pasa.cbentley.byteobjects.src4.core.BOAbstractFactory;
@@ -12,21 +16,47 @@ import pasa.cbentley.layouter.src4.tech.ITechLinker;
 import pasa.cbentley.layouter.src4.tech.ITechPozer;
 import pasa.cbentley.layouter.src4.tech.ITechSizer;
 
+/**
+ * 
+ */
 public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOTypesLayout, ITechCoded, ITechSizer, ITechPozer, ITechLayout {
 
+   /**
+    * 
+    */
    private LayouterCtx lac;
 
+   /**
+    * 
+    */
    private ByteObject  prefSizer;
 
+   /**
+    * 
+    */
    private ByteObject  sizerMatchParentContentCtx;
 
+   /**
+    * 
+    */
    private ByteObject  sizerMatchParentCtx;
 
+   /**
+    * 
+    *
+    * @param lac 
+    */
    public SizerFactory(LayouterCtx lac) {
       super(lac.getBOC());
       this.lac = lac;
    }
 
+   /**
+    * 
+    *
+    * @param bo 
+    * @param max 
+    */
    private void addMax(ByteObject bo, ByteObject max) {
       //#mdebug
       if (max == null) {
@@ -40,6 +70,12 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       bo.setFlag(SIZER_OFFSET_01_FLAG, SIZER_FLAG_4_MAXIMUM, true);
    }
 
+   /**
+    * 
+    *
+    * @param bo 
+    * @param min 
+    */
    private void addMin(ByteObject bo, ByteObject min) {
       //#mdebug
       if (min == null) {
@@ -59,11 +95,10 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     * Example
     * <li> 20dp => {@link ITechLayout#MODE_1_DELEGATE}, 8 
     * <li> 100pixels => {@link ITechLayout#MODE_0_RAW_UNITS}, 8 
-    * 
-    * @param mod
-    * @param mode
-    * @param value
-    * @return
+    *
+    * @param mode 
+    * @param value 
+    * @return 
     */
    public ByteObject getSizer(int mode, int value) {
       ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
@@ -74,13 +109,13 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
 
    /**
     * 
-    * @param mod 
+    *
     * @param mode {@link ITechSizer#MODE_2_RATIO}
     * @param value any value
     * @param etalon {@link ITechSizer#ETALON_1_VIEWCONTEXT}
-    * @param etype {@link ITechSizer#E_VIEWCONTEXT_1_APPLI} 
+    * @param etype {@link ITechSizer#E_VIEWCONTEXT_1_APPLI}
     * @param efun {@link ITechSizer#ET_FUN_3_MIN}
-    * @return
+    * @return 
     */
    public ByteObject getSizer(int mode, int value, int etalon, int etype, int efun) {
       ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
@@ -93,9 +128,9 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
    }
 
    /**
-    * When size is Preferred
-    * @param mod
-    * @return
+    * When size is Preferred.
+    *
+    * @return 
     */
    public ByteObject getSizerCtx() {
       ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
@@ -119,8 +154,9 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
    }
 
    /**
-    * Sizer is the height of the default font
-    * @return
+    * Sizer is the height of the default font.
+    *
+    * @return 
     */
    public ByteObject getSizerFontH() {
       ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
@@ -134,11 +170,12 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
    /**
     * Function is
     * <li> {@link ITechSizer#ET_FUN_6_DIFF}
-    * <li> {@link ITechSizer#ET_FUN_5_ADD}
-    * @param function
-    * @param sizer1
-    * @param sizer2
-    * @return
+    * <li> {@link ITechSizer#ET_FUN_5_ADD}.
+    *
+    * @param function 
+    * @param sizer1 
+    * @param sizer2 
+    * @return 
     */
    public ByteObject getSizerFun(int function, ByteObject sizer1, ByteObject sizer2) {
       ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
@@ -172,8 +209,9 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
    }
 
    /**
-    * Size is the full size minus margin, border and padding
-    * @return
+    * Size is the full size minus margin, border and padding.
+    *
+    * @return 
     */
    public ByteObject getSizerMatchParentLazyContent() {
       if (sizerMatchParentContentCtx == null) {
@@ -203,13 +241,24 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       return bo;
    }
 
+   /**
+    * 
+    *
+    * @param mode 
+    * @param value 
+    * @param etalon 
+    * @param etype 
+    * @param efun 
+    * @return 
+    */
    public ByteObject getSizerNew(int mode, int value, int etalon, int etype, int efun) {
       return getSizer(mode, value, etalon, etype, efun);
    }
 
    /**
-    * Preferred size with a maximum of size of parent's content
-    * @return
+    * Preferred size with a maximum of size of parent's content.
+    *
+    * @return 
     */
    public ByteObject getSizerPackParentContent() {
 
@@ -230,8 +279,8 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     * This sizer is used to pack/shrink
     * 
     * PACK means. preferred size with maximum size of parent,
-    * @param mod
-    * @return
+    *
+    * @return 
     */
    public ByteObject getSizerPackViewContext() {
       ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
@@ -242,6 +291,12 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       return bo;
    }
 
+   /**
+    * 
+    *
+    * @param value 
+    * @return 
+    */
    public ByteObject getSizerPix(int value) {
       ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
       bo.set1(SIZER_OFFSET_02_MODE1, MODE_0_RAW_UNITS);
@@ -250,9 +305,10 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
    }
 
    /**
-    * Implicit sizer, where the first pozer will be decided from the context
-    * @param pozer
-    * @return
+    * Implicit sizer, where the first pozer will be decided from the context.
+    *
+    * @param pozer 
+    * @return 
     */
    public ByteObject getSizerPozers(ByteObject pozer) {
       ByteObject bo = getSizer(MODE_6_POZER_DISTANCE, 0);
@@ -261,6 +317,13 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       return bo;
    }
 
+   /**
+    * 
+    *
+    * @param pozer1 
+    * @param pozer2 
+    * @return 
+    */
    public ByteObject getSizerPozers(ByteObject pozer1, ByteObject pozer2) {
       ByteObject bo = getSizer(MODE_6_POZER_DISTANCE, 0);
       bo.addByteObject(pozer1);
@@ -285,6 +348,12 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       return bo;
    }
 
+   /**
+    * 
+    *
+    * @param maximuSizer 
+    * @return 
+    */
    public ByteObject getSizerPref(ByteObject maximuSizer) {
       ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
       setSizerRatio100(bo, 100);
@@ -301,9 +370,8 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     * 
     * Lazy get of a cached size for the preferred size.
     *  
-    * @param mod
-    * @param value
-    * @return
+    *
+    * @return 
     */
    public ByteObject getSizerPrefLazy() {
       if (prefSizer == null) {
@@ -312,6 +380,11 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       return prefSizer;
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public ByteObject getSingletonSizerPref() {
       return getSizerPrefLazy();
    }
@@ -321,11 +394,11 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     * 
     * {@link ITechSizer#SIZER_OFFSET_02_MODE1} is {@link ITechLayout#MODE_2_RATIO}
     * 
-    * Etalon 
-    * 
+    * Etalon .
+    *
     * @param etalon {@link ITechSizer#SIZER_OFFSET_03_ETALON1}
     * @param ratioValue {@link ITechSizer#SIZER_OFFSET_05_VALUE2}
-    * @return
+    * @return 
     */
    public ByteObject getSizerRatio100(int etalon, int ratioValue) {
       ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
@@ -336,15 +409,22 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       return bo;
    }
 
+   /**
+    * 
+    *
+    * @param ratioValue 
+    * @return 
+    */
    public ByteObject getSizerRatio100Parent(int ratioValue) {
       return getSizerRatio100(ETALON_4_PARENT, ratioValue);
    }
 
    /**
-    * Fraction of the other size 
-    * @param fracTop
-    * @param fracBot
-    * @return
+    * Fraction of the other size .
+    *
+    * @param fracTop 
+    * @param fracBot 
+    * @return 
     */
    public ByteObject getSizerRatioFraction(int fracTop, int fracBot) {
       ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
@@ -358,9 +438,11 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
 
    /**
     * Used when we want a component to take more space if there is available in the ratio
-    * but if ratio gives a smaller value than minimum, the size give is the minimum
-    * @param minimumSizer
-    * @return
+    * but if ratio gives a smaller value than minimum, the size give is the minimum.
+    *
+    * @param ratio100 
+    * @param minimumSizer 
+    * @return 
     */
    public ByteObject getSizerRatio100ParentMin(int ratio100, ByteObject minimumSizer) {
       ByteObject bo = getSizerRatio100Parent(ratio100);
@@ -368,6 +450,12 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       return bo;
    }
 
+   /**
+    * 
+    *
+    * @param sizerHeight 
+    * @return 
+    */
    public Zer2DSizer getZer16_9_Height(ByteObject sizerHeight) {
       ByteObject bo = getSizerRatioFraction(16, 9);
       Zer2DSizer zer = new Zer2DSizer(lac);
@@ -379,9 +467,9 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
    /**
     * Sizer given gives the width of the area.
     * The heigh is 9/16 of it
-    * @param pozer1
-    * @param pozer2
-    * @return
+    *
+    * @param sizerWidth 
+    * @return 
     */
    public Zer2DSizer getZer16_9_Width(ByteObject sizerWidth) {
       ByteObject bo = getSizerRatioFraction(9, 16);
@@ -391,18 +479,36 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       return zer;
    }
 
+   /**
+    * 
+    *
+    * @param sizer 
+    * @param cent 
+    */
    public void setSizerRatio1(ByteObject sizer, int cent) {
       sizer.set1(SIZER_OFFSET_02_MODE1, MODE_2_RATIO);
       sizer.set1(SIZER_OFFSET_05_VALUE2, cent);
       sizer.set1(SIZER_OFFSET_05_VALUE2 + 1, 1);
    }
 
+   /**
+    * 
+    *
+    * @param sizer 
+    * @param cent 
+    */
    public void setSizerRatio100(ByteObject sizer, int cent) {
       sizer.set1(SIZER_OFFSET_02_MODE1, MODE_2_RATIO);
       sizer.set1(SIZER_OFFSET_05_VALUE2, cent);
       sizer.set1(SIZER_OFFSET_05_VALUE2 + 1, 100);
    }
 
+   /**
+    * 
+    *
+    * @param sizer 
+    * @param dc 
+    */
    public void toString1Line(ByteObject sizer, Dctx dc) {
       dc.root(sizer, "Sizer");
       if (dc.isCompact()) {
@@ -412,6 +518,12 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       }
    }
 
+   /**
+    * 
+    *
+    * @param sizer 
+    * @return 
+    */
    public String toString1LineContentShort(ByteObject sizer) {
       int value = sizer.get2(SIZER_OFFSET_05_VALUE2);
       int mode = sizer.get1(SIZER_OFFSET_02_MODE1);
@@ -437,10 +549,23 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       }
    }
 
+   /**
+    * 
+    *
+    * @param dc 
+    * @param sizer 
+    */
    public void toString1LineContentShort(Dctx dc, ByteObject sizer) {
       dc.append(toString1LineContentShort(sizer));
    }
 
+   /**
+    * 
+    *
+    * @param sizer 
+    * @param dc 
+    * @param title 
+    */
    public void toStringSizer(ByteObject sizer, Dctx dc, String title) {
       dc.root(sizer, "Sizer");
       if (title != null) {

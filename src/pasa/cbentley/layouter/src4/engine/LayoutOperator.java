@@ -1,3 +1,7 @@
+/*
+ * (c) 2018-2019 Charles-Philip Bentley
+ * This code is licensed under MIT license (see LICENSE.txt for details)
+ */
 package pasa.cbentley.layouter.src4.engine;
 
 import pasa.cbentley.byteobjects.src4.core.BOAbstractOperator;
@@ -48,13 +52,30 @@ import pasa.cbentley.layouter.src4.tech.ITechSizer;
  */
 public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout, ITechPozer, ITechSizer, ITechLayout, ITechCoded {
 
+   /**
+    * 
+    */
    private LayouterCtx lc;
 
+   /**
+    * 
+    *
+    * @param lac 
+    */
    public LayoutOperator(LayouterCtx lac) {
       super(lac.getBOC());
       this.lc = lac;
    }
 
+   /**
+    * 
+    *
+    * @param s 
+    * @param sc 
+    * @param ctx 
+    * @param result 
+    * @return 
+    */
    private int applyMinMax(ByteObject s, ILayoutable sc, int ctx, int result) {
       if (s.hasFlag(SIZER_OFFSET_01_FLAG, SIZER_FLAG_3_MINIMUM)) {
          int min = getMin(s, sc, ctx);
@@ -80,6 +101,11 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return result;
    }
 
+   /**
+    * 
+    *
+    * @param layoutable 
+    */
    private void checkNull(ILayoutable layoutable) {
       if (layoutable == null) {
          throw new NullPointerException();
@@ -96,11 +122,32 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return codedSizeDecode(value, lc.getDefaultSizeContext(), CTX_1_WIDTH);
    }
 
+   /**
+    * 
+    *
+    * @param ow 
+    * @param bo 
+    * @param index 
+    * @param w 
+    * @param h 
+    * @param ctx 
+    * @return 
+    */
    public int codedPosDecode(int ow, ByteObject bo, int index, int w, int h, int ctx) {
       // TODO Auto-generated method stub
       return 0;
    }
 
+   /**
+    * 
+    *
+    * @param bo 
+    * @param index 
+    * @param w 
+    * @param h 
+    * @param ctx 
+    * @return 
+    */
    public int codedSizeDecode(ByteObject bo, int index, int w, int h, int ctx) {
       //use a thread local
       //we are always on 4 bytes for those calls
@@ -126,14 +173,23 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
    }
 
    /**
-    * Decode size using the default module {@link ILayoutable} and {@link ISizer#CTX_1_WIDTH}
-    * @param value
-    * @return
+    * Decode size using the default module {@link ILayoutable} and {@link ISizer#CTX_1_WIDTH}.
+    *
+    * @param value 
+    * @return 
     */
    public int codedSizeDecode(int value) {
       return codedSizeDecode(value, lc.getDefaultSizeContext(), CTX_1_WIDTH);
    }
 
+   /**
+    * 
+    *
+    * @param value 
+    * @param sc 
+    * @param ctxType 
+    * @return 
+    */
    public int codedSizeDecode(int value, ILayoutable sc, int ctxType) {
       if (CodedUtils.isCoded(value)) {
          if (CodedUtils.isLinked(value)) {
@@ -156,22 +212,49 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       }
    }
 
+   /**
+    * 
+    *
+    * @param value 
+    * @param w 
+    * @param h 
+    * @param ctx 
+    * @return 
+    */
    public int codedSizeDecode(int value, int w, int h, int ctx) {
       LayoutableRect sc = new LayoutableRect(lc, w, h);
       return codedSizeDecode(value, sc, ctx);
    }
 
+   /**
+    * 
+    *
+    * @param codedsize 
+    * @param sc 
+    * @return 
+    */
    public int codedSizeDecodeH(int codedsize, ILayoutable sc) {
       return codedSizeDecode(codedsize, sc, CTX_2_HEIGHT);
    }
 
+   /**
+    * 
+    *
+    * @param codedsize 
+    * @param sc 
+    * @return 
+    */
    public int codedSizeDecodeW(int codedsize, ILayoutable sc) {
       return codedSizeDecode(codedsize, sc, CTX_1_WIDTH);
    }
 
    /**
     * When value is above {@link ISizer#CODED_BITS_0_VALUE},
-    * returns
+    * returns.
+    *
+    * @param value 
+    * @param etalon 
+    * @return 
     */
    public int codedSizeEncode(int value, int etalon) {
       int code = CODED_SIZE_FLAG_30_CODED;
@@ -180,6 +263,16 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return code + etalonV + valueV;
    }
 
+   /**
+    * 
+    *
+    * @param mode 
+    * @param value 
+    * @param etalon 
+    * @param etype 
+    * @param efun 
+    * @return 
+    */
    public int codedSizeEncode(int mode, int value, int etalon, int etype, int efun) {
       if (value > 10000 || value < 0) {
          //value too big for our mask. coded as raw
@@ -194,6 +287,15 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return code + modV + etalonV + valueV + etalonFunV + etalonTypeV;
    }
 
+   /**
+    * 
+    *
+    * @param fun 
+    * @param ctx 
+    * @param sizer 
+    * @param ctxType 
+    * @return 
+    */
    private int computeEtalonInPixels(int fun, ILayoutable ctx, ByteObject sizer, int ctxType) {
       if (fun == ET_FUN_0_CTX) {
          //context... caller knows what it is supposed to be
@@ -232,6 +334,15 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return getSizeEtalonW(sizer, ctx);
    }
 
+   /**
+    * 
+    *
+    * @param val 
+    * @param ref 
+    * @param cfun 
+    * @param extraSizing 
+    * @return 
+    */
    private int funPos(int val, int ref, int cfun, int extraSizing) {
       //modified by sizer function. sign defined by function
       if (cfun == POS_FUN_0_TOWARDS_CENTER) {
@@ -254,40 +365,77 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return ref;
    }
 
+   /**
+    * 
+    *
+    * @param value 
+    * @return 
+    */
    public int getCodedEtalon(int value) {
       int etalonV = (value >> CODED_SIZE_SHIFT_2_ETALON) & CODED_MASK_2_ETALON;
       return etalonV;
    }
 
+   /**
+    * 
+    *
+    * @param value 
+    * @return 
+    */
    public int getCodedEtalonFun(int value) {
       int etalonFunV = (value >> CODED_SIZE_SHIFT_4_ETALON_FUN) & CODED_MASK_4_ETALON_FUN;
       return etalonFunV;
    }
 
+   /**
+    * 
+    *
+    * @param value 
+    * @return 
+    */
    public int getCodedEtalonType(int value) {
       int etalonTypeV = (value >> CODED_SIZE_SHIFT_3_ETALON_TYPE) & CODED_MASK_3_ETALON_TYPE;
       return etalonTypeV;
    }
 
+   /**
+    * 
+    *
+    * @param value 
+    * @return 
+    */
    public int getCodedMode(int value) {
       int modV = (value >> CODED_SIZE_SHIFT_1_MODE) & CODED_MASK_1_MODE;
       return modV;
    }
 
+   /**
+    * 
+    *
+    * @param value 
+    * @return 
+    */
    public int getCodedValue(int value) {
       return CodedUtils.getCodedValue(value);
    }
 
+   /**
+    * 
+    *
+    * @param value 
+    * @return 
+    */
    public int getEncodedIndex(int value) {
       return getCodedValue(value);
    }
 
    /**
-    * Apply the function to w and h
-    * @param type
-    * @param w
-    * @param h
-    * @return
+    * Apply the function to w and h.
+    *
+    * @param type 
+    * @param w 
+    * @param h 
+    * @return 
     */
    private int getEtalonFun(int type, int w, int h) {
       if (type == ET_FUN_1_WIDTH) {
@@ -308,6 +456,15 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       }
    }
 
+   /**
+    * 
+    *
+    * @param pozerSizer 
+    * @param index 
+    * @param id 
+    * @param layoutable 
+    * @return 
+    */
    private ILayoutable getEtalonLink(ByteObject pozerSizer, int index, int id, ILayoutable layoutable) {
       ILayoutable layoutableEtalon = layoutable;
       if (index == ET_LINK_2_PARENT) {
@@ -334,8 +491,10 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
 
    /**
     * 
-    * @param pozer
+    *
+    * @param pozer 
     * @param layoutable the {@link ILayoutable} to get the position for
+    * @param ctx 
     * @return null if etalon not found
     */
    public ILayoutable getEtalonPozer(ByteObject pozer, ILayoutable layoutable, int ctx) {
@@ -388,6 +547,14 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return layoutableEtalon;
    }
 
+   /**
+    * 
+    *
+    * @param pozer 
+    * @param ctx 
+    * @param layoutableEtalon 
+    * @return 
+    */
    private ILayoutable getEtalonPozerSizer(ByteObject pozer, int ctx, ILayoutable layoutableEtalon) {
       ByteObject sizer = pozer.getSubFirst(IBOTypesLayout.FTYPE_3_SIZER);
       if (sizer != null) {
@@ -405,6 +572,13 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return layoutableEtalon;
    }
 
+   /**
+    * 
+    *
+    * @param pozer 
+    * @param ctx 
+    * @return 
+    */
    private ILayoutable getEtalonPozer0Point(ByteObject pozer, int ctx) {
       ILayoutable layoutableEtalon;
       //read value
@@ -423,6 +597,13 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return layoutableEtalon;
    }
 
+   /**
+    * 
+    *
+    * @param sizer 
+    * @param layoutable 
+    * @return 
+    */
    public ILayoutable getEtalonSizer(ByteObject sizer, ILayoutable layoutable) {
       int etalon = sizer.get1(SIZER_OFFSET_03_ETALON1);
       //goal is to find the right layoutable on which to compute
@@ -449,32 +630,62 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
    }
 
    /**
-    * Returns the maximum defined
-    * @param sizer
-    * 
+    * Returns the maximum defined.
+    *
+    * @param sizer 
+    * @param c 
+    * @param ctx 
     * @return -1 if none
     */
    public int getMax(ByteObject sizer, ILayoutable c, int ctx) {
       return getMinMax(sizer, c, ctx, SIZER_FLAG_6_IS_MAX, SIZER_FLAG_4_MAXIMUM, IBOTypesLayout.RELATION_2_MAX);
    }
 
+   /**
+    * 
+    *
+    * @param sizer 
+    * @param c 
+    * @return 
+    */
    public int getMaxH(ByteObject sizer, ILayoutable c) {
       return getMax(sizer, c, CTX_2_HEIGHT);
    }
 
+   /**
+    * 
+    *
+    * @param sizer 
+    * @param c 
+    * @return 
+    */
    public int getMaxW(ByteObject sizer, ILayoutable c) {
       return getMax(sizer, c, CTX_1_WIDTH);
    }
 
    /**
-    * Returns the maximum defined
-    * @param sizer
+    * Returns the maximum defined.
+    *
+    * @param sizer 
+    * @param c 
+    * @param ctx 
     * @return -1 if none
     */
    public int getMin(ByteObject sizer, ILayoutable c, int ctx) {
       return getMinMax(sizer, c, ctx, SIZER_FLAG_5_IS_MIN, SIZER_FLAG_3_MINIMUM, IBOTypesLayout.RELATION_1_MIN);
    }
 
+   /**
+    * 
+    *
+    * @param sizer 
+    * @param c 
+    * @param ctx 
+    * @param isFlag 
+    * @param hasFlag 
+    * @param relationType 
+    * @return 
+    */
    public int getMinMax(ByteObject sizer, ILayoutable c, int ctx, int isFlag, int hasFlag, int relationType) {
       if (sizer.hasFlag(SIZER_OFFSET_01_FLAG, isFlag)) {
          return getPixelSize(sizer, c, ctx);
@@ -500,6 +711,12 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return -1;
    }
 
+   /**
+    * 
+    *
+    * @param sizer 
+    * @return 
+    */
    private int getPixelSizeRawUnit(ByteObject sizer) {
       int rawUnit = sizer.get1(SIZER_OFFSET_03_ETALON1);
       int value = sizer.get2(SIZER_OFFSET_05_VALUE2);
@@ -512,6 +729,14 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       }
    }
 
+   /**
+    * 
+    *
+    * @param sizer 
+    * @param layoutable 
+    * @param ctx 
+    * @return 
+    */
    private int getPixelSizeRatioEtalon(ByteObject sizer, ILayoutable layoutable, int ctx) {
       int result = 0;
       int fun = sizer.get1(SIZER_OFFSET_04_FUNCTION1);
@@ -527,12 +752,25 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return result;
    }
 
+   /**
+    * 
+    *
+    * @param ctx 
+    */
    private void checkCtx(int ctx) {
       if (ctx != CTX_1_WIDTH && ctx != CTX_2_HEIGHT) {
          throw new IllegalArgumentException();
       }
    }
 
+   /**
+    * 
+    *
+    * @param sizer 
+    * @param layoutable 
+    * @param ctx 
+    * @return 
+    */
    private int getPixelSizeDelegate(ByteObject sizer, ILayoutable layoutable, int ctx) {
       int delegateEtalon = sizer.get1(SIZER_OFFSET_03_ETALON1);
       if (delegateEtalon == DELEGATE_ETALON_0_PREFERRED) {
@@ -629,21 +867,53 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return getPixelSize(sizer, value, value, value);
    }
 
+   /**
+    * 
+    *
+    * @param s 
+    * @param w 
+    * @param h 
+    * @param ctx 
+    * @return 
+    */
    public int getPixelSize(ByteObject s, int w, int h, int ctx) {
       LayoutableRect lr = lc.getDefaultSizeContext();
       lr.set(w, h);
       return getPixelSize(s, lr, ctx);
    }
 
+   /**
+    * 
+    *
+    * @param s 
+    * @param sc 
+    * @return 
+    */
    public int getPixelSizeH(ByteObject s, ILayoutable sc) {
       return getPixelSize(s, sc, CTX_2_HEIGHT);
    }
 
+   /**
+    * 
+    *
+    * @param s 
+    * @param w 
+    * @param h 
+    * @return 
+    */
    public int getPixelSizeH(ByteObject s, int w, int h) {
       LayoutableRect sc = new LayoutableRect(lc, w, h);
       return getPixelSize(s, sc, CTX_2_HEIGHT);
    }
 
+   /**
+    * 
+    *
+    * @param sizer 
+    * @param layoutable 
+    * @param ctx 
+    * @return 
+    */
    private int getPixelSizePozerDistance(ByteObject sizer, ILayoutable layoutable, int ctx) {
       //at least one
       int val1 = 0;
@@ -686,10 +956,25 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return getPixelSize(s, lr, ctx);
    }
 
+   /**
+    * 
+    *
+    * @param s 
+    * @param sc 
+    * @return 
+    */
    public int getPixelSizeW(ByteObject s, ILayoutable sc) {
       return getPixelSize(s, sc, CTX_1_WIDTH);
    }
 
+   /**
+    * 
+    *
+    * @param s 
+    * @param w 
+    * @param h 
+    * @return 
+    */
    public int getPixelSizeW(ByteObject s, int w, int h) {
       LayoutableRect sc = new LayoutableRect(lc, w, h);
       return getPixelSize(s, sc, CTX_1_WIDTH);
@@ -732,12 +1017,16 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     * Reads the alignement. if complex coded value, compute it.
     * 
     * Provide the context to compute sizing distance
-    * @param index
-    * @param bo
-    * @param topleftMost
-    * @param totatSize
-    * @param objectSize
-    * @return
+    *
+    * @param index 
+    * @param bo 
+    * @param topleftMost 
+    * @param totalSize 
+    * @param objectSize 
+    * @param w 
+    * @param h 
+    * @param ctx 
+    * @return 
     */
    public int getPosAlign(int index, ByteObject bo, int topleftMost, int totalSize, int objectSize, int w, int h, int ctx) {
       int val = bo.get4(index);
@@ -763,6 +1052,14 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       }
    }
 
+   /**
+    * 
+    *
+    * @param alignSrc 
+    * @param objectSize 
+    * @param topleftMost 
+    * @return 
+    */
    public int getPosAlign(int alignSrc, int objectSize, int topleftMost) {
       int val = topleftMost;
       if (alignSrc == C.LOGIC_2_CENTER) {
@@ -775,6 +1072,14 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return val;
    }
 
+   /**
+    * 
+    *
+    * @param align 
+    * @param objectSize 
+    * @param xyLeftTop 
+    * @return 
+    */
    public int getPosPure(int align, int objectSize, int xyLeftTop) {
       int val = xyLeftTop;
       if (align == C.LOGIC_2_CENTER) {
@@ -805,6 +1110,16 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return topleftMost + val;
    }
 
+   /**
+    * 
+    *
+    * @param alignSrc 
+    * @param alignDest 
+    * @param topleftMost 
+    * @param totalSize 
+    * @param objectSize 
+    * @return 
+    */
    public int getPosAlign(int alignSrc, int alignDest, int topleftMost, int totalSize, int objectSize) {
       int val = 0;
       if (alignSrc == C.LOGIC_2_CENTER) {
@@ -858,6 +1173,13 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return 0;
    }
 
+   /**
+    * 
+    *
+    * @param layoutable 
+    * @param ctx 
+    * @return 
+    */
    private int getPosition(ILayoutable layoutable, int ctx) {
       int val1;
       if (ctx == CTX_1_WIDTH) {
@@ -869,6 +1191,14 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return val1;
    }
 
+   /**
+    * 
+    *
+    * @param layoutable 
+    * @param ctx 
+    * @param pozer1 
+    * @return 
+    */
    private int getPosition(ILayoutable layoutable, int ctx, ByteObject pozer1) {
       int val2;
       if (ctx == CTX_1_WIDTH) {
@@ -906,6 +1236,13 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return x;
    }
 
+   /**
+    * 
+    *
+    * @param pozerX 
+    * @param layoutable 
+    * @return 
+    */
    public int getPozXPure(ByteObject pozerX, ILayoutable layoutable) {
       //#debug
       checkNull(layoutable);
@@ -921,6 +1258,13 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return x;
    }
    
+   /**
+    * 
+    *
+    * @param pozerX 
+    * @param layoutable 
+    * @return 
+    */
    public int getPozYPure(ByteObject pozerX, ILayoutable layoutable) {
       //#debug
       checkNull(layoutable);
@@ -961,10 +1305,11 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
    }
 
    /**
-    * Once etalon has been found, get one of its properties
-    * @param sizer
-    * @param layoutable
-    * @return
+    * Once etalon has been found, get one of its properties.
+    *
+    * @param sizer 
+    * @param layoutable 
+    * @return 
     */
    private int getSizeEtalonCtxH(ByteObject sizer, ILayoutable layoutable) {
       int type = sizer.get1(SIZER_OFFSET_06_PROPERTY1);
@@ -981,10 +1326,11 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
    }
 
    /**
-    * Once etalon has been found, get one of its properties
-    * @param sizer
-    * @param layoutable
-    * @return
+    * Once etalon has been found, get one of its properties.
+    *
+    * @param sizer 
+    * @param layoutable 
+    * @return 
     */
    private int getSizeEtalonCtxW(ByteObject sizer, ILayoutable layoutable) {
       int type = sizer.get1(SIZER_OFFSET_06_PROPERTY1);
@@ -1003,10 +1349,10 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
    /**
     * 1st resolve the target {@link ILayoutable}
     * 
-    * Of context
-    * 
-    * @param sizer
-    * @param layoutable
+    * Of context.
+    *
+    * @param sizer 
+    * @param layoutable 
     * @return 
     */
    public int getSizeEtalonH(ByteObject sizer, ILayoutable layoutable) {
@@ -1018,6 +1364,13 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return getSizeEtalonCtxH(sizer, layoutableEtalon);
    }
 
+   /**
+    * 
+    *
+    * @param sizer 
+    * @param layoutable 
+    * @return 
+    */
    public int getSizeEtalonW(ByteObject sizer, ILayoutable layoutable) {
       ILayoutable layoutableEtalon = getEtalonSizer(sizer, layoutable);
       //if etalon is yourself ?
@@ -1028,8 +1381,11 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
    }
 
    /**
-    * Check if both sizers use the same etalon reference
-    * @return
+    * Check if both sizers use the same etalon reference.
+    *
+    * @param sizerW 
+    * @param sizerH 
+    * @return 
     */
    public boolean isSameEtalon(ByteObject sizerW, ByteObject sizerH) {
       if (sizerW.get1(SIZER_OFFSET_03_ETALON1) == sizerH.get1(SIZER_OFFSET_03_ETALON1)) {
@@ -1040,6 +1396,13 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return false;
    }
 
+   /**
+    * 
+    *
+    * @param bo 
+    * @param index 
+    * @param sizer 
+    */
    public void linkSizer(ByteObject bo, int index, ByteObject sizer) {
       sizer.checkType(FTYPE_3_SIZER);
       int in = bo.addByteObject(sizer);
@@ -1050,10 +1413,10 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
    /**
     * Link sizer to the 4 byes reference.
     * <br>
-    * @param obj
-    * @param index
+    *
+    * @param obj 
+    * @param index 
     * @param sizer Type check {@link ITypesBentleyFw#FTYPE_3_SIZER}
-    * @return
     */
    public void linkSizer4(ByteObject obj, int index, ByteObject sizer) {
       sizer.checkType(FTYPE_3_SIZER);
@@ -1062,11 +1425,22 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       obj.set4(index, val);
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    //#mdebug
    public IDLog toDLog() {
       return lc.toDLog();
    }
 
+   /**
+    * 
+    *
+    * @param sizer 
+    * @param relationType 
+    */
    private void toDLogMalformedMinMax(ByteObject sizer, int relationType) {
       if (relationType == IBOTypesLayout.RELATION_1_MIN) {
          toDLog().pNull("Malformed Sizer on Minium. Returning -1", sizer, LayoutOperator.class, "toDLogMalformedMinMax", LVL_05_FINE, true);
@@ -1075,36 +1449,78 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       }
    }
 
+   /**
+    * 
+    *
+    * @param sizer 
+    * @param msg 
+    */
    private void toDLogMalformedSizer(ByteObject sizer, String msg) {
       toDLog().pNull(msg, sizer, LayoutOperator.class, "toDLogMalformedSizer", LVL_05_FINE, true);
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public String toString() {
       return Dctx.toString(this);
    }
 
+   /**
+    * 
+    *
+    * @param dc 
+    */
    public void toString(Dctx dc) {
       dc.root(this, "BasicSizer");
       toStringPrivate(dc);
    }
 
+   /**
+    * 
+    *
+    * @param dc 
+    * @param sizer 
+    */
    public void toString(Dctx dc, ByteObject sizer) {
       sizer.toString(dc);
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public String toString1Line() {
       return Dctx.toString1Line(this);
    }
 
+   /**
+    * 
+    *
+    * @param dc 
+    */
    public void toString1Line(Dctx dc) {
       dc.root1Line(this, "BasicSizer");
       toStringPrivate(dc);
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public UCtx toStringGetUCtx() {
       return lc.getUCtx();
    }
 
+   /**
+    * 
+    *
+    * @param dc 
+    */
    private void toStringPrivate(Dctx dc) {
 
    }

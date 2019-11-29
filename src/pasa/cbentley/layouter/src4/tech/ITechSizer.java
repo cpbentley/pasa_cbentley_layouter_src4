@@ -1,3 +1,7 @@
+/*
+ * (c) 2018-2019 Charles-Philip Bentley
+ * This code is licensed under MIT license (see LICENSE.txt for details)
+ */
 package pasa.cbentley.layouter.src4.tech;
 
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
@@ -32,10 +36,13 @@ import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
  */
 public interface ITechSizer extends ITechByteObject {
 
+   /**
+    * 
+    */
    public static final int ET_PROP_4_SIZE_FONT_RATIO        = 4;
 
    /**
-    * Can be computed on a long value
+    * Can be computed on a long value.
     */
    public static final int SIZER_BASIC_SIZE                 = A_OBJECT_BASIC_SIZE + 7;
 
@@ -63,7 +70,7 @@ public interface ITechSizer extends ITechByteObject {
    public static final int SIZER_FLAG_3_MINIMUM             = 1 << 2;
 
    /**
-    * A maximum has been defined as a {@link ITechLayout}
+    * A maximum has been defined as a {@link ITechLayout}.
     */
    public static final int SIZER_FLAG_4_MAXIMUM             = 1 << 3;
 
@@ -91,10 +98,13 @@ public interface ITechSizer extends ITechByteObject {
    public static final int SIZER_FLAG_7_DEFINED             = 1 << 6;
 
    /**
-    * When used for {@link ITechLayout#MODE_6_POZER_DISTANCE}, the second sizer is implicit
+    * When used for {@link ITechLayout#MODE_6_POZER_DISTANCE}, the second sizer is implicit.
     */
    public static final int SIZER_FLAG_8_IMPLICIT            = 1 << 7;
 
+   /**
+    * 
+    */
    public static final int SIZER_OFFSET_01_FLAG             = A_OBJECT_BASIC_SIZE;
 
    /**
@@ -105,8 +115,7 @@ public interface ITechSizer extends ITechByteObject {
     * <li> {@link ITechLayout#MODE_3_SCALE} value according a given scale
     * <li> {@link ITechLayout#MODE_5_FUNCTION} complex function
     * <br>
-    * <br>
-    * 
+    * <br>.
     */
    public static final int SIZER_OFFSET_02_MODE1            = A_OBJECT_BASIC_SIZE + 1;
 
@@ -127,7 +136,6 @@ public interface ITechSizer extends ITechByteObject {
    public static final int SIZER_OFFSET_03_ETALON1          = A_OBJECT_BASIC_SIZE + 2;
 
    /**
-    * 
     * When etalon is 
     * {@link ITechLayout#ETALON_0_SIZEE_CTX}, 
     * {@link ITechLayout#ETALON_4_PARENT}, 
@@ -146,13 +154,18 @@ public interface ITechSizer extends ITechByteObject {
     * <li> {@link ITechLayout#ET_FUN_6_DIFF}
     * <li> {@link ITechLayout#ET_FUN_7_CTX_OP}
     * 
-    * The sizer is a function
-    * 
+    * The sizer is a function.
     */
    public static final int SIZER_OFFSET_04_FUNCTION1        = A_OBJECT_BASIC_SIZE + 3;
 
+   /**
+    * 
+    */
    public static final int SIZER_OFFSET_05_FRAC_BOT1        = A_OBJECT_BASIC_SIZE + 4 + 1;
 
+   /**
+    * 
+    */
    public static final int SIZER_OFFSET_05_FRAC_TOP1        = A_OBJECT_BASIC_SIZE + 4;
 
    /**
@@ -207,10 +220,19 @@ public interface ITechSizer extends ITechByteObject {
     */
    public static final int SIZER_OFFSET_06_PROPERTY1        = A_OBJECT_BASIC_SIZE + 6;
 
+   /**
+    * 
+    */
    public static final int SIZER_OFFSET_07_ETALON_SUBTYPE1  = A_OBJECT_BASIC_SIZE + 7;
 
+   /**
+    * 
+    */
    public static final int SIZER_OFFSET_08_ETALON_DATA1     = A_OBJECT_BASIC_SIZE + 8;
 
+   /**
+    * 
+    */
    public static final int SIZER_OFFSET_09_ETALON_DATA2     = A_OBJECT_BASIC_SIZE + 9;
 
    /**
@@ -220,15 +242,18 @@ public interface ITechSizer extends ITechByteObject {
    public static final int SIZER_PROP_00_DRAWN              = 0;
 
    /**
-    * Preferred size includes content, padding, border and margin
+    * Preferred size includes content, padding, border and margin.
     */
    public static final int SIZER_PROP_01_PREFERRED          = 1;
 
    /**
-    * Size of a unit, contextual to {@link ILayoutable}
+    * Size of a unit, contextual to {@link ILayoutable}.
     */
    public static final int SIZER_PROP_02_UNIT_LOGIC         = 2;
 
+   /**
+    * 
+    */
    public static final int SIZER_PROP_03_FONT               = 3;
 
    /**
@@ -246,16 +271,34 @@ public interface ITechSizer extends ITechByteObject {
     */
    public static final int SIZER_PROP_06_CONTENT_PAD        = 6;
 
+   /**
+    * 
+    */
    public static final int SIZER_PROP_10_PAD                = 10;
 
+   /**
+    * 
+    */
    public static final int SIZER_PROP_11_PAD_BORDER         = 11;
 
+   /**
+    * 
+    */
    public static final int SIZER_PROP_12_PAD_BORDER_MARGIN  = 12;
 
+   /**
+    * 
+    */
    public static final int SIZER_PROP_13_BORDER             = 13;
 
+   /**
+    * 
+    */
    public static final int SIZER_PROP_14_BORDER_MARGIN      = 14;
 
+   /**
+    * 
+    */
    public static final int SIZER_PROP_15_MARGIN             = 15;
 
 }

@@ -1,3 +1,7 @@
+/*
+ * (c) 2018-2019 Charles-Philip Bentley
+ * This code is licensed under MIT license (see LICENSE.txt for details)
+ */
 package pasa.cbentley.layouter.src4.tech;
 
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
@@ -12,41 +16,74 @@ import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
  */
 public interface ITechLayout extends ITechByteObject {
 
+   /**
+    * 
+    */
    public static final int COMPUTE_0_INVALID                     = 0;
 
+   /**
+    * 
+    */
    public static final int COMPUTE_1_NORMAL                      = 1;
 
+   /**
+    * 
+    */
    public static final int COMPUTE_2_INVERSE                     = 2;
 
+   /**
+    * 
+    */
    public static final int COMPUTE_3_BOTH                        = 3;
 
+   /**
+    * 
+    */
    public static final int COMPUTE_SIZE_0_NORMAL                     = 0;
 
+   /**
+    * 
+    */
    public static final int COMPUTE_SIZE_1_ONLY_W                      = 1;
 
+   /**
+    * 
+    */
    public static final int COMPUTE_SIZE_2_ONLY_H                     = 2;
 
+   /**
+    * 
+    */
    public static final int COMPUTE_SIZE_3_NONE                        = 3;
 
    /**
-    * implicit width or height
+    * implicit width or height.
     */
    public static final int CTX_0_                                = 0;
 
    /**
-    * Use the width of the etalon
+    * Use the width of the etalon.
     */
    public static final int CTX_1_WIDTH                           = 1;
 
    /**
-    * use the height
+    * use the height.
     */
    public static final int CTX_2_HEIGHT                          = 2;
 
+   /**
+    * 
+    */
    public static final int DELEGATE_ETALON_0_PREFERRED           = 0;
 
+   /**
+    * 
+    */
    public static final int DELEGATE_ETALON_2_CALL                = 2;
 
+   /**
+    * 
+    */
    public static final int DELEGATE_ETALON_3_OBJECT              = 3;
 
    /**
@@ -57,37 +94,58 @@ public interface ITechLayout extends ITechByteObject {
    public static final int DELEGATE_ETALON_1_PARENT_MAX          = 1;
 
    /**
-    * Keep in memory
+    * Keep in memory.
     */
    public static final int DEPENDENCY_0_NONE                     = 0;
 
    /**
-    * {@link ILayoutable} depends on the size of another {@link ILayoutable}
+    * {@link ILayoutable} depends on the size of another {@link ILayoutable}.
     */
    public static final int DEPENDENCY_1_SIZE                     = 1;
 
+   /**
+    * 
+    */
    public static final int DEPENDENCY_2_POZE                     = 2;
 
    /**
-    * {@link ILayoutable} depends on the size anb position of the {@link ILayoutable}
+    * {@link ILayoutable} depends on the size anb position of the {@link ILayoutable}.
     */
    public static final int DEPENDENCY_3_BOTH                     = 3;
 
+   /**
+    * 
+    */
    public static final int DEPENDENCY_4_PARENT                   = 4;
 
+   /**
+    * 
+    */
    public static final int DEPENDENCY_X_DELETE                   = -1;
 
+   /**
+    * 
+    */
    public static final int E_FONT_0_DEFAULT                      = 0;
 
    /**
-    * Font defined in the sub
+    * Font defined in the sub.
     */
    public static final int E_FONT_1_DEFINED                      = 1;
 
+   /**
+    * 
+    */
    public static final int E_FONT_2_SMALL                        = 2;
 
+   /**
+    * 
+    */
    public static final int E_FONT_3_MEDIUM                       = 3;
 
+   /**
+    * 
+    */
    public static final int E_FONT_4_BIG                          = 4;
 
    /**
@@ -99,7 +157,7 @@ public interface ITechLayout extends ITechByteObject {
    public static final int E_VIEWCONTEXT_0_ROOT                  = 0;
 
    /**
-    * THe view context of the application
+    * THe view context of the application.
     */
    public static final int E_VIEWCONTEXT_1_APPLI                 = 1;
 
@@ -114,13 +172,19 @@ public interface ITechLayout extends ITechByteObject {
     */
    public static final int E_VIEWCONTEXT_3_LINK                  = 3;
 
+   /**
+    * 
+    */
    public static final int E_VIEWCONTEXT_4_CLIP                  = 4;
 
    /**
-    * The full multi screens view context
+    * The full multi screens view context.
     */
    public static final int E_VIEWCONTEXT_4_SCREEN_ALL            = 4;
 
+   /**
+    * 
+    */
    public static final int E_VIEWCONTEXT_4_SCREEN_MAIN           = 4;
 
    /**
@@ -148,44 +212,50 @@ public interface ITechLayout extends ITechByteObject {
    public static final int ET_FUN_2_HEIGHT                       = 2;
 
    /**
-    * Take the minimum between W and H of etalon
+    * Take the minimum between W and H of etalon.
     */
    public static final int ET_FUN_3_MIN                          = 3;
 
    /**
-    * Take the maximum between W and H
+    * Take the maximum between W and H.
     */
    public static final int ET_FUN_4_MAX                          = 4;
 
    /**
-    * Add w and h
+    * Add w and h.
     */
    public static final int ET_FUN_5_ADD                          = 5;
 
    /**
-    * Take the difference between w and h
+    * Take the difference between w and h.
     */
    public static final int ET_FUN_6_DIFF                         = 6;
 
    /**
-    * Inverse of context
+    * Inverse of context.
     */
    public static final int ET_FUN_7_CTX_OP                       = 7;
 
    /**
-    * Etalon link type {@link ITechSizer#SIZER_OFFSET_06_PROPERTY1}
+    * Etalon link type {@link ITechSizer#SIZER_OFFSET_06_PROPERTY1}.
     */
    public static final int ET_LINK_0_ID                          = 0;
 
    /**
-    * Drawn size minus styles
-    * 
+    * Drawn size minus styles.
+    *
     * @see ITechNav
     */
    public static final int ET_LINK_1_NAV                         = 1;
 
+   /**
+    * 
+    */
    public static final int ET_LINK_2_PARENT                      = 2;
 
+   /**
+    * 
+    */
    public static final int ET_LINK_3_LAYOUTABLE                  = 3;
 
    /**
@@ -321,6 +391,9 @@ public interface ITechLayout extends ITechByteObject {
     */
    public static final int ETALON_7_DELEGATE                     = 7;
 
+   /**
+    * 
+    */
    public static final int ETALON_CK_MAX                         = 3;
 
    /**
@@ -336,12 +409,12 @@ public interface ITechLayout extends ITechByteObject {
    public static final int LINK_0_PARENT                         = 1;
 
    /**
-    * Etalon is Nav
+    * Etalon is Nav.
     */
    public static final int LINK_1_NAV                            = 5;
 
    /**
-    * Provides by a 4 byte UIID
+    * Provides by a 4 byte UIID.
     */
    public static final int LINK_2_UIID                           = 6;
 
@@ -361,7 +434,7 @@ public interface ITechLayout extends ITechByteObject {
     * 
     * <li> {@link ITechLayout#DELEGATE_ETALON_0_PREFERRED}
     * <li> {@link ITechLayout#DELEGATE_ETALON_2_CALL}
-    * <li> {@link ITechLayout#DELEGATE_ETALON_3_OBJECT}
+    * <li> {@link ITechLayout#DELEGATE_ETALON_3_OBJECT}.
     */
    public static final int MODE_1_DELEGATE                       = 1;
 
@@ -418,26 +491,38 @@ public interface ITechLayout extends ITechByteObject {
    public static final int MODE_5_FUNCTION                       = 5;
 
    /**
-    * The size is the distance between 2 pozers
+    * The size is the distance between 2 pozers.
     */
    public static final int MODE_6_POZER_DISTANCE                 = 6;
 
    /**
-    * Mode is coded in 1 byte, potentially a total of 255 modes
+    * Mode is coded in 1 byte, potentially a total of 255 modes.
     */
    public static final int MODE_CK_MAX                           = 3;
 
+   /**
+    * 
+    */
    public static final int PARENT_LINK_BYTE                      = 255;
 
    /**
-    * Main screen with default font
+    * Main screen with default font.
     */
    public static final int RATIO_01_SCREEN_FONT                  = 1;
 
+   /**
+    * 
+    */
    public static final int RATIO_02_VIEWCTX_FONT                 = 1;
 
+   /**
+    * 
+    */
    public static final int RATIO_03_PARENT_FONT                  = 1;
 
+   /**
+    * 
+    */
    public static final int RAW_UNIT_0_PIXEL                      = 0;
 
    /**
@@ -475,17 +560,20 @@ public interface ITechLayout extends ITechByteObject {
     */
    public static final int SCALE_1_EXPO                          = 1;
 
+   /**
+    * 
+    */
    public static final int SCALE_2_FONT                          = 2;
 
    /**
-    * No margin
+    * No margin.
     */
    public static final int SIZE_0_NONE                           = 0;
 
    /**
     * For some hosts, very small equals small
     * <br>
-    * Smallest possible in this scale
+    * Smallest possible in this scale.
     */
    public static final int SIZE_1_SMALLEST                       = 1;
 
@@ -499,41 +587,59 @@ public interface ITechLayout extends ITechByteObject {
     */
    public static final int SIZE_3_MEDIUM                         = 3;
 
+   /**
+    * 
+    */
    public static final int SIZE_4_BIG                            = 4;
 
+   /**
+    * 
+    */
    public static final int SIZE_5_BIGGEST                        = 5;
 
    /**
-    * Uses the whole visible object
+    * Uses the whole visible object.
     */
    public static final int VIEW_STRUCT_00_ALL_VISIBLE            = 0;
 
    /**
-    * Inner content values
+    * Inner content values.
     */
    public static final int VIEW_STRUCT_01_INNER_CONTENT          = 1;
 
    /**
-    * Uses the windows inner
+    * Uses the windows inner.
     */
    public static final int VIEW_STRUCT_02_VIEW_PORT              = 2;
 
    /**
-    * Uses the window and the scrollbar artifacts
+    * Uses the window and the scrollbar artifacts.
     */
    public static final int VIEW_STRUCT_03_VIEW_PORT_ARTIFACTS    = 3;
 
    /**
-    * Uses the area defined by content, padding, border and margin
+    * Uses the area defined by content, padding, border and margin.
     */
    public static final int VIEW_STYLE_00_VIEW_FULL               = 0;
 
+   /**
+    * 
+    */
    public static final int VIEW_STYLE_01_VIEW_CONTENT_PAD_BORDER = 1;
 
+   /**
+    * 
+    */
    public static final int VIEW_STYLE_02_VIEW_CONTENT_PAD        = 2;
 
+   /**
+    * 
+    */
    public static final int VIEW_STYLE_03_VIEW_CONTENT            = 3;
 
+   /**
+    * 
+    */
    public static final int Z_SIZE_FILL                           = ITechCoded.CODED_SIZE_FLAG_32_SIGN + (DELEGATE_ETALON_1_PARENT_MAX << ITechCoded.CODED_SIZE_SHIFT_1_MODE);
 
 }

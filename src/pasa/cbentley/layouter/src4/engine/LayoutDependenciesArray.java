@@ -1,3 +1,7 @@
+/*
+ * (c) 2018-2019 Charles-Philip Bentley
+ * This code is licensed under MIT license (see LICENSE.txt for details)
+ */
 package pasa.cbentley.layouter.src4.engine;
 
 import pasa.cbentley.core.src4.ctx.UCtx;
@@ -10,20 +14,37 @@ import pasa.cbentley.layouter.src4.interfaces.ILayoutDependencies;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
 
+/**
+ * 
+ */
 public class LayoutDependenciesArray implements ILayoutDependencies {
 
    /**
-    * int is the dependency type
+    * int is the dependency type.
     */
    private IntToObjects        array;
 
+   /**
+    * 
+    */
    protected final LayouterCtx lc;
 
+   /**
+    * 
+    *
+    * @param lc 
+    */
    public LayoutDependenciesArray(LayouterCtx lc) {
       this.lc = lc;
       array = new IntToObjects(lc.getUCtx());
    }
 
+   /**
+    * 
+    *
+    * @param lay 
+    * @param flags 
+    */
    public void addDependency(ILayoutable lay, int flags) {
       int index = array.getObjectIndex(lay);
       if (index == -1) {
@@ -49,14 +70,31 @@ public class LayoutDependenciesArray implements ILayoutDependencies {
       return 0;
    }
 
+   /**
+    * 
+    *
+    * @param flags 
+    * @return 
+    */
    private boolean isMatchSize(int flags) {
       return flags == ITechLayout.DEPENDENCY_1_SIZE || flags == ITechLayout.DEPENDENCY_3_BOTH;
    }
 
+   /**
+    * 
+    *
+    * @param flags 
+    * @return 
+    */
    private boolean isMatchPosition(int flags) {
       return flags == ITechLayout.DEPENDENCY_2_POZE || flags == ITechLayout.DEPENDENCY_3_BOTH;
    }
 
+   /**
+    * 
+    *
+    * @param flags 
+    */
    public void layoutUpdateDependencies(int flags) {
       for (int i = 0; i < array.nextempty; i++) {
          int flagsLayoutable = array.getInt(i);
@@ -77,6 +115,12 @@ public class LayoutDependenciesArray implements ILayoutDependencies {
       }
    }
 
+   /**
+    * 
+    *
+    * @param layout 
+    * @param flags 
+    */
    public void removeDependency(ILayoutable layout, int flags) {
       int index = array.getObjectIndex(layout);
       if (index != -1) {
@@ -98,37 +142,77 @@ public class LayoutDependenciesArray implements ILayoutDependencies {
 
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    //#mdebug
    public IDLog toDLog() {
       return toStringGetUCtx().toDLog();
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public String toString() {
       return Dctx.toString(this);
    }
 
+   /**
+    * 
+    *
+    * @param dc 
+    */
    public void toString(Dctx dc) {
       dc.root(this, "LayoutDependenciesArray");
       toStringPrivate(dc);
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public String toString1Line() {
       return Dctx.toString1Line(this);
    }
 
+   /**
+    * 
+    *
+    * @param dc 
+    */
    public void toString1Line(Dctx dc) {
       dc.root1Line(this, "LayoutDependenciesArray");
       toStringPrivate(dc);
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public UCtx toStringGetUCtx() {
       return lc.getUCtx();
    }
 
+   /**
+    * 
+    *
+    * @param dc 
+    */
    private void toStringPrivate(Dctx dc) {
 
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public ILayoutable[] getDependencies() {
       if(array == null || array.getLength() == 0) {
          return null;

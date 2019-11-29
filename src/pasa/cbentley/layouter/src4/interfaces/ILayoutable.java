@@ -1,3 +1,7 @@
+/*
+ * (c) 2018-2019 Charles-Philip Bentley
+ * This code is licensed under MIT license (see LICENSE.txt for details)
+ */
 package pasa.cbentley.layouter.src4.interfaces;
 
 import pasa.cbentley.core.src4.interfaces.ITechNav;
@@ -29,34 +33,38 @@ public interface ILayoutable extends IStringable {
    /**
     * Adding a dependency
     * 
-    * A {@link ILayoutable} can find its children by looking at
-    * 
-    * @param lay
-    * @param flags
+    * A {@link ILayoutable} can find its children by looking at.
+    *
+    * @param lay 
+    * @param flags 
     */
    public void addDependency(ILayoutable lay, int flags);
 
    /**
-    * Returns the {@link Zer2DArea} that hosts the sizers and pozers of this {@link ILayoutable}
-    * @return
+    * Returns the {@link Zer2DArea} that hosts the sizers and pozers of this {@link ILayoutable}.
+    *
+    * @return 
     */
    public Zer2DArea getArea();
 
    /**
-    * Return the {@link ILayoutable} that depends on this
+    * Return the {@link ILayoutable} that depends on this.
+    *
     * @return null if none
     */
    public ILayoutable[] getDependencies();
 
    /**
-    * The height in pixels
-    * @return
+    * The height in pixels.
+    *
+    * @return 
     */
    public int getFontHeight();
 
    /**
-    * The size in pixels of the widest letter
-    * @return
+    * The size in pixels of the widest letter.
+    *
+    * @return 
     */
    public int getFontWidth();
 
@@ -73,34 +81,35 @@ public interface ILayoutable extends IStringable {
    public ILayoutable getLayoutableDelegate(ILayoutable source);
 
    /**
-    * In the context of this {@link ILayoutable} which 
-    * @param id
-    * @return
+    * In the context of this {@link ILayoutable} which .
+    *
+    * @param id 
+    * @return 
     */
    public ILayoutable getLayoutableID(int id);
 
    /**
     * Which {@link ILayoutable} is positioned in the nav graph
     *  
-    * null if no object positioned on top, {@link ITechNav#NAV_1_UP}
-    * 
+    * null if no object positioned on top, {@link ITechNav#NAV_1_UP}.
+    *
     * @param dir code from {@link ITechNav}
-    * @return
-    * 
+    * @return 
     * @see ITechNav
     */
    public ILayoutable getLayoutableNav(int dir);
 
    /**
-    * The parent, null if root
-    * @return
+    * The parent, null if root.
+    *
+    * @return 
     */
    public ILayoutable getLayoutableParent();
 
    /**
-    * {@link ITechLayout#ETALON_1_VIEWCONTEXT}
-    * 
-    * @return
+    * {@link ITechLayout#ETALON_1_VIEWCONTEXT}.
+    *
+    * @return 
     */
    public ILayoutable getLayoutableViewContext();
 
@@ -117,8 +126,9 @@ public interface ILayoutable extends IStringable {
     * Unique ID given by the underlying {@link LayouterCtx}
     * 
     * 
-    * 0 if no id
-    * @return
+    * 0 if no id.
+    *
+    * @return 
     */
    public int getLayoutID();
 
@@ -136,35 +146,59 @@ public interface ILayoutable extends IStringable {
    public ILayoutRequestListener getLayoutRequestListener();
 
    /**
-    * Simply returns current x/start value
-    * @return
+    * Simply returns current x/start value.
+    *
+    * @return 
     */
    public int getPozeX();
 
    /**
-    * If not computed, compute only the X
-    * @return
+    * If not computed, compute only the X.
+    *
+    * @return 
     */
    public int getPozeXComputed();
 
    /**
-    * Simply returns current y/top value
-    * @return
+    * Simply returns current y/top value.
+    *
+    * @return 
     */
    public int getPozeY();
 
    /**
-    * If not computed, compute only the Y
-    * @return
+    * If not computed, compute only the Y.
+    *
+    * @return 
     */
    public int getPozeYComputed();
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public int getSizeBorderHeight();
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public int getSizeBorderWidth();
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public int getSizeContentHeight();
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public int getSizeContentWidth();
 
    /**
@@ -179,22 +213,69 @@ public interface ILayoutable extends IStringable {
     */
    public int getSizeDrawnWidth();
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public int getSizeFromDeletgateHeight();
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public int getSizeFromDeletgateWidth();
 
+   /**
+    * 
+    *
+    * @param layoutable 
+    * @return 
+    */
    public int getSizeMaxHeight(ILayoutable layoutable);
 
+   /**
+    * 
+    *
+    * @param layoutable 
+    * @return 
+    */
    public int getSizeMaxWidth(ILayoutable layoutable);
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public int getSizePaddingHeight();
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public int getSizePaddingWidth();
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public int getSizePreferredHeight();
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public int getSizePreferredWidth();
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public int getSizeUnitHeight();
 
    /**
@@ -203,21 +284,38 @@ public interface ILayoutable extends IStringable {
     */
    public int getSizeUnitWidth();
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public int getWidthDelegate();
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public int getWidthDrawn();
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public int getWidthFont();
 
    /**
-    * Sugar for {@link ILayoutable#getSizePreferredWidth()}
-    * @return
+    * Sugar for {@link ILayoutable#getSizePreferredWidth()}.
+    *
+    * @return 
     */
    public int getWidthPreferred();
 
    /**
-    * Sugar for {@link ILayoutable#getSizeUnitWidth()}
-    * @return
+    * Sugar for {@link ILayoutable#getSizeUnitWidth()}.
+    *
+    * @return 
     */
    public int getWidthUnit();
 
@@ -227,7 +325,7 @@ public interface ILayoutable extends IStringable {
     * {@link ILayoutable#layoutIsValidSize()} returns false
     * {@link ILayoutable#layoutIsValidPosition()} returns false
     * 
-    * It will also invalidates dependencies
+    * It will also invalidates dependencies.
     */
    public void layoutInvalidate();
 
@@ -238,12 +336,30 @@ public interface ILayoutable extends IStringable {
     */
    public void layoutInvalidatePosition();
 
+   /**
+    * 
+    */
    public void layoutInvalidateSize();
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public boolean layoutIsValidPosition();
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public boolean layoutIsValidSize();
 
+   /**
+    * 
+    *
+    * @param type 
+    */
    public void layoutUpdateDependencies(int type);
 
    /**
@@ -258,8 +374,14 @@ public interface ILayoutable extends IStringable {
     */
    public void layoutUpdatePositionCheck();
 
+   /**
+    * 
+    */
    public void layoutUpdatePositionXCheck();
 
+   /**
+    * 
+    */
    public void layoutUpdatePositionYCheck();
 
    /**
@@ -279,8 +401,14 @@ public interface ILayoutable extends IStringable {
     */
    public void layoutUpdateSizeCheck();
 
+   /**
+    * 
+    */
    public void layoutUpdateSizeHCheck();
 
+   /**
+    * 
+    */
    public void layoutUpdateSizeWCheck();
 
    //#enddebug
@@ -288,18 +416,22 @@ public interface ILayoutable extends IStringable {
    /**
     * Completely change the area of this {@link ILayoutable}
     * 
-    * This method invalidates positions and sizes
-    * 
-    * @param area
+    * This method invalidates positions and sizes.
+    *
+    * @param area 
     */
    public void setArea(Zer2DArea area);
 
    //#mdebug
    /**
-    * Debug short name
-    * @return
+    * Debug short name.
+    *
+    * @return 
     */
    public String toStringName();
 
+   /**
+    * 
+    */
    public void repaintLayoutable();
 }

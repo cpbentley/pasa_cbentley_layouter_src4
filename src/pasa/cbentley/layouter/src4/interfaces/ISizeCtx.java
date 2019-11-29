@@ -1,3 +1,7 @@
+/*
+ * (c) 2018-2019 Charles-Philip Bentley
+ * This code is licensed under MIT license (see LICENSE.txt for details)
+ */
 package pasa.cbentley.layouter.src4.interfaces;
 
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
@@ -31,15 +35,16 @@ public interface ISizeCtx {
     * <li> {@link ITechSizer#E_CTX_2_PARENT}
     * <br>
     * <br>
-    * 
-    * @param type
+    *
+    * @param sizer 
     * @return -1 if could not compute
     */
    public int getSizeEtalonH(ByteObject sizer);
 
    /**
-    * Same as getSizeEtalonH but for the width
-    * @param sizer
+    * Same as getSizeEtalonH but for the width.
+    *
+    * @param sizer 
     * @return -1 if could not compute
     */
    public int getSizeEtalonW(ByteObject sizer);

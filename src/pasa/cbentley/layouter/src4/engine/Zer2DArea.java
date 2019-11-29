@@ -1,3 +1,7 @@
+/*
+ * (c) 2018-2019 Charles-Philip Bentley
+ * This code is licensed under MIT license (see LICENSE.txt for details)
+ */
 package pasa.cbentley.layouter.src4.engine;
 
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
@@ -21,26 +25,59 @@ import pasa.cbentley.layouter.src4.tech.ITechLayout;
  */
 public class Zer2DArea implements IStringable, ITechLayout {
 
+   /**
+    * 
+    */
    protected final LayouterCtx lc;
 
+   /**
+    * 
+    */
    protected ByteObject        pozerXEnd;
 
+   /**
+    * 
+    */
    protected ByteObject        pozerXStart;
 
+   /**
+    * 
+    */
    protected ByteObject        pozerYBot;
 
+   /**
+    * 
+    */
    protected ByteObject        pozerYTop;
 
+   /**
+    * 
+    */
    protected Zer2DSizer        sizer;
 
+   /**
+    * 
+    *
+    * @param lc 
+    */
    public Zer2DArea(LayouterCtx lc) {
       this.lc = lc;
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public Zer2DSizer getSizer() {
       return sizer;
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public Zer2DSizer getSizerLazy() {
       if (sizer == null) {
          sizer = new Zer2DSizer(lc, null, null);
@@ -49,8 +86,9 @@ public class Zer2DArea implements IStringable, ITechLayout {
    }
 
    /**
-    * Is there enough data to compute the area's position and size
-    * @return
+    * Is there enough data to compute the area's position and size.
+    *
+    * @return 
     */
    public boolean isValidArea() {
       if (isValidHeight()) {
@@ -63,6 +101,11 @@ public class Zer2DArea implements IStringable, ITechLayout {
       return false;
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public boolean isValidAreaOptimized() {
       if (sizer == null || (sizer.getSizerH() == null && sizer.getSizerW() == null)) {
          //then we need all pozer
@@ -102,6 +145,11 @@ public class Zer2DArea implements IStringable, ITechLayout {
       }
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public boolean isInvalidArea() {
       boolean isValid1 = isValidArea();
       boolean isValid2 = isValidAreaOptimized();
@@ -114,6 +162,11 @@ public class Zer2DArea implements IStringable, ITechLayout {
       return !isValid1;
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public String toStringInvalidAreaMessage() {
       StringBBuilder sb = new StringBBuilder(lc.getUCtx());
       sb.append("Area Invalid");
@@ -132,6 +185,11 @@ public class Zer2DArea implements IStringable, ITechLayout {
       return sb.toString();
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public boolean isValidHeight() {
       if (sizer == null || sizer.getSizerH() == null) {
          //then we need all pozer
@@ -143,9 +201,21 @@ public class Zer2DArea implements IStringable, ITechLayout {
          return sizer.getSizerH() != null;
       }
    }
+   
+   /**
+    * 
+    *
+    * @return 
+    */
    public Zer2DArea cloneMe() {
       return (Zer2DArea)clone();
    }
+   
+   /**
+    * 
+    *
+    * @return 
+    */
    public Object clone() {
       Zer2DArea clone = new Zer2DArea(lc);
       if (this.pozerXEnd != null) {
@@ -166,6 +236,11 @@ public class Zer2DArea implements IStringable, ITechLayout {
       return clone;
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public boolean isValidPosition() {
       //we need at least one x and one y
       if ((pozerXEnd == null && pozerXStart == null) || (pozerYTop == null && pozerYBot == null)) {
@@ -174,6 +249,11 @@ public class Zer2DArea implements IStringable, ITechLayout {
       return true;
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public boolean isValidPositionX() {
       //we need at least one x and one y
       if ((pozerXEnd == null && pozerXStart == null)) {
@@ -182,6 +262,11 @@ public class Zer2DArea implements IStringable, ITechLayout {
       return true;
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public boolean isValidPositionY() {
       //we need at least one x and one y
       if ((pozerYTop == null && pozerYBot == null)) {
@@ -190,10 +275,20 @@ public class Zer2DArea implements IStringable, ITechLayout {
       return true;
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public boolean isValidSize() {
       return isValidWidth() && isValidHeight();
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public int getPositionComputeFlagX() {
       boolean isXNormal = pozerXStart != null;
       boolean isXEnd = pozerXEnd != null;
@@ -214,6 +309,11 @@ public class Zer2DArea implements IStringable, ITechLayout {
       }
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public int getSizeComputeFlag() {
       if (sizer == null) {
          return COMPUTE_SIZE_3_NONE;
@@ -238,6 +338,11 @@ public class Zer2DArea implements IStringable, ITechLayout {
       }
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public int getPositionComputeFlagY() {
       boolean isYNormal = pozerYTop != null;
       boolean isYEnd = pozerYBot != null;
@@ -258,6 +363,11 @@ public class Zer2DArea implements IStringable, ITechLayout {
       }
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public boolean isValidWidth() {
       if (sizer == null || sizer.getSizerW() == null) {
          //then we need all pozer
@@ -271,50 +381,74 @@ public class Zer2DArea implements IStringable, ITechLayout {
    }
 
    /**
-    * Defines the X coordinate of the bottom line of this area
-    * @param pozerY
+    * Defines the X coordinate of the bottom line of this area.
+    *
+    * @param pozerX 
     */
    public void setPozerXEnd(ByteObject pozerX) {
       pozerXEnd = pozerX;
    }
 
    /**
-    * Defines the X coordinate of the top line of this area
-    * @param pozerY
+    * Defines the X coordinate of the top line of this area.
+    *
+    * @param pozerX 
     */
    public void setPozerXStart(ByteObject pozerX) {
       pozerXStart = pozerX;
    }
 
    /**
-    * Defines the Y coordinate of the bottom line of this area
-    * @param pozerY
+    * Defines the Y coordinate of the bottom line of this area.
+    *
+    * @param pozerY 
     */
    public void setPozerYBot(ByteObject pozerY) {
       pozerYBot = pozerY;
    }
 
    /**
-    * Defines the Y coordinate of the top line of this area
-    * @param pozerY
+    * Defines the Y coordinate of the top line of this area.
+    *
+    * @param pozerY 
     */
    public void setPozerYTop(ByteObject pozerY) {
       pozerYTop = pozerY;
    }
 
+   /**
+    * 
+    *
+    * @param sizer 
+    */
    public void setSizer(Zer2DSizer sizer) {
       this.sizer = sizer;
    }
 
+   /**
+    * 
+    *
+    * @param sizerH 
+    */
    public void setSizerH(ByteObject sizerH) {
       getSizerLazy().setSizerH(sizerH);
    }
 
+   /**
+    * 
+    *
+    * @param sizerW 
+    */
    public void setSizerW(ByteObject sizerW) {
       getSizerLazy().setSizerW(sizerW);
 
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public ByteObject getSizerH() {
       if (sizer == null) {
          return null;
@@ -322,6 +456,11 @@ public class Zer2DArea implements IStringable, ITechLayout {
       return sizer.getSizerH();
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public ByteObject getSizerW() {
       if (sizer == null) {
          return null;
@@ -329,14 +468,29 @@ public class Zer2DArea implements IStringable, ITechLayout {
       return sizer.getSizerW();
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public ByteObject getPozerYTop() {
       return pozerYTop;
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public ByteObject getPozerXEnd() {
       return pozerXEnd;
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public ByteObject getPozerXMain() {
       if (pozerXStart == null) {
          return pozerXEnd;
@@ -352,19 +506,39 @@ public class Zer2DArea implements IStringable, ITechLayout {
       return pozerXStart;
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public ByteObject getPozerYBot() {
       return pozerYBot;
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    //#mdebug
    public IDLog toDLog() {
       return toStringGetUCtx().toDLog();
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public String toString() {
       return Dctx.toString(this);
    }
 
+   /**
+    * 
+    *
+    * @param dc 
+    */
    public void toString(Dctx dc) {
       dc.root(this, "Zer2DArea");
       toStringPrivate(dc);
@@ -373,6 +547,12 @@ public class Zer2DArea implements IStringable, ITechLayout {
       toStringPozerLayout(dc, null);
    }
 
+   /**
+    * 
+    *
+    * @param dc 
+    * @param layoutable 
+    */
    public void toString(Dctx dc, ILayoutable layoutable) {
       dc.root(this, "Zer2DArea");
       toStringPrivate(dc);
@@ -381,6 +561,12 @@ public class Zer2DArea implements IStringable, ITechLayout {
       toStringPozerLayout(dc, layoutable);
    }
 
+   /**
+    * 
+    *
+    * @param dc 
+    * @param layoutable 
+    */
    private void toStringPozerLayout(Dctx dc, ILayoutable layoutable) {
       //TODO mode pozerX and 
       //in mode start-end, PozerStart and PozerEnd
@@ -390,19 +576,39 @@ public class Zer2DArea implements IStringable, ITechLayout {
       lc.getPozerFactory().toStringPozerBot(pozerYBot, dc.nLevel(), layoutable);
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public String toString1Line() {
       return Dctx.toString1Line(this);
    }
 
+   /**
+    * 
+    *
+    * @param dc 
+    */
    private void toStringPrivate(Dctx dc) {
 
    }
 
+   /**
+    * 
+    *
+    * @param dc 
+    */
    public void toString1Line(Dctx dc) {
       dc.root1Line(this, "Zer2DArea");
       toStringPrivate(dc);
    }
 
+   /**
+    * 
+    *
+    * @return 
+    */
    public UCtx toStringGetUCtx() {
       return lc.getUCtx();
    }
