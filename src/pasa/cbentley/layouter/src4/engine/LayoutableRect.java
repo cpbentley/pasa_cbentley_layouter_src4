@@ -695,6 +695,10 @@ public class LayoutableRect implements ILayoutable {
       return w;
    }
 
+   public ILayoutable getLayoutableEtalon(int etalonType) {
+      return null;
+   }
+
    //#enddebug
 
 }

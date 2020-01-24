@@ -14,6 +14,7 @@ import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.core.src4.logging.IDLog;
 import pasa.cbentley.layouter.src4.ctx.LayoutException;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
+import pasa.cbentley.layouter.src4.ctx.ToStringStaticLayout;
 import pasa.cbentley.layouter.src4.interfaces.IBOTypesLayout;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutRequestListener;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
@@ -181,7 +182,47 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
    public int codedSizeDecode(int value) {
       return codedSizeDecode(value, lc.getDefaultSizeContext(), CTX_1_WIDTH);
    }
+   /**
+    * True when 
+    * <li>{@link ISizer#CODED_SIZE_FLAG_32_SIGN}
+    * <li>{@link ISizer#CODED_SIZE_FLAG_31_SIGN_CODE}
+    * 
+    * @param value
+    * @return
+    */
+   public static boolean isCoded(int value) {
+      return ((value >> 30) & 0x3) == 2;
+   }
+   public static boolean hasSubFlag(int value) {
+      return ((value >> 30) & 0x3) == 2;
+   }
+   
+   public static boolean isLinked(int value) {
+      return (value & CODED_SIZE_FLAG_30_CODED) == CODED_SIZE_FLAG_30_CODED;
+   }
 
+   
+   public String codedSizeToString1Line(int codedsize) {
+      String s = null;
+      if (!isCoded(codedsize)) {
+         s = "Raw Size Value = " + codedsize;
+      } else {
+         //we have code
+         if (isLinked(codedsize)) {
+            s = "Index Link to " + getCodedValue(codedsize);
+         } else {
+            int value = getCodedValue(codedsize);
+            int mode = getCodedMode(codedsize);
+            int etalon = getCodedEtalon(codedsize);
+            int etalonType = getCodedEtalonType(codedsize);
+            int etalonFun = getCodedEtalonFun(codedsize);
+            s = "v=" + value;
+            s += "mo" + ToStringStaticLayout.toStringMod(mode);
+         }
+      }
+      return s;
+   }
+   
    /**
     * 
     *
@@ -1319,6 +1360,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
          case SIZER_PROP_01_PREFERRED:
             return layoutable.getSizePreferredHeight();
          case SIZER_PROP_02_UNIT_LOGIC:
+            //TODO with style, including artifacts etc, number, current number
             return layoutable.getSizeUnitHeight();
          default:
             return layoutable.getSizeDrawnHeight();

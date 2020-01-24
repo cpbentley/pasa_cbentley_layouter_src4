@@ -125,7 +125,7 @@ public class Zer2DArea implements IStringable, ITechLayout {
             }
          } else {
             //do we have a Y coordinate ?
-            if(pozerYBot == null && pozerYTop == null) {
+            if (pozerYBot == null && pozerYTop == null) {
                return false;
             }
          }
@@ -201,16 +201,16 @@ public class Zer2DArea implements IStringable, ITechLayout {
          return sizer.getSizerH() != null;
       }
    }
-   
+
    /**
     * 
     *
     * @return 
     */
    public Zer2DArea cloneMe() {
-      return (Zer2DArea)clone();
+      return (Zer2DArea) clone();
    }
-   
+
    /**
     * 
     *
@@ -432,6 +432,10 @@ public class Zer2DArea implements IStringable, ITechLayout {
     */
    public void setSizerH(ByteObject sizerH) {
       getSizerLazy().setSizerH(sizerH);
+   }
+
+   public void setSizerWH(ByteObject sizerW, ByteObject sizerH) {
+      getSizerLazy().setSizerWH(sizerW, sizerH);
    }
 
    /**

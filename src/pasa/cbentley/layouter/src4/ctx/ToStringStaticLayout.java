@@ -6,6 +6,7 @@ package pasa.cbentley.layouter.src4.ctx;
 
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.core.src4.logging.ToStringStaticBase;
+import pasa.cbentley.layouter.src4.interfaces.IBOTypesLayout;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
 import pasa.cbentley.layouter.src4.tech.ITechPozer;
 import pasa.cbentley.layouter.src4.tech.ITechSizer;
@@ -41,6 +42,27 @@ public class ToStringStaticLayout extends ToStringStaticBase {
             return "delegate";
          default:
             return "Unknown " + fun;
+      }
+   }
+
+   public static String toStringTypes(int type) {
+      String str = toStringTypesNull(type);
+      if(str == null) {
+         return "UnknownType "+ type;
+      }
+      return str;
+   }
+
+   public static String toStringTypesNull(int type) {
+      switch (type) {
+         case IBOTypesLayout.FTYPE_3_SIZER:
+            return "Sizer";
+         case IBOTypesLayout.FTYPE_4_POSITION:
+            return "Pozer";
+         case IBOTypesLayout.FTYPE_6_LINK:
+            return "Link";
+         default:
+            return null;
       }
    }
 

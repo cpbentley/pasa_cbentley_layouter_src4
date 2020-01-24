@@ -189,7 +189,6 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       return bo;
    }
 
-
    /**
     * 
     * @return
@@ -206,6 +205,35 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
          sizerMatchParentCtx.setImmutable();
       }
       return sizerMatchParentCtx;
+   }
+
+   /**
+    * 3 different interpretations exist for the width and height values in the {@link IDrawable#init(int, int)} method.
+    * <ol>
+    * <li> <b>Positve</b>. The pixel size is fully known. It must be that value. Axis is fully constrained.
+    * <li> <b>0</b>. The pixel size is fully computed based on content, capped to screen size. Axis is free.
+    * <li> <b>Negative</b>. The size is logical. -2 means 2 lines for a StringDrawable. Axis is constrained.
+    * </ol>
+    * </p>
+    * @param value Old dimension API defined by {@link IDrawable#init(int, int)}
+    * @return
+    */
+   public ByteObject getSizerFromOldValue(int value) {
+      ByteObject sizer = null;
+      if (value == 0) {
+         int etalonType = SIZER_PROP_01_PREFERRED;
+         int etalon = ETALON_0_SIZEE_CTX;
+         //0 value equal preferred size
+         sizer = getSizer(MODE_2_RATIO, 0, etalon, etalonType, 0);
+      } else if (value < 0) {
+         //might be a coded size
+         int val = -value;
+         int etalon = ETALON_0_SIZEE_CTX;
+         sizer = getSizer(MODE_2_RATIO, val, etalon, 0, 0);
+      } else {
+         sizer = getSizerPix(value);
+      }
+      return sizer;
    }
 
    /**
@@ -411,12 +439,33 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
 
    /**
     * 
+    * @param ratioValue
+    * @param etalon
+    * @param etalonFun {@link ITechSizer#SIZER_OFFSET_04_FUNCTION1} {@link ITechLayout#ET_FUN_0_CTX}
+    * @param etalonType
+    * @return
+    */
+   public ByteObject getSizerRatio100(int ratioValue, int etalon, int etalonFun, int etalonType) {
+      ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
+      setSizerRatio100(bo, ratioValue);
+      bo.set1(SIZER_OFFSET_03_ETALON1, etalon);
+      bo.set1(SIZER_OFFSET_04_FUNCTION1, etalonFun);
+      bo.set1(SIZER_OFFSET_06_PROPERTY1, etalonType);
+      return bo;
+   }
+
+   /**
+    * 
     *
     * @param ratioValue 
     * @return 
     */
    public ByteObject getSizerRatio100Parent(int ratioValue) {
       return getSizerRatio100(ETALON_4_PARENT, ratioValue);
+   }
+
+   public ByteObject getSizerRatio100ViewCtx(int ratioValue) {
+      return getSizerRatio100(ETALON_1_VIEWCONTEXT, ratioValue);
    }
 
    /**

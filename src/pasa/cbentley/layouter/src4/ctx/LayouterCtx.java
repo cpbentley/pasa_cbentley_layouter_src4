@@ -5,6 +5,7 @@
 package pasa.cbentley.layouter.src4.ctx;
 
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
+import pasa.cbentley.byteobjects.src4.ctx.ABOCtx;
 import pasa.cbentley.byteobjects.src4.ctx.BOCtx;
 import pasa.cbentley.byteobjects.src4.ctx.IBOTypesBOC;
 import pasa.cbentley.byteobjects.src4.tech.ITechRelation;
@@ -28,12 +29,7 @@ import pasa.cbentley.layouter.src4.tech.ITechLayout;
  *
  * @author Charles Bentley
  */
-public class LayouterCtx extends ACtx {
-
-   /**
-    * 
-    */
-   protected final BOCtx            boc;
+public class LayouterCtx extends ABOCtx {
 
    /**
     * 
@@ -64,7 +60,7 @@ public class LayouterCtx extends ACtx {
    /**
     * 
     */
-   protected final BOLayouterModule module;
+   protected final BOModuleLayouter module;
 
    /**
     * 
@@ -88,10 +84,9 @@ public class LayouterCtx extends ACtx {
     * @param boc 
     */
    public LayouterCtx(UCtx uc, BOCtx boc) {
-      super(uc);
-      this.boc = boc;
+      super(boc);
       sc = new LayoutableRect(this);
-      module = new BOLayouterModule(this);
+      module = new BOModuleLayouter(this);
    }
 
    /**
@@ -108,7 +103,7 @@ public class LayouterCtx extends ACtx {
     *
     * @return 
     */
-   public BOLayouterModule getBOModule() {
+   public BOModuleLayouter getBOModule() {
       return module;
    }
 
@@ -291,6 +286,10 @@ public class LayouterCtx extends ACtx {
     */
    public void updateConfig() {
       //dpi = dd.getDeviceHost().getIHost().getHostInt(ITechHost.DATA_ID_20_DPI);
+   }
+
+   public int getBOSettingsCtxSize() {
+      return ITechCtxSettingsLayouter.CTX_LAY_BASIC_SIZE;
    }
 
 }

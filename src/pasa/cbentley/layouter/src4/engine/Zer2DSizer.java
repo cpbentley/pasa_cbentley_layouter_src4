@@ -44,6 +44,11 @@ public class Zer2DSizer extends Zer2DAbstract implements ITechSizer {
       this.er2dH = sizerH;
    }
 
+   public void setSizerWH(ByteObject sizerW, ByteObject sizerH) {
+      this.er2dW = sizerW;
+      this.er2dH = sizerH;
+   }
+
    /**
     * 
     *

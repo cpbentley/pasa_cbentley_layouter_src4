@@ -9,6 +9,8 @@ import pasa.cbentley.core.src4.logging.IStringable;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
 import pasa.cbentley.layouter.src4.engine.Zer2DArea;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
+import pasa.cbentley.layouter.src4.tech.ITechPozer;
+import pasa.cbentley.layouter.src4.tech.ITechSizer;
 
 /**
  * 2D UI object able to be used in the Layouter engine.
@@ -98,6 +100,19 @@ public interface ILayoutable extends IStringable {
     * @see ITechNav
     */
    public ILayoutable getLayoutableNav(int dir);
+
+   
+   /**
+    * Enables custom etalon types for
+    * 
+    * {@link ITechSizer#SIZER_OFFSET_07_ETALON_SUBTYPE1}
+    * {@link ITechPozer#POS_OFFSET_02_ETALON1}
+    * 
+    * 
+    * @param etalonType
+    * @return
+    */
+   public ILayoutable getLayoutableEtalon(int etalonType);
 
    /**
     * The parent, null if root.

@@ -647,6 +647,20 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
    }
 
    /**
+    * Any context
+    * @param pozer
+    * @param dc
+    */
+   public void toStringPozer1Line(ByteObject pozer, Dctx dc) {
+      dc.root1Line(pozer, "Pozer");
+      int align = pozer.get4(POS_OFFSET_03_ANCHOR_ETALON_POINT_VALUE4);
+      int fun = pozer.get1(POS_OFFSET_10_SIZER_FUN1);
+      int etalon = pozer.get1(POS_OFFSET_02_ETALON1);
+      dc.appendVarWithSpace("val", align);
+      dc.appendVarWithSpace("etalon", etalon);
+   }
+
+   /**
     * 
     *
     * @param pozer 
