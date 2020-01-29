@@ -85,6 +85,7 @@ public interface ITechLayout extends ITechByteObject {
     * 
     */
    public static final int DELEGATE_ETALON_3_OBJECT              = 3;
+   public static final int DELEGATE_ETALON_4_REFERENCE              = 4;
 
    /**
     * This mode, takes the biggest possible value provided by the context
@@ -388,6 +389,8 @@ public interface ITechLayout extends ITechByteObject {
    /**
     * The etalon choice is dynamic by a delegate object.
     * 
+    * etalon is chosen dynamically by the sizer's delegate
+    * 
     */
    public static final int ETALON_7_DELEGATE                     = 7;
 
@@ -435,6 +438,10 @@ public interface ITechLayout extends ITechByteObject {
     * <li> {@link ITechLayout#DELEGATE_ETALON_0_PREFERRED}
     * <li> {@link ITechLayout#DELEGATE_ETALON_2_CALL}
     * <li> {@link ITechLayout#DELEGATE_ETALON_3_OBJECT}.
+    * 
+    * Dynamic listener
+    * 
+    * When a function cannot be expressed, a delegate registers
     */
    public static final int MODE_1_DELEGATE                       = 1;
 

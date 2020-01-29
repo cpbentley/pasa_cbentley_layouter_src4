@@ -16,6 +16,7 @@ import pasa.cbentley.layouter.src4.ctx.LayoutException;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
 import pasa.cbentley.layouter.src4.ctx.ToStringStaticLayout;
 import pasa.cbentley.layouter.src4.interfaces.IBOTypesLayout;
+import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegate;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutRequestListener;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 import pasa.cbentley.layouter.src4.interfaces.SizeResult;
@@ -182,6 +183,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
    public int codedSizeDecode(int value) {
       return codedSizeDecode(value, lc.getDefaultSizeContext(), CTX_1_WIDTH);
    }
+
    /**
     * True when 
     * <li>{@link ISizer#CODED_SIZE_FLAG_32_SIGN}
@@ -193,15 +195,15 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
    public static boolean isCoded(int value) {
       return ((value >> 30) & 0x3) == 2;
    }
+
    public static boolean hasSubFlag(int value) {
       return ((value >> 30) & 0x3) == 2;
    }
-   
+
    public static boolean isLinked(int value) {
       return (value & CODED_SIZE_FLAG_30_CODED) == CODED_SIZE_FLAG_30_CODED;
    }
 
-   
    public String codedSizeToString1Line(int codedsize) {
       String s = null;
       if (!isCoded(codedsize)) {
@@ -222,7 +224,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       }
       return s;
    }
-   
+
    /**
     * 
     *
@@ -625,7 +627,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       //read value
       int unit = pozer.get1(POS_OFFSET_10_SIZER_FUN1);
       int val = pozer.get4(POS_OFFSET_03_ANCHOR_ETALON_POINT_VALUE4);
-      if(unit == RAW_UNIT_1_DIP) {
+      if (unit == RAW_UNIT_1_DIP) {
          val = lc.getDPI() * val / 160;
       }
       LayoutableRect lr = lc.getDefaultSizeContext();
@@ -645,7 +647,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     * @param layoutable 
     * @return 
     */
-   public ILayoutable getEtalonSizer(ByteObject sizer, ILayoutable layoutable) {
+   private ILayoutable getEtalonSizer(ByteObject sizer, ILayoutable layoutable, int ctx) {
       int etalon = sizer.get1(SIZER_OFFSET_03_ETALON1);
       //goal is to find the right layoutable on which to compute
       ILayoutable layoutableEtalon = layoutable; //to avoid NPE
@@ -657,7 +659,15 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       } else if (etalon == ETALON_2_FONT) {
          layoutableEtalon = layoutable;
       } else if (etalon == ETALON_7_DELEGATE) {
-         layoutableEtalon = layoutable.getLayoutableDelegate(layoutable);
+         //etalon is chosen dynamically by the sizer's delegate
+         ByteObject bo = sizer.getSubFirst(IBOTypesBOC.TYPE_017_REFERENCE_OBJECT);
+         if (bo instanceof ByteObjectLayoutDelegate) {
+            ByteObjectLayoutDelegate bol = (ByteObjectLayoutDelegate) bo;
+            ILayoutDelegate delegate = bol.getDelegate();
+            layoutableEtalon = delegate.getDelegateSizer(sizer, layoutable, ctx);
+         } else {
+            throw new LayoutException(lc, "");
+         }
       } else if (etalon == ETALON_4_PARENT) {
          layoutableEtalon = layoutable.getLayoutableParent();
          //no need to add a dependency for parent
@@ -834,7 +844,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
          if (ctx == CTX_1_WIDTH) {
             return layoutable.getSizeFromDeletgateWidth();
          } else {
-            return layoutable.getSizeFromDeletgateHeight();
+            return layoutable.getSizeFromDeletgateHeight(sizer, layoutable);
          }
       } else if (delegateEtalon == DELEGATE_ETALON_3_OBJECT) {
          ILayoutRequestListener delegate = layoutable.getLayoutRequestListener();
@@ -845,6 +855,19 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
             delegate.computeSizeHeightFor(layoutable, sizer, sr);
          }
          return sr.getInt();
+      } else if (delegateEtalon == DELEGATE_ETALON_4_REFERENCE) {
+         ByteObject bo = sizer.getSubFirst(IBOTypesBOC.TYPE_017_REFERENCE_OBJECT);
+         if (bo instanceof ByteObjectLayoutDelegate) {
+            ByteObjectLayoutDelegate bol = (ByteObjectLayoutDelegate) bo;
+            ILayoutDelegate delegate = bol.getDelegate();
+            if (ctx == CTX_1_WIDTH) {
+               return delegate.getDelegateSizeWidth(sizer, layoutable);
+            } else {
+               return delegate.getDelegateSizeHeight(sizer, layoutable);
+            }
+         } else {
+            throw new LayoutException(lc, "");
+         }
       } else {
          throw new IllegalArgumentException();
       }
@@ -1289,8 +1312,8 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       checkNull(layoutable);
 
       ILayoutable layoutableEtalon = getEtalonPozer(pozerX, layoutable, CTX_1_WIDTH);
-      layoutableEtalon.layoutUpdatePositionXCheck(); 
-      layoutableEtalon.layoutUpdateSizeWCheck(); 
+      layoutableEtalon.layoutUpdatePositionXCheck();
+      layoutableEtalon.layoutUpdateSizeWCheck();
 
       int fx = layoutableEtalon.getPozeX();
       int fw = layoutableEtalon.getSizeDrawnWidth();
@@ -1298,7 +1321,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       int x = getPosPure(alignDest, fw, fx);
       return x;
    }
-   
+
    /**
     * 
     *
@@ -1311,8 +1334,8 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       checkNull(layoutable);
 
       ILayoutable layoutableEtalon = getEtalonPozer(pozerX, layoutable, CTX_1_WIDTH);
-      layoutableEtalon.layoutUpdatePositionYCheck(); 
-      layoutableEtalon.layoutUpdateSizeHCheck(); 
+      layoutableEtalon.layoutUpdatePositionYCheck();
+      layoutableEtalon.layoutUpdateSizeHCheck();
 
       int fy = layoutableEtalon.getPozeY();
       int fh = layoutableEtalon.getSizeDrawnHeight();
@@ -1399,7 +1422,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     */
    public int getSizeEtalonH(ByteObject sizer, ILayoutable layoutable) {
       //goal is to find the right layoutable on which to compute
-      ILayoutable layoutableEtalon = getEtalonSizer(sizer, layoutable);
+      ILayoutable layoutableEtalon = getEtalonSizer(sizer, layoutable, CTX_2_HEIGHT);
       if (layoutable != layoutableEtalon) {
          layoutableEtalon.layoutUpdateSizeCheck();
       }
@@ -1414,7 +1437,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     * @return 
     */
    public int getSizeEtalonW(ByteObject sizer, ILayoutable layoutable) {
-      ILayoutable layoutableEtalon = getEtalonSizer(sizer, layoutable);
+      ILayoutable layoutableEtalon = getEtalonSizer(sizer, layoutable, CTX_1_WIDTH);
       //if etalon is yourself ?
       if (layoutable != layoutableEtalon) {
          layoutableEtalon.layoutUpdateSizeCheck();

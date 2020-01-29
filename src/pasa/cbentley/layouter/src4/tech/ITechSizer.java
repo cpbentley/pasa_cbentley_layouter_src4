@@ -61,7 +61,8 @@ public interface ITechSizer extends ITechByteObject {
    /**
     * Allows context to shrink this size.
     * <br>
-    * When contextual content is smaller than provided size
+    * When contextual content is smaller than provided size.
+    * Shrink to preferred size
     */
    public static final int SIZER_FLAG_2_ALLOW_SHRINK        = 1 << 1;
 

@@ -4,8 +4,6 @@
  */
 package pasa.cbentley.layouter.src4.engine;
 
-import java.awt.Dimension;
-
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.logging.Dctx;
@@ -88,19 +86,18 @@ public abstract class LayoutableAdapterAbstract implements ILayoutable, ITechLay
    private void applyRectToComponentSize() {
       int width = rect.getW();
       int height = rect.getH();
-      Dimension preferredSize;
+      int prefW = width;
+      int prefH = height;
       int sizeComputeFlag = area.getSizeComputeFlag();
       if (sizeComputeFlag == COMPUTE_SIZE_0_NORMAL) {
-         preferredSize = new Dimension(width, height);
       } else if (sizeComputeFlag == COMPUTE_SIZE_1_ONLY_W) {
-         preferredSize = new Dimension(width, height);
       } else if (sizeComputeFlag == COMPUTE_SIZE_2_ONLY_H) {
-         preferredSize = new Dimension(width, height);
       } else {
-         preferredSize = new Dimension(rect.getPw(), rect.getPh());
+         prefW = rect.getPw();
+         prefH = rect.getPh();
       }
       setSize(width, height);
-      setPreferredSize(preferredSize);
+      setPreferredSize(prefW, prefH);
       isAppliedSizeH = true;
       isAppliedSizeW = true;
    }
@@ -950,9 +947,9 @@ public abstract class LayoutableAdapterAbstract implements ILayoutable, ITechLay
       area.setPozerYTop(pozerY);
    }
 
-   protected abstract void setPreferredSize(Dimension preferredSize);
-
    protected abstract void setSize(int width, int height);
+
+   protected abstract void setPreferredSize(int width, int height);
 
    public void setSizer(Zer2DSizer sizer) {
       this.area.setSizer(sizer);

@@ -4,11 +4,7 @@
  */
 package pasa.cbentley.layouter.src4.engine;
 
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Toolkit;
-
+import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
 import pasa.cbentley.layouter.src4.interfaces.I2DReal;
@@ -91,7 +87,7 @@ public class LayoutableAdapterI2DReal extends LayoutableAdapterAbstract implemen
       return getSizeDrawnWidth();
    }
 
-   public int getSizeFromDeletgateHeight() {
+   public int getSizeFromDeletgateHeight(ByteObject sizer, ILayoutable layoutable) {
       return c.getRealHeight();
    }
 
@@ -116,10 +112,6 @@ public class LayoutableAdapterI2DReal extends LayoutableAdapterAbstract implemen
 
    }
 
-   protected void setPreferredSize(Dimension preferredSize) {
-      // TODO Auto-generated method stub
-
-   }
 
    protected void setSize(int width, int height) {
       // TODO Auto-generated method stub
@@ -151,6 +143,11 @@ public class LayoutableAdapterI2DReal extends LayoutableAdapterAbstract implemen
    public ILayoutable getLayoutableEtalon(int etalonType) {
       // TODO Auto-generated method stub
       return null;
+   }
+
+   protected void setPreferredSize(int width, int height) {
+      // TODO Auto-generated method stub
+      
    }
 
    //#enddebug

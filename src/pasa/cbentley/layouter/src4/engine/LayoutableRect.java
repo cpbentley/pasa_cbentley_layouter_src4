@@ -340,7 +340,7 @@ public class LayoutableRect implements ILayoutable {
     *
     * @return 
     */
-   public int getSizeFromDeletgateHeight() {
+   public int getSizeFromDeletgateHeight(ByteObject sizer, ILayoutable layoutable) {
       // TODO Auto-generated method stub
       return 0;
    }

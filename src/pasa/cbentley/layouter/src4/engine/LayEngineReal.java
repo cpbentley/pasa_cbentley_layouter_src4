@@ -1,7 +1,5 @@
 package pasa.cbentley.layouter.src4.engine;
 
-import java.awt.Dimension;
-
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
 import pasa.cbentley.layouter.src4.interfaces.I2DReal;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
@@ -39,27 +37,6 @@ public class LayEngineReal extends LayEngine {
    protected void setAppliedPositionTrue() {
       isAppliedPositionX = true;
       isAppliedPositionY = true;
-   }
-
-   private void applyRectToComponentSize() {
-      int width = rect.getW();
-      int height = rect.getH();
-      Dimension preferredSize;
-      Zer2DArea area = getArea();
-      int sizeComputeFlag = area.getSizeComputeFlag();
-      if (sizeComputeFlag == COMPUTE_SIZE_0_NORMAL) {
-         preferredSize = new Dimension(width, height);
-      } else if (sizeComputeFlag == COMPUTE_SIZE_1_ONLY_W) {
-         preferredSize = new Dimension(width, height);
-      } else if (sizeComputeFlag == COMPUTE_SIZE_2_ONLY_H) {
-         preferredSize = new Dimension(width, height);
-      } else {
-         preferredSize = new Dimension(rect.getPw(), rect.getPh());
-      }
-      real.setSize(width, height);
-      real.setPreferredSize(preferredSize);
-      setAppliedSizeTrue();
-
    }
 
    protected void setAppliedSizeTrue() {

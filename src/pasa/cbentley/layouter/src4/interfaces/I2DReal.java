@@ -1,7 +1,5 @@
 package pasa.cbentley.layouter.src4.interfaces;
 
-import java.awt.Container;
-import java.awt.Dimension;
 
 import pasa.cbentley.core.src4.logging.IStringable;
 
@@ -17,7 +15,7 @@ public interface I2DReal extends IStringable {
 
    public void setSize(int width, int height);
 
-   public void setPreferredSize(Dimension preferredSize);
+   public void setPreferredSize(int width, int height);
 
    public void setLocation(int x, int y);
 

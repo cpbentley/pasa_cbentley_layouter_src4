@@ -4,6 +4,7 @@
  */
 package pasa.cbentley.layouter.src4.interfaces;
 
+import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.core.src4.interfaces.ITechNav;
 import pasa.cbentley.core.src4.logging.IStringable;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
@@ -229,11 +230,14 @@ public interface ILayoutable extends IStringable {
    public int getSizeDrawnWidth();
 
    /**
+    * This layoutable is a delegate and must compute the size of the {@link ILayoutable}
     * 
-    *
+    * @param sizer TODO
+    * @param layoutable TODO
     * @return 
+    * @throws new {@link IllegalArgumentException} if layoutable is not know
     */
-   public int getSizeFromDeletgateHeight();
+   public int getSizeFromDeletgateHeight(ByteObject sizer, ILayoutable layoutable);
 
    /**
     * 

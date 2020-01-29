@@ -9,8 +9,9 @@ import pasa.cbentley.byteobjects.src4.ctx.ABOCtx;
 import pasa.cbentley.byteobjects.src4.ctx.BOCtx;
 import pasa.cbentley.byteobjects.src4.ctx.IBOTypesBOC;
 import pasa.cbentley.byteobjects.src4.tech.ITechRelation;
-import pasa.cbentley.core.src4.ctx.ACtx;
 import pasa.cbentley.core.src4.ctx.UCtx;
+import pasa.cbentley.core.src4.logging.Dctx;
+import pasa.cbentley.core.src4.logging.IDLog;
 import pasa.cbentley.layouter.src4.engine.DebugBreakAdapter;
 import pasa.cbentley.layouter.src4.engine.LayoutFactory;
 import pasa.cbentley.layouter.src4.engine.LayoutOperator;
@@ -31,11 +32,13 @@ import pasa.cbentley.layouter.src4.tech.ITechLayout;
  */
 public class LayouterCtx extends ABOCtx {
 
+   public static final int          CTX_ID = 60;
+
    /**
     * 
     */
    //#debug
-   private IDebugBreaks debugBreaks;
+   private IDebugBreaks             debugBreaks;
 
    /**
     * Value is given by the outisde and changed by an event.
@@ -105,6 +108,10 @@ public class LayouterCtx extends ABOCtx {
     */
    public BOModuleLayouter getBOModule() {
       return module;
+   }
+
+   public int getBOSettingsCtxSize() {
+      return ITechCtxSettingsLayouter.CTX_LAY_BASIC_SIZE;
    }
 
    /**
@@ -200,6 +207,10 @@ public class LayouterCtx extends ABOCtx {
       return layoutOperator;
    }
 
+   public int getCtxID() {
+      return CTX_ID;
+   }
+
    /**
     * 
     *
@@ -281,15 +292,25 @@ public class LayouterCtx extends ABOCtx {
    }
    //#enddebug
 
-   /**
-    * Called.
-    */
-   public void updateConfig() {
-      //dpi = dd.getDeviceHost().getIHost().getHostInt(ITechHost.DATA_ID_20_DPI);
+
+   //#mdebug
+   public void toString(Dctx dc) {
+      dc.root(this, "LayouterCtx");
+      toStringPrivate(dc);
+      super.toString(dc.sup());
    }
 
-   public int getBOSettingsCtxSize() {
-      return ITechCtxSettingsLayouter.CTX_LAY_BASIC_SIZE;
+   private void toStringPrivate(Dctx dc) {
+      
    }
+
+   public void toString1Line(Dctx dc) {
+      dc.root1Line(this, "LayouterCtx");
+      toStringPrivate(dc);
+      super.toString1Line(dc.sup1Line());
+   }
+
+   //#enddebug
+   
 
 }

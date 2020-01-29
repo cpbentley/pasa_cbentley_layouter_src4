@@ -10,6 +10,7 @@ import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
 import pasa.cbentley.layouter.src4.ctx.ToStringStaticLayout;
 import pasa.cbentley.layouter.src4.interfaces.IBOTypesLayout;
+import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegate;
 import pasa.cbentley.layouter.src4.tech.ITechCoded;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
 import pasa.cbentley.layouter.src4.tech.ITechLinker;
@@ -87,6 +88,15 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       relationshipMin.addByteObject(min);
       bo.addByteObject(relationshipMin);
       bo.setFlag(SIZER_OFFSET_01_FLAG, SIZER_FLAG_3_MINIMUM, true);
+   }
+
+   /**
+    * 
+    *
+    * @return 
+    */
+   public ByteObject getSingletonSizerPref() {
+      return getSizerPrefLazy();
    }
 
    /**
@@ -168,46 +178,6 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
    }
 
    /**
-    * Function is
-    * <li> {@link ITechSizer#ET_FUN_6_DIFF}
-    * <li> {@link ITechSizer#ET_FUN_5_ADD}.
-    *
-    * @param function 
-    * @param sizer1 
-    * @param sizer2 
-    * @return 
-    */
-   public ByteObject getSizerFun(int function, ByteObject sizer1, ByteObject sizer2) {
-      ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
-      bo.set1(SIZER_OFFSET_02_MODE1, MODE_5_FUNCTION);
-      bo.set1(SIZER_OFFSET_03_ETALON1, 0);
-      bo.set1(SIZER_OFFSET_06_PROPERTY1, 0);
-      bo.set1(SIZER_OFFSET_04_FUNCTION1, function);
-      bo.set2(SIZER_OFFSET_05_VALUE2, 0);
-      bo.addSub(sizer1);
-      bo.addSub(sizer2);
-      return bo;
-   }
-
-   /**
-    * 
-    * @return
-    */
-   public ByteObject getSizerMatchParentLazy() {
-      if (sizerMatchParentCtx == null) {
-         ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
-         bo.set1(SIZER_OFFSET_02_MODE1, MODE_2_RATIO);
-         bo.set1(SIZER_OFFSET_04_FUNCTION1, ET_FUN_0_CTX); //when computing W, take parent's W, 
-         bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_4_PARENT);
-         bo.set1(SIZER_OFFSET_06_PROPERTY1, ITechSizer.SIZER_PROP_00_DRAWN);
-         setSizerRatio100(bo, 100);
-         sizerMatchParentCtx = bo;
-         sizerMatchParentCtx.setImmutable();
-      }
-      return sizerMatchParentCtx;
-   }
-
-   /**
     * 3 different interpretations exist for the width and height values in the {@link IDrawable#init(int, int)} method.
     * <ol>
     * <li> <b>Positve</b>. The pixel size is fully known. It must be that value. Axis is fully constrained.
@@ -234,6 +204,62 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
          sizer = getSizerPix(value);
       }
       return sizer;
+   }
+
+   /**
+    * Function is
+    * <li> {@link ITechSizer#ET_FUN_6_DIFF}
+    * <li> {@link ITechSizer#ET_FUN_5_ADD}.
+    *
+    * @param function 
+    * @param sizer1 
+    * @param sizer2 
+    * @return 
+    */
+   public ByteObject getSizerFun(int function, ByteObject sizer1, ByteObject sizer2) {
+      ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
+      bo.set1(SIZER_OFFSET_02_MODE1, MODE_5_FUNCTION);
+      bo.set1(SIZER_OFFSET_03_ETALON1, 0);
+      bo.set1(SIZER_OFFSET_06_PROPERTY1, 0);
+      bo.set1(SIZER_OFFSET_04_FUNCTION1, function);
+      bo.set2(SIZER_OFFSET_05_VALUE2, 0);
+      bo.addSub(sizer1);
+      bo.addSub(sizer2);
+      return bo;
+   }
+
+   /**
+    * Mode is {@link ITechLayout#MODE_1_DELEGATE}
+    * 
+    * Etalon might be ignored.
+    * @param delegate
+    * @return
+    */
+   public ByteObject getSizerListener(ILayoutDelegate delegate) {
+      ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
+      bo.set1(SIZER_OFFSET_02_MODE1, MODE_1_DELEGATE);
+      bo.set1(SIZER_OFFSET_03_ETALON1, DELEGATE_ETALON_4_REFERENCE);
+      ByteObjectLayoutDelegate boLayoutable = new ByteObjectLayoutDelegate(lac.getBOC(), delegate);
+      bo.addByteObject(boLayoutable);
+      return null;
+   }
+
+   /**
+    * 
+    * @return
+    */
+   public ByteObject getSizerMatchParentLazy() {
+      if (sizerMatchParentCtx == null) {
+         ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
+         bo.set1(SIZER_OFFSET_02_MODE1, MODE_2_RATIO);
+         bo.set1(SIZER_OFFSET_04_FUNCTION1, ET_FUN_0_CTX); //when computing W, take parent's W, 
+         bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_4_PARENT);
+         bo.set1(SIZER_OFFSET_06_PROPERTY1, ITechSizer.SIZER_PROP_00_DRAWN);
+         setSizerRatio100(bo, 100);
+         sizerMatchParentCtx = bo;
+         sizerMatchParentCtx.setImmutable();
+      }
+      return sizerMatchParentCtx;
    }
 
    /**
@@ -409,15 +435,6 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
    }
 
    /**
-    * 
-    *
-    * @return 
-    */
-   public ByteObject getSingletonSizerPref() {
-      return getSizerPrefLazy();
-   }
-
-   /**
     * A ration definition with the etalon ID and 
     * 
     * {@link ITechSizer#SIZER_OFFSET_02_MODE1} is {@link ITechLayout#MODE_2_RATIO}
@@ -464,6 +481,26 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       return getSizerRatio100(ETALON_4_PARENT, ratioValue);
    }
 
+   /**
+    * Used when we want a component to take more space if there is available in the ratio
+    * but if ratio gives a smaller value than minimum, the size give is the minimum.
+    *
+    * @param ratio100 
+    * @param minimumSizer 
+    * @return 
+    */
+   public ByteObject getSizerRatio100ParentMin(int ratio100, ByteObject minimumSizer) {
+      ByteObject bo = getSizerRatio100Parent(ratio100);
+      addMin(bo, minimumSizer);
+      return bo;
+   }
+
+   /**
+    * with {@link ITechLayout#ET_FUN_0_CTX}
+    * so that we computing width, it takes the width
+    * @param ratioValue
+    * @return
+    */
    public ByteObject getSizerRatio100ViewCtx(int ratioValue) {
       return getSizerRatio100(ETALON_1_VIEWCONTEXT, ratioValue);
    }
@@ -482,20 +519,6 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       bo.set1(SIZER_OFFSET_04_FUNCTION1, ET_FUN_7_CTX_OP);
       bo.set1(SIZER_OFFSET_05_VALUE2, fracTop);
       bo.set1(SIZER_OFFSET_05_VALUE2 + 1, fracBot);
-      return bo;
-   }
-
-   /**
-    * Used when we want a component to take more space if there is available in the ratio
-    * but if ratio gives a smaller value than minimum, the size give is the minimum.
-    *
-    * @param ratio100 
-    * @param minimumSizer 
-    * @return 
-    */
-   public ByteObject getSizerRatio100ParentMin(int ratio100, ByteObject minimumSizer) {
-      ByteObject bo = getSizerRatio100Parent(ratio100);
-      addMin(bo, minimumSizer);
       return bo;
    }
 
