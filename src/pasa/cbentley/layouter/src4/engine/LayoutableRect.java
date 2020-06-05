@@ -1,15 +1,14 @@
 /*
- * (c) 2018-2019 Charles-Philip Bentley
+ * (c) 2018-2020 Charles-Philip Bentley
  * This code is licensed under MIT license (see LICENSE.txt for details)
  */
 package pasa.cbentley.layouter.src4.engine;
 
-import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.core.src4.logging.IDLog;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
-import pasa.cbentley.layouter.src4.interfaces.ILayoutRequestListener;
+import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegate;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 
 /**
@@ -75,12 +74,6 @@ public class LayoutableRect implements ILayoutable {
 
    /**
     * 
-    */
-   public void repaintLayoutable() {
-   }
-
-   /**
-    * 
     *
     * @return 
     */
@@ -102,26 +95,6 @@ public class LayoutableRect implements ILayoutable {
     *
     * @return 
     */
-   public int getFontHeight() {
-      // TODO Auto-generated method stub
-      return 0;
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public int getFontWidth() {
-      // TODO Auto-generated method stub
-      return 0;
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
    public int getH() {
       return h;
    }
@@ -134,6 +107,10 @@ public class LayoutableRect implements ILayoutable {
     */
    public ILayoutable getLayoutableDelegate(ILayoutable source) {
       // TODO Auto-generated method stub
+      return null;
+   }
+
+   public ILayoutable getLayoutableEtalon(int etalonType) {
       return null;
    }
 
@@ -185,6 +162,10 @@ public class LayoutableRect implements ILayoutable {
       return null;
    }
 
+   public ILayoutDelegate getLayoutDelegate() {
+      return null;
+   }
+
    /**
     * 
     *
@@ -194,14 +175,6 @@ public class LayoutableRect implements ILayoutable {
       return 0;
    }
 
-   /**
-    * 
-    *
-    * @return 
-    */
-   public ILayoutRequestListener getLayoutRequestListener() {
-      return null;
-   }
 
    /**
     * 
@@ -239,14 +212,14 @@ public class LayoutableRect implements ILayoutable {
       return y;
    }
 
+
    /**
     * 
     *
     * @return 
     */
    public int getSizeDrawnHeight() {
-      // TODO Auto-generated method stub
-      return 0;
+      return h;
    }
 
    /**
@@ -255,47 +228,16 @@ public class LayoutableRect implements ILayoutable {
     * @return 
     */
    public int getSizeDrawnWidth() {
-      // TODO Auto-generated method stub
-      return 0;
-   }
-
-   /**
-    * 
-    *
-    * @param sizer 
-    * @return 
-    */
-   public int getSizeEtalonH(ByteObject sizer) {
-      // TODO Auto-generated method stub
-      return 0;
-   }
-
-   /**
-    * 
-    *
-    * @param sizer 
-    * @return 
-    */
-   public int getSizeEtalonW(ByteObject sizer) {
-      // TODO Auto-generated method stub
-      return 0;
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public int getSizePaddingWidth() {
       return w;
    }
 
+
    /**
     * 
     *
     * @return 
     */
-   public int getSizePaddingHeight() {
+   public int getSizeFontHeight() {
       return h;
    }
 
@@ -304,56 +246,10 @@ public class LayoutableRect implements ILayoutable {
     *
     * @return 
     */
-   public int getSizeBorderWidth() {
+   public int getSizeFontWidth() {
       return w;
    }
 
-   /**
-    * 
-    *
-    * @return 
-    */
-   public int getSizeBorderHeight() {
-      return h;
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public int getSizeContentWidth() {
-      return w;
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public int getSizeContentHeight() {
-      return h;
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public int getSizeFromDeletgateHeight(ByteObject sizer, ILayoutable layoutable) {
-      // TODO Auto-generated method stub
-      return 0;
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public int getSizeFromDeletgateWidth() {
-      // TODO Auto-generated method stub
-      return 0;
-   }
 
    /**
     * 
@@ -361,8 +257,7 @@ public class LayoutableRect implements ILayoutable {
     * @return 
     */
    public int getSizePreferredHeight() {
-      // TODO Auto-generated method stub
-      return 0;
+      return h;
    }
 
    /**
@@ -371,26 +266,14 @@ public class LayoutableRect implements ILayoutable {
     * @return 
     */
    public int getSizePreferredWidth() {
-      // TODO Auto-generated method stub
-      return 0;
+      return w;
    }
 
-   /**
-    * 
-    *
-    * @return 
-    */
-   public int getSizeUnitHeight() {
-      // TODO Auto-generated method stub
-      return 0;
+   public int getSizePropertyValueH(int property) {
+      return h;
    }
 
-   /**
-    * 
-    *
-    * @return 
-    */
-   public int getSizeUnitWidth() {
+   public int getSizePropertyValueW(int property) {
       return w;
    }
 
@@ -400,51 +283,6 @@ public class LayoutableRect implements ILayoutable {
     * @return 
     */
    public int getW() {
-      return w;
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public int getWidthDelegate() {
-      return w;
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public int getWidthDrawn() {
-      return w;
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public int getWidthFont() {
-      return 0;
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public int getWidthPreferred() {
-      return w;
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public int getWidthUnit() {
       return w;
    }
 
@@ -526,6 +364,20 @@ public class LayoutableRect implements ILayoutable {
    /**
     * 
     */
+   public void layoutUpdatePositionXCheck() {
+
+   }
+
+   /**
+    * 
+    */
+   public void layoutUpdatePositionYCheck() {
+
+   }
+
+   /**
+    * 
+    */
    public void layoutUpdateSize() {
    }
 
@@ -534,6 +386,26 @@ public class LayoutableRect implements ILayoutable {
     */
    public void layoutUpdateSizeCheck() {
 
+   }
+
+   /**
+    * 
+    */
+   public void layoutUpdateSizeHCheck() {
+
+   }
+
+   /**
+    * 
+    */
+   public void layoutUpdateSizeWCheck() {
+
+   }
+
+   /**
+    * 
+    */
+   public void repaintLayoutable() {
    }
 
    /**
@@ -629,18 +501,6 @@ public class LayoutableRect implements ILayoutable {
    /**
     * 
     *
-    * @param dc 
-    */
-   private void toStringPrivate(Dctx dc) {
-      dc.appendVarWithSpace("x", x);
-      dc.appendVarWithSpace("y", y);
-      dc.appendVarWithSpace("w", w);
-      dc.appendVarWithSpace("h", h);
-   }
-
-   /**
-    * 
-    *
     * @return 
     */
    public String toStringName() {
@@ -649,54 +509,14 @@ public class LayoutableRect implements ILayoutable {
 
    /**
     * 
-    */
-   public void layoutUpdatePositionXCheck() {
-
-   }
-
-   /**
-    * 
-    */
-   public void layoutUpdatePositionYCheck() {
-
-   }
-
-   /**
-    * 
-    */
-   public void layoutUpdateSizeHCheck() {
-
-   }
-
-   /**
-    * 
-    */
-   public void layoutUpdateSizeWCheck() {
-
-   }
-
-   /**
-    * 
     *
-    * @param layoutable 
-    * @return 
+    * @param dc 
     */
-   public int getSizeMaxHeight(ILayoutable layoutable) {
-      return h;
-   }
-
-   /**
-    * 
-    *
-    * @param layoutable 
-    * @return 
-    */
-   public int getSizeMaxWidth(ILayoutable layoutable) {
-      return w;
-   }
-
-   public ILayoutable getLayoutableEtalon(int etalonType) {
-      return null;
+   private void toStringPrivate(Dctx dc) {
+      dc.appendVarWithSpace("x", x);
+      dc.appendVarWithSpace("y", y);
+      dc.appendVarWithSpace("w", w);
+      dc.appendVarWithSpace("h", h);
    }
 
    //#enddebug

@@ -1,5 +1,5 @@
 /*
- * (c) 2018-2019 Charles-Philip Bentley
+ * (c) 2018-2020 Charles-Philip Bentley
  * This code is licensed under MIT license (see LICENSE.txt for details)
  */
 package pasa.cbentley.layouter.src4.engine;
@@ -98,8 +98,8 @@ public class Zer2DSizer extends Zer2DAbstract implements ITechSizer {
       toStringPrivate(dc);
       super.toString(dc.sup());
       SizerFactory sizerFactory = lc.getSizerFactory();
-      sizerFactory.toStringSizer(er2dW, dc.nLevel(), "W");
-      sizerFactory.toStringSizer(er2dH, dc.nLevel(), "H");
+      sizerFactory.toStringSizer(er2dW, dc.newLevel(), "W");
+      sizerFactory.toStringSizer(er2dH, dc.newLevel(), "H");
    }
 
    /**

@@ -1,5 +1,5 @@
 /*
- * (c) 2018-2019 Charles-Philip Bentley
+ * (c) 2018-2020 Charles-Philip Bentley
  * This code is licensed under MIT license (see LICENSE.txt for details)
  */
 package pasa.cbentley.layouter.src4.engine;
@@ -11,9 +11,43 @@ import pasa.cbentley.core.src4.logging.IStringable;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
 
 /**
+ * Encapsulates x,y,w,h of a rectangle.
  * 
+ * <br>
+ * <br>
+ * Additionally, we have the concept of preferred width and height.
+ * 
+ * Preferred size is wehn have a w sizer with 2 pozers.. that's pref size
+ * The 2 pozers override the w inner size.
+ * 
+ * It can also simply record a domain specific size to be used later.
  */
 public class Zer2DRect implements IStringable {
+
+   /**
+    * 
+    */
+   private int                 h;
+
+   /**
+    * 
+    */
+   protected final LayouterCtx lc;
+
+   /**
+    * 
+    */
+   private int                 ph;
+
+   /**
+    * 
+    */
+   private int                 pw;
+
+   /**
+    * 
+    */
+   private int                 w;
 
    /**
     * 
@@ -24,31 +58,6 @@ public class Zer2DRect implements IStringable {
     * 
     */
    private int                 y;
-
-   /**
-    * 
-    */
-   private int                 w;
-
-   /**
-    * 
-    */
-   private int                 h;
-   
-   /**
-    * 
-    */
-   private int                 pw;
-
-   /**
-    * 
-    */
-   private int                 ph;
-
-   /**
-    * 
-    */
-   protected final LayouterCtx lc;
 
    /**
     * 
@@ -64,17 +73,8 @@ public class Zer2DRect implements IStringable {
     *
     * @return 
     */
-   public int getX() {
-      return x;
-   }
-
-   /**
-    * 
-    *
-    * @param x 
-    */
-   public void setX(int x) {
-      this.x = x;
+   public int getH() {
+      return h;
    }
 
    /**
@@ -82,17 +82,17 @@ public class Zer2DRect implements IStringable {
     *
     * @return 
     */
-   public int getY() {
-      return y;
+   public int getPh() {
+      return ph;
    }
 
    /**
     * 
     *
-    * @param y 
+    * @return 
     */
-   public void setY(int y) {
-      this.y = y;
+   public int getPw() {
+      return pw;
    }
 
    /**
@@ -107,10 +107,10 @@ public class Zer2DRect implements IStringable {
    /**
     * 
     *
-    * @param w 
+    * @return 
     */
-   public void setW(int w) {
-      this.w = w;
+   public int getX() {
+      return x;
    }
 
    /**
@@ -118,8 +118,8 @@ public class Zer2DRect implements IStringable {
     *
     * @return 
     */
-   public int getH() {
-      return h;
+   public int getY() {
+      return y;
    }
 
    /**
@@ -129,6 +129,51 @@ public class Zer2DRect implements IStringable {
     */
    public void setH(int h) {
       this.h = h;
+   }
+
+   /**
+    * 
+    *
+    * @param ph 
+    */
+   public void setPh(int ph) {
+      this.ph = ph;
+   }
+
+   /**
+    * 
+    *
+    * @param pw 
+    */
+   public void setPw(int pw) {
+      this.pw = pw;
+   }
+
+   /**
+    * 
+    *
+    * @param w 
+    */
+   public void setW(int w) {
+      this.w = w;
+   }
+
+   /**
+    * 
+    *
+    * @param x 
+    */
+   public void setX(int x) {
+      this.x = x;
+   }
+
+   /**
+    * 
+    *
+    * @param y 
+    */
+   public void setY(int y) {
+      this.y = y;
    }
 
    /**
@@ -174,18 +219,6 @@ public class Zer2DRect implements IStringable {
     *
     * @param dc 
     */
-   private void toStringPrivate(Dctx dc) {
-      dc.appendVarWithSpace("x", x);
-      dc.appendVarWithSpace("y", y);
-      dc.appendVarWithSpace("w", w);
-      dc.appendVarWithSpace("h", h);
-   }
-
-   /**
-    * 
-    *
-    * @param dc 
-    */
    public void toString1Line(Dctx dc) {
       dc.root1Line(this, "Zer2DRect");
       toStringPrivate(dc);
@@ -203,40 +236,17 @@ public class Zer2DRect implements IStringable {
    /**
     * 
     *
-    * @return 
+    * @param dc 
     */
-   public int getPw() {
-      return pw;
-   }
-
-   /**
-    * 
-    *
-    * @param pw 
-    */
-   public void setPw(int pw) {
-      this.pw = pw;
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public int getPh() {
-      return ph;
-   }
-
-   /**
-    * 
-    *
-    * @param ph 
-    */
-   public void setPh(int ph) {
-      this.ph = ph;
+   private void toStringPrivate(Dctx dc) {
+      dc.appendVarWithSpace("x", x);
+      dc.appendVarWithSpace("y", y);
+      dc.appendVarWithSpace("w", w);
+      dc.appendVarWithSpace("h", h);
+      dc.appendVarWithSpace("pw", pw);
+      dc.appendVarWithSpace("ph", ph);
    }
 
    //#enddebug
-   
 
 }

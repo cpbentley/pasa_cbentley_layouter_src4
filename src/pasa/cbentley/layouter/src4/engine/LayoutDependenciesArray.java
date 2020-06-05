@@ -1,5 +1,5 @@
 /*
- * (c) 2018-2019 Charles-Philip Bentley
+ * (c) 2018-2020 Charles-Philip Bentley
  * This code is licensed under MIT license (see LICENSE.txt for details)
  */
 package pasa.cbentley.layouter.src4.engine;
@@ -15,7 +15,7 @@ import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
 
 /**
- * 
+ * Helper class for implementing the {@link ILayoutable#addDependency(ILayoutable, int)} method.
  */
 public class LayoutDependenciesArray implements ILayoutDependencies {
 
@@ -59,6 +59,22 @@ public class LayoutDependenciesArray implements ILayoutDependencies {
 
    /**
     * 
+    *
+    * @return 
+    */
+   public ILayoutable[] getDependencies() {
+      if (array == null || array.getLength() == 0) {
+         return null;
+      }
+      ILayoutable[] ar = new ILayoutable[array.getLength()];
+      for (int i = 0; i < ar.length; i++) {
+         ar[i] = (ILayoutable) array.getObjectAtIndex(i);
+      }
+      return ar;
+   }
+
+   /**
+    * 
     * @param lay
     * @return 0 if no dependency
     */
@@ -76,8 +92,8 @@ public class LayoutDependenciesArray implements ILayoutDependencies {
     * @param flags 
     * @return 
     */
-   private boolean isMatchSize(int flags) {
-      return flags == ITechLayout.DEPENDENCY_1_SIZE || flags == ITechLayout.DEPENDENCY_3_BOTH;
+   private boolean isMatchPosition(int flags) {
+      return flags == ITechLayout.DEPENDENCY_2_POZE || flags == ITechLayout.DEPENDENCY_3_BOTH;
    }
 
    /**
@@ -86,8 +102,8 @@ public class LayoutDependenciesArray implements ILayoutDependencies {
     * @param flags 
     * @return 
     */
-   private boolean isMatchPosition(int flags) {
-      return flags == ITechLayout.DEPENDENCY_2_POZE || flags == ITechLayout.DEPENDENCY_3_BOTH;
+   private boolean isMatchSize(int flags) {
+      return flags == ITechLayout.DEPENDENCY_1_SIZE || flags == ITechLayout.DEPENDENCY_3_BOTH;
    }
 
    /**
@@ -206,22 +222,6 @@ public class LayoutDependenciesArray implements ILayoutDependencies {
     */
    private void toStringPrivate(Dctx dc) {
 
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public ILayoutable[] getDependencies() {
-      if(array == null || array.getLength() == 0) {
-         return null;
-      }
-      ILayoutable[] ar = new ILayoutable[array.getLength()];
-      for (int i = 0; i < ar.length; i++) {
-         ar[i] = (ILayoutable) array.getObjectAtIndex(i);
-      }
-      return ar;
    }
 
    //#enddebug

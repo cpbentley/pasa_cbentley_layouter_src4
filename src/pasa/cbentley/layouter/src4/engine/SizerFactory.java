@@ -1,5 +1,5 @@
 /*
- * (c) 2018-2019 Charles-Philip Bentley
+ * (c) 2018-2020 Charles-Philip Bentley
  * This code is licensed under MIT license (see LICENSE.txt for details)
  */
 package pasa.cbentley.layouter.src4.engine;
@@ -11,6 +11,7 @@ import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
 import pasa.cbentley.layouter.src4.ctx.ToStringStaticLayout;
 import pasa.cbentley.layouter.src4.interfaces.IBOTypesLayout;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegate;
+import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 import pasa.cbentley.layouter.src4.tech.ITechCoded;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
 import pasa.cbentley.layouter.src4.tech.ITechLinker;
@@ -41,6 +42,8 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     * 
     */
    private ByteObject  sizerMatchParentCtx;
+
+   private ByteObject  sizerEmpty;
 
    /**
     * 
@@ -119,6 +122,22 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
 
    /**
     * 
+    * @param times
+    * @return
+    */
+   public ByteObject getSizerLogicUnit(int times) {
+      ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
+      bo.set1(SIZER_OFFSET_02_MODE1, MODE_2_RATIO);
+      bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_0_SIZEE_CTX);
+      bo.set1(SIZER_OFFSET_06_PROPERTY1, SIZER_PROP_02_UNIT_LOGIC);
+      bo.set1(SIZER_OFFSET_04_FUNCTION1, ET_FUN_0_CTX);
+      bo.set1(SIZER_OFFSET_05A_FRACTION_TOP1, times);
+      bo.set1(SIZER_OFFSET_05B_FRACTION_BOT1, 1);
+      return bo;
+   }
+
+   /**
+    * 
     *
     * @param mode {@link ITechSizer#MODE_2_RATIO}
     * @param value any value
@@ -133,6 +152,13 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       bo.set1(SIZER_OFFSET_03_ETALON1, etalon);
       bo.set1(SIZER_OFFSET_06_PROPERTY1, etype);
       bo.set1(SIZER_OFFSET_04_FUNCTION1, efun);
+      bo.set2(SIZER_OFFSET_05_VALUE2, value);
+      return bo;
+   }
+
+   public ByteObject getSizerRaw(int value) {
+      ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
+      bo.set1(SIZER_OFFSET_02_MODE1, MODE_0_RAW_UNITS);
       bo.set2(SIZER_OFFSET_05_VALUE2, value);
       return bo;
    }
@@ -226,6 +252,17 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       bo.addSub(sizer1);
       bo.addSub(sizer2);
       return bo;
+   }
+
+   /**
+    * Raw sizer whose value is 0
+    * @return
+    */
+   public ByteObject getSizerEmptyLazy() {
+      if (sizerEmpty == null) {
+         sizerEmpty = getSizerRaw(0);
+      }
+      return sizerEmpty;
    }
 
    /**
@@ -360,6 +397,8 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
 
    /**
     * Implicit sizer, where the first pozer will be decided from the context.
+    * 
+    * i.e. the Layoutable that is being sized. It will have at least one pozer.
     *
     * @param pozer 
     * @return 
@@ -403,7 +442,10 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
    }
 
    /**
+    * When sizing an {@link ILayoutable} as container to its preferred size, you often need
+    * to specificy a maximum size.
     * 
+    * This is not necessary when sizing leaves such as Buttons.
     *
     * @param maximuSizer 
     * @return 
@@ -440,7 +482,6 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     * {@link ITechSizer#SIZER_OFFSET_02_MODE1} is {@link ITechLayout#MODE_2_RATIO}
     * 
     * Etalon .
-    *
     * @param etalon {@link ITechSizer#SIZER_OFFSET_03_ETALON1}
     * @param ratioValue {@link ITechSizer#SIZER_OFFSET_05_VALUE2}
     * @return 
@@ -451,6 +492,32 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       bo.set1(SIZER_OFFSET_03_ETALON1, etalon);
       bo.set1(SIZER_OFFSET_04_FUNCTION1, ET_FUN_0_CTX);
       bo.set1(SIZER_OFFSET_06_PROPERTY1, ITechSizer.SIZER_PROP_00_DRAWN);
+      return bo;
+   }
+
+   /**
+    * Leaks the reference into the {@link ByteObject}
+    * @param etalon
+    * @param ratioValue
+    * @return
+    */
+   public ByteObject getSizerRatio100(ILayoutable etalon, int ratioValue) {
+      ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
+      setSizerRatio100(bo, ratioValue);
+      bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_7_DELEGATE);
+      bo.set1(SIZER_OFFSET_04_FUNCTION1, ET_FUN_0_CTX);
+      bo.set1(SIZER_OFFSET_06_PROPERTY1, ITechSizer.SIZER_PROP_00_DRAWN);
+      ByteObjectLayoutable boLayoutable = new ByteObjectLayoutable(lac.getBOC(), etalon);
+      bo.addByteObject(boLayoutable);
+      return bo;
+   }
+
+   public ByteObject getSizerRatio100W(int etalon, int ratioValue) {
+      ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
+      setSizerRatio100(bo, ratioValue);
+      bo.set1(SIZER_OFFSET_03_ETALON1, etalon);
+      bo.set1(SIZER_OFFSET_04_FUNCTION1, ET_FUN_1_WIDTH);
+      bo.set1(SIZER_OFFSET_06_PROPERTY1, SIZER_PROP_00_DRAWN);
       return bo;
    }
 
@@ -472,9 +539,8 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
    }
 
    /**
-    * 
     *
-    * @param ratioValue 
+    * @param ratioValue 0-100 percent value
     * @return 
     */
    public ByteObject getSizerRatio100Parent(int ratioValue) {
@@ -639,7 +705,7 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     * @param title 
     */
    public void toStringSizer(ByteObject sizer, Dctx dc, String title) {
-      dc.root(sizer, "Sizer");
+      dc.rootN(sizer, "Sizer");
       if (title != null) {
          dc.appendWithSpace(title);
       }
@@ -648,15 +714,15 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
          return;
       }
       if (sizer == lac.getSizerFactory().getSingletonSizerPref()) {
-         dc.append("Singleton Preferred Size");
+         dc.appendWithSpace("Singleton Preferred Size");
          toString1LineContentShort(sizer);
          return;
       }
       int mode = sizer.get1(SIZER_OFFSET_02_MODE1);
       dc.nlVar("Mode", ToStringStaticLayout.toStringMod(mode));
       if (mode == MODE_2_RATIO) {
-         int fracTop = sizer.get1(SIZER_OFFSET_05_FRAC_TOP1);
-         int fracBot = sizer.get1(SIZER_OFFSET_05_FRAC_TOP1);
+         int fracTop = sizer.get1(SIZER_OFFSET_05A_FRACTION_TOP1);
+         int fracBot = sizer.get1(SIZER_OFFSET_05B_FRACTION_BOT1);
          dc.append(' ');
          if (fracBot == 100) {
             dc.append(fracTop);

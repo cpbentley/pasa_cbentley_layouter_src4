@@ -1,5 +1,5 @@
 /*
- * (c) 2018-2019 Charles-Philip Bentley
+ * (c) 2018-2020 Charles-Philip Bentley
  * This code is licensed under MIT license (see LICENSE.txt for details)
  */
 package pasa.cbentley.layouter.src4.interfaces;
@@ -8,6 +8,8 @@ import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.core.src4.interfaces.ITechNav;
 import pasa.cbentley.core.src4.logging.IStringable;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
+import pasa.cbentley.layouter.src4.engine.ByteObjectLayoutDelegate;
+import pasa.cbentley.layouter.src4.engine.LayEngine;
 import pasa.cbentley.layouter.src4.engine.Zer2DArea;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
 import pasa.cbentley.layouter.src4.tech.ITechPozer;
@@ -37,9 +39,13 @@ public interface ILayoutable extends IStringable {
     * Adding a dependency
     * 
     * A {@link ILayoutable} can find its children by looking at.
-    *
+    * <li>{@link ITechLayout#DEPENDENCY_0_NONE}
+    * <li>{@link ITechLayout#DEPENDENCY_1_SIZE}
+    * <li>{@link ITechLayout#DEPENDENCY_2_POZE}
+    * <li>{@link ITechLayout#DEPENDENCY_3_BOTH}
+    * <li>{@link ITechLayout#DEPENDENCY_4_PARENT}
     * @param lay 
-    * @param flags 
+    * @param flags  
     */
    public void addDependency(ILayoutable lay, int flags);
 
@@ -62,24 +68,30 @@ public interface ILayoutable extends IStringable {
     *
     * @return 
     */
-   public int getFontHeight();
+   public int getSizeFontHeight();
 
    /**
     * The size in pixels of the widest letter.
     *
     * @return 
     */
-   public int getFontWidth();
+   public int getSizeFontWidth();
 
    /**
-    * Return the etalon to be used for computing sizes.
+    * Return the reference to be used for computing a size and/or a position.
     * 
+    * The Delegate uses the source reference to return the Etalon.
+    * 
+    * 2 indirection.
     * Allows for dynamic etalons
+    * 
+    * Similar to {@link ByteObjectLayoutDelegate} but the control of the delegate
+    * is on the {@link ILayoutable} instead of the sizer/pozer definition
     * 
     * {@link ITechLayout#ETALON_7_DELEGATE}
     * 
     * @param source
-    * @return
+    * @return null if {@link ILayoutable} is unaware of a delegate
     */
    public ILayoutable getLayoutableDelegate(ILayoutable source);
 
@@ -87,7 +99,7 @@ public interface ILayoutable extends IStringable {
     * In the context of this {@link ILayoutable} which .
     *
     * @param id 
-    * @return 
+    * @return null if id could not be found
     */
    public ILayoutable getLayoutableID(int id);
 
@@ -102,14 +114,14 @@ public interface ILayoutable extends IStringable {
     */
    public ILayoutable getLayoutableNav(int dir);
 
-   
    /**
     * Enables custom etalon types for
     * 
     * {@link ITechSizer#SIZER_OFFSET_07_ETALON_SUBTYPE1}
     * {@link ITechPozer#POS_OFFSET_02_ETALON1}
     * 
-    * 
+    * TODO add the layout context to help choose the etalon, provides others parameteres
+    * the target layoutable etc
     * @param etalonType
     * @return
     */
@@ -124,7 +136,8 @@ public interface ILayoutable extends IStringable {
 
    /**
     * {@link ITechLayout#ETALON_1_VIEWCONTEXT}.
-    *
+    * If the {@link ILayoutable} does not have the concept of a ViewContext,
+    * return the parent or the root
     * @return 
     */
    public ILayoutable getLayoutableViewContext();
@@ -143,23 +156,13 @@ public interface ILayoutable extends IStringable {
     * 
     * 
     * 0 if no id.
-    *
+    * It allows to indirectly reference another {@link ILayoutable} that hasn't been created yet.
+    * 
+    * Some layout id are statically defined, if none, it is created by {@link LayouterCtx#getNewLayoutID()}
+    * 
     * @return 
     */
    public int getLayoutID();
-
-   /**
-    * Can be null. then {@link LayouterCtx#getGlobalLayoutRequestListener()}
-    * 
-    * If both null, then an exception is thrown.
-    * 
-    * The width and/or height are computed by an {@link ILayoutRequestListener}
-    * 
-    * {@link ITechLayout#MODE_1_DELEGATE}
-    * 
-    * @return
-    */
-   public ILayoutRequestListener getLayoutRequestListener();
 
    /**
     * Simply returns current x/start value.
@@ -190,153 +193,69 @@ public interface ILayoutable extends IStringable {
    public int getPozeYComputed();
 
    /**
-    * 
-    *
-    * @return 
-    */
-   public int getSizeBorderHeight();
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public int getSizeBorderWidth();
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public int getSizeContentHeight();
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public int getSizeContentWidth();
-
-   /**
-    * 
-    * @return height drawn on screen if it would be drawn on this call
+    * Method is a simple get and does not computes anything.
+    * <br>
+    * Caller is responsible to check with {@link ILayoutable#layoutIsValidSize()} or
+    * {@link ILayoutable#layoutUpdateSizeHCheck()}
+    * @return pixel height drawn on screen if it would be drawn on this call
     */
    public int getSizeDrawnHeight();
 
    /**
-    * 
-    * @return
+    * Method is a simple get and does not computes anything.
+    * <br>
+    * Caller is responsible to check with {@link ILayoutable#layoutIsValidSize()}
+    * @return pixel width drawn on screen if it would be drawn on this call
     */
    public int getSizeDrawnWidth();
 
    /**
-    * This layoutable is a delegate and must compute the size of the {@link ILayoutable}
-    * 
-    * @param sizer TODO
-    * @param layoutable TODO
-    * @return 
-    * @throws new {@link IllegalArgumentException} if layoutable is not know
+    * {@link ILayoutDelegate}
+    * @return
     */
-   public int getSizeFromDeletgateHeight(ByteObject sizer, ILayoutable layoutable);
+   public ILayoutDelegate getLayoutDelegate();
+
+   /**
+    * Returns the current non computed width property.
+    * Some often use properties have their own methods
+    * <li> {@link ITechSizer#SIZER_PROP_00_DRAWN} -> {@link ILayoutable#getSizeDrawnWidth()}
+    * <li> {@link ITechSizer#SIZER_PROP_01_PREFERRED} -> {@link ILayoutable#getSizePreferredWidth()}
+    * <li> {@link ITechSizer#SIZER_PROP_02_UNIT_LOGIC}
+    * <li> {@link ITechSizer#SIZER_PROP_03_FONT} -> {@link ILayoutable#getSizeFontWidth()}
+    * <li> {@link ITechSizer#SIZER_PROP_05_CONTENT}
+    * <li> {@link ITechSizer#SIZER_PROP_06_CONTENT_PAD}
+    * <li> {@link ITechSizer#SIZER_PROP_07_CONTENT_PAD_BORDER}
+    * <li> {@link ITechSizer#SIZER_PROP_10_PAD}
+    * 
+    * When {@link ILayoutable} is free to send a similar value when it has no understanding of the concept.
+    * 
+    * The {@link LayEngine} will call this method on an Etalon {@link ILayoutable} to compute sizes for other {@link ILayoutable} .
+    * @param property
+    * @return
+    */
+   public int getSizePropertyValueW(int property);
 
    /**
     * 
-    *
-    * @return 
+    * @param property
+    * @return
     */
-   public int getSizeFromDeletgateWidth();
+   public int getSizePropertyValueH(int property);
 
    /**
-    * 
-    *
-    * @param layoutable 
-    * @return 
-    */
-   public int getSizeMaxHeight(ILayoutable layoutable);
-
-   /**
-    * 
-    *
-    * @param layoutable 
-    * @return 
-    */
-   public int getSizeMaxWidth(ILayoutable layoutable);
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public int getSizePaddingHeight();
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public int getSizePaddingWidth();
-
-   /**
-    * 
+    * Returns the preferred height of this {@link ILayoutable}
     *
     * @return 
     */
    public int getSizePreferredHeight();
 
    /**
+    * Returns the preferred height of this {@link ILayoutable}
     * 
-    *
+    * The {@link ILayoutable} computes this value based on its content
     * @return 
     */
    public int getSizePreferredWidth();
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public int getSizeUnitHeight();
-
-   /**
-    * This value depends on the type of content.
-    * @return
-    */
-   public int getSizeUnitWidth();
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public int getWidthDelegate();
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public int getWidthDrawn();
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public int getWidthFont();
-
-   /**
-    * Sugar for {@link ILayoutable#getSizePreferredWidth()}.
-    *
-    * @return 
-    */
-   public int getWidthPreferred();
-
-   /**
-    * Sugar for {@link ILayoutable#getSizeUnitWidth()}.
-    *
-    * @return 
-    */
-   public int getWidthUnit();
 
    /**
     * The layout is invalid so that 
@@ -410,13 +329,6 @@ public interface ILayoutable extends IStringable {
     * for both the width and the height
     * 
     * This bombs if valid TODO
-    */
-   //public void layoutUpdateSize();
-
-   /**
-    * When an etalon is choosen, the engine must check
-    * if it has been sized
-    * Check if size, compute
     */
    public void layoutUpdateSizeCheck();
 

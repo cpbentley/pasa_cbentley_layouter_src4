@@ -1,5 +1,5 @@
 /*
- * (c) 2018-2019 Charles-Philip Bentley
+ * (c) 2018-2020 Charles-Philip Bentley
  * This code is licensed under MIT license (see LICENSE.txt for details)
  */
 package pasa.cbentley.layouter.src4.ctx;
@@ -40,8 +40,12 @@ public class BOModuleLayouter extends BOModuleAbstract implements IBOTypesLayout
    }
 
    public ByteObject merge(ByteObject root, ByteObject merge) {
-      // TODO Auto-generated method stub
-      return null;
+      int type = merge.getType();
+      switch (type) {
+         default:
+            //not found here
+            return null;
+      }
    }
 
    public String subToStringOffset(ByteObject o, int offset) {

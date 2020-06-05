@@ -1,5 +1,5 @@
 /*
- * (c) 2018-2019 Charles-Philip Bentley
+ * (c) 2018-2020 Charles-Philip Bentley
  * This code is licensed under MIT license (see LICENSE.txt for details)
  */
 package pasa.cbentley.layouter.src4.engine;
@@ -91,8 +91,8 @@ public class Zer2DPozer extends Zer2DAbstract {
       toStringPrivate(dc);
       super.toString(dc.sup());
       PozerFactory pozerFactory = lc.getPozerFactory();
-      pozerFactory.toStringPozerX(er2dW, dc.nlLvl());
-      pozerFactory.toStringPozerY(er2dH, dc.nlLvl());
+      pozerFactory.toStringPozerX(er2dW, dc.newLevel());
+      pozerFactory.toStringPozerY(er2dH, dc.newLevel());
    }
 
    /**

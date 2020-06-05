@@ -1,5 +1,5 @@
 /*
- * (c) 2018-2019 Charles-Philip Bentley
+ * (c) 2018-2020 Charles-Philip Bentley
  * This code is licensed under MIT license (see LICENSE.txt for details)
  */
 package pasa.cbentley.layouter.src4.engine;
@@ -10,9 +10,11 @@ import pasa.cbentley.byteobjects.src4.ctx.IBOTypesBOC;
 import pasa.cbentley.core.src4.interfaces.C;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.core.src4.logging.ToStringStaticC;
+import pasa.cbentley.layouter.src4.ctx.LayoutException;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
 import pasa.cbentley.layouter.src4.ctx.ToStringStaticLayout;
 import pasa.cbentley.layouter.src4.interfaces.IBOTypesLayout;
+import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegate;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 import pasa.cbentley.layouter.src4.tech.ITechCoded;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
@@ -30,10 +32,12 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     */
    private final LayouterCtx lc;
 
+   private ByteObject        pozerAtPixel0Lazy;
+
    /**
     * often used pozer.
     */
-   private ByteObject        pozerCenter;
+   private ByteObject        pozerCenterLazy;
 
    /**
     * 
@@ -56,8 +60,26 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
    public ByteObject getPoserWithSizer(int pos, ByteObject sizer) {
       sizer.checkType(FTYPE_3_SIZER);
       ByteObject bo = getBOFactory().createByteObject(FTYPE_4_POSITION, SIZER_BASIC_SIZE);
-
+      bo.set1(POS_OFFSET_10_SIZER_FUN1, pos);
+      bo.setFlag(POS_OFFSET_01_FLAG, POS_FLAG_1_SIZER, true);
+      bo.addSub(sizer);
       return bo;
+   }
+
+   /**
+    * 
+    * @param pozer
+    * @param posFunction
+    * @param sizer
+    * @return
+    */
+   public ByteObject setPoserWithSizer(ByteObject pozer, int posFunction, ByteObject sizer) {
+      pozer.checkType(FTYPE_4_POSITION);
+      sizer.checkType(FTYPE_3_SIZER);
+      pozer.set1(POS_OFFSET_10_SIZER_FUN1, posFunction);
+      pozer.setFlag(POS_OFFSET_01_FLAG, POS_FLAG_1_SIZER, true);
+      pozer.addSub(sizer);
+      return pozer;
    }
 
    /**
@@ -104,6 +126,13 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     */
    public ByteObject getPozerAtPixel0() {
       return getPozerAtPixel(C.LOGIC_1_TOP_LEFT, 0);
+   }
+
+   public ByteObject getPozerAtPixel0Lazy() {
+      if (pozerAtPixel0Lazy == null) {
+         pozerAtPixel0Lazy = getPozerAtPixel0();
+      }
+      return pozerAtPixel0Lazy;
    }
 
    /**
@@ -153,6 +182,10 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       return getPozerOnParentAt(C.LOGIC_3_BOTTOM_RIGHT, ITechLayout.VIEW_STYLE_01_VIEW_CONTENT_PAD_BORDER);
    }
 
+   public ByteObject getPozerBottomRightVC() {
+      return getPozerOnParentAt(C.LOGIC_3_BOTTOM_RIGHT, ITechLayout.VIEW_STYLE_00_VIEW_FULL);
+   }
+
    /**
     * 
     *
@@ -187,10 +220,10 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     * @return 
     */
    public ByteObject getPozerCenterToCenterLazy() {
-      if (pozerCenter == null) {
-         pozerCenter = getPozerOnParentAt(C.LOGIC_2_CENTER, C.LOGIC_2_CENTER, ITechLayout.VIEW_STYLE_00_VIEW_FULL);
+      if (pozerCenterLazy == null) {
+         pozerCenterLazy = getPozerOnParentAt(C.LOGIC_2_CENTER, C.LOGIC_2_CENTER, ITechLayout.VIEW_STYLE_00_VIEW_FULL);
       }
-      return pozerCenter;
+      return pozerCenterLazy;
    }
 
    /**
@@ -203,12 +236,36 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
    }
 
    /**
+    * Position end of the end of a {@link ILayoutable} dynamically provided by the {@link ILayoutDelegate}
+    * @param delegate
+    * @return
+    */
+   public ByteObject getPozerEndToEndDelegate(ILayoutDelegate delegate) {
+      ByteObject bo = getPozerOnDelegateAt(delegate, C.LOGIC_3_BOTTOM_RIGHT, C.LOGIC_3_BOTTOM_RIGHT, ITechLayout.VIEW_STYLE_00_VIEW_FULL);
+      return bo;
+   }
+
+   /**
+    * 
+    *
+    * @return 
+    */
+   public ByteObject getPozerEndToCenter() {
+      return getPozerOnParentAt(C.LOGIC_3_BOTTOM_RIGHT, C.LOGIC_2_CENTER, ITechLayout.VIEW_STYLE_00_VIEW_FULL);
+
+   }
+
+   /**
     * 
     *
     * @return 
     */
    public ByteObject getPozerEndToEnd() {
       return getPozerOnParentAt(C.LOGIC_3_BOTTOM_RIGHT, C.LOGIC_3_BOTTOM_RIGHT, ITechLayout.VIEW_STYLE_00_VIEW_FULL);
+   }
+
+   public ByteObject getPozerEndToEndVC() {
+      return getPozerOnVCAt(C.LOGIC_3_BOTTOM_RIGHT, C.LOGIC_3_BOTTOM_RIGHT, ITechLayout.VIEW_STYLE_00_VIEW_FULL);
    }
 
    /**
@@ -218,6 +275,10 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     */
    public ByteObject getPozerEndToStart() {
       return getPozerOnParentAt(C.LOGIC_3_BOTTOM_RIGHT, C.LOGIC_1_TOP_LEFT, ITechLayout.VIEW_STYLE_00_VIEW_FULL);
+   }
+
+   public ByteObject getPozerEndToStartVC() {
+      return getPozerOnVCAt(C.LOGIC_3_BOTTOM_RIGHT, C.LOGIC_1_TOP_LEFT, ITechLayout.VIEW_STYLE_00_VIEW_FULL);
    }
 
    /**
@@ -333,6 +394,38 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       return bo;
    }
 
+   public ByteObject getPozerOnDelegateAt(ILayoutDelegate delegate, int anchorSrc, int anchorDest, int atStyle) {
+      ByteObject bo = getBOFactory().createByteObject(FTYPE_4_POSITION, POS_BASIC_SIZE);
+      bo.set1(POS_OFFSET_02_ETALON1, ITechPozer.POS_ETALON_7_DELEGATE);
+      bo.set1(POS_OFFSET_04_ANCHOR_ETALON1, anchorDest);
+      bo.set1(POS_OFFSET_05_ANCHOR_ETALON_STRUCT1, ITechLayout.VIEW_STRUCT_00_ALL_VISIBLE);
+      bo.set1(POS_OFFSET_06_ANCHOR_ETALON_STYLE1, atStyle);
+      bo.set1(POS_OFFSET_07_ANCHOR_POZEE1, anchorSrc);
+      bo.set1(POS_OFFSET_08_ANCHOR_POZEE_STRUCT1, ITechLayout.VIEW_STRUCT_00_ALL_VISIBLE);
+      bo.set1(POS_OFFSET_09_ANCHOR_POZEE_STYLE1, atStyle);
+
+      ByteObjectLayoutDelegate delegateBO = new ByteObjectLayoutDelegate(lc.getBOC(), delegate);
+      bo.addByteObject(delegateBO);
+
+      return bo;
+   }
+
+   public ByteObject getPozerOnVCAt(int anchorMatch, int at) {
+      return getPozerOnVCAt(anchorMatch, anchorMatch, at);
+   }
+
+   public ByteObject getPozerOnVCAt(int anchorSrc, int anchorDest, int atStyle) {
+      ByteObject bo = getBOFactory().createByteObject(FTYPE_4_POSITION, POS_BASIC_SIZE);
+      bo.set1(POS_OFFSET_02_ETALON1, ITechPozer.POS_ETALON_2_VIEWCTX);
+      bo.set1(POS_OFFSET_04_ANCHOR_ETALON1, anchorDest);
+      bo.set1(POS_OFFSET_05_ANCHOR_ETALON_STRUCT1, ITechLayout.VIEW_STRUCT_00_ALL_VISIBLE);
+      bo.set1(POS_OFFSET_06_ANCHOR_ETALON_STYLE1, atStyle);
+      bo.set1(POS_OFFSET_07_ANCHOR_POZEE1, anchorSrc);
+      bo.set1(POS_OFFSET_08_ANCHOR_POZEE_STRUCT1, ITechLayout.VIEW_STRUCT_00_ALL_VISIBLE);
+      bo.set1(POS_OFFSET_09_ANCHOR_POZEE_STYLE1, atStyle);
+      return bo;
+   }
+
    /**
     * 
     *
@@ -371,6 +464,15 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     *
     * @return 
     */
+   public ByteObject getPozerStartToCenter() {
+      return getPozerOnParentAt(C.LOGIC_1_TOP_LEFT, C.LOGIC_2_CENTER, ITechLayout.VIEW_STYLE_00_VIEW_FULL);
+   }
+
+   /**
+    * 
+    *
+    * @return 
+    */
    public ByteObject getPozerStartToEnd() {
       return getPozerOnParentAt(C.LOGIC_1_TOP_LEFT, C.LOGIC_3_BOTTOM_RIGHT, ITechLayout.VIEW_STYLE_00_VIEW_FULL);
    }
@@ -382,25 +484,6 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     */
    public ByteObject getPozerStartToStart() {
       return getPozerOnParentAt(C.LOGIC_1_TOP_LEFT, C.LOGIC_1_TOP_LEFT, ITechLayout.VIEW_STYLE_00_VIEW_FULL);
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public ByteObject getPozerEndToCenter() {
-      return getPozerOnParentAt(C.LOGIC_3_BOTTOM_RIGHT, C.LOGIC_2_CENTER, ITechLayout.VIEW_STYLE_00_VIEW_FULL);
-
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public ByteObject getPozerStartToCenter() {
-      return getPozerOnParentAt(C.LOGIC_1_TOP_LEFT, C.LOGIC_2_CENTER, ITechLayout.VIEW_STYLE_00_VIEW_FULL);
    }
 
    /**
@@ -431,7 +514,9 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
    }
 
    /**
-    * 
+    * Positions Top of Pozee to the Top of parent.
+    * <br>
+    * The property of parent use for computing its top is {@link ITechLayout#VIEW_STYLE_00_VIEW_FULL}
     *
     * @return 
     */
@@ -474,30 +559,6 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
    /**
     * 
     *
-    * @param pozer 
-    * @param pozeeName 
-    * @return 
-    */
-   public String toStringPozee(ByteObject pozer, String pozeeName) {
-      int pozeeViewStruct = pozer.get1(POS_OFFSET_08_ANCHOR_POZEE_STRUCT1);
-      int pozeeViewStyle = pozer.get1(POS_OFFSET_09_ANCHOR_POZEE_STYLE1);
-
-      return toStringAnchorStructStyle(pozeeName, pozeeViewStruct, pozeeViewStyle);
-   }
-
-   /**
-    * 
-    *
-    * @param pozer 
-    * @return 
-    */
-   public String toStringPozee(ByteObject pozer) {
-      return toStringPozee(pozer, "pozee");
-   }
-
-   /**
-    * 
-    *
     * @param object 
     * @param viewStruct 
     * @param viewStyle 
@@ -517,13 +578,23 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     * 
     *
     * @param pozer 
+    * @return 
+    */
+   public String toStringEtalon(ByteObject pozer) {
+      return toStringEtalon(pozer, null);
+   }
+
+   /**
+    * 
+    *
+    * @param pozer 
     * @param pozee 
     * @return 
     */
    public String toStringEtalon(ByteObject pozer, ILayoutable pozee) {
-      int etalon = pozer.get1(POS_OFFSET_02_ETALON1);
+      int etalonType = pozer.get1(POS_OFFSET_02_ETALON1);
       String strEtalon = "etalon";
-      if (etalon == POS_ETALON_3_LINK) {
+      if (etalonType == POS_ETALON_3_LINK) {
          ByteObject bo = pozer.getSubFirst(IBOTypesBOC.TYPE_017_REFERENCE_OBJECT);
          if (bo instanceof ByteObjectLayoutable) {
             ByteObjectLayoutable bol = (ByteObjectLayoutable) bo;
@@ -531,7 +602,7 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
          } else {
             strEtalon = "wrong TYPE_017_REFERENCE_OBJECT";
          }
-      } else if (etalon == POS_ETALON_1_PARENT) {
+      } else if (etalonType == POS_ETALON_1_PARENT) {
          if (pozee != null) {
             ILayoutable layoutableParent = pozee.getLayoutableParent();
             if (layoutableParent != null) {
@@ -542,10 +613,21 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
          } else {
             strEtalon = "parent";
          }
-      } else if (etalon == POS_ETALON_2_VIEWCTX) {
+      } else if (etalonType == POS_ETALON_2_VIEWCTX) {
          strEtalon = "viewcontext";
+      } else if (etalonType == POS_ETALON_6_LAYOUTABLE) {
+         strEtalon = "layoutable";
+         ByteObject bo = pozer.getSubFirst(IBOTypesBOC.TYPE_017_REFERENCE_OBJECT);
+         if (bo instanceof ByteObjectLayoutable) {
+            ByteObjectLayoutable bol = (ByteObjectLayoutable) bo;
+            ILayoutable lay = bol.getLayoutable();
+            strEtalon += " ";
+            strEtalon += lay.toString1Line();
+         } else {
+            strEtalon += "error";
+         }
       } else {
-         strEtalon = "unknown etalon " + etalon;
+         strEtalon = "unknown etalon " + etalonType;
       }
       int etalonViewStruct = pozer.get1(POS_OFFSET_05_ANCHOR_ETALON_STRUCT1);
       int etalonViewStyle = pozer.get1(POS_OFFSET_06_ANCHOR_ETALON_STYLE1);
@@ -559,8 +641,22 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     * @param pozer 
     * @return 
     */
-   public String toStringEtalon(ByteObject pozer) {
-      return toStringEtalon(pozer, null);
+   public String toStringPozee(ByteObject pozer) {
+      return toStringPozee(pozer, "pozee");
+   }
+
+   /**
+    * 
+    *
+    * @param pozer 
+    * @param pozeeName 
+    * @return 
+    */
+   public String toStringPozee(ByteObject pozer, String pozeeName) {
+      int pozeeViewStruct = pozer.get1(POS_OFFSET_08_ANCHOR_POZEE_STRUCT1);
+      int pozeeViewStyle = pozer.get1(POS_OFFSET_09_ANCHOR_POZEE_STYLE1);
+
+      return toStringAnchorStructStyle(pozeeName, pozeeViewStruct, pozeeViewStyle);
    }
 
    /**
@@ -634,19 +730,6 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
    }
 
    /**
-    * 
-    *
-    * @param pozer 
-    * @param ctx 
-    * @return 
-    */
-   public String toStringPozer1Line(ByteObject pozer, int ctx) {
-      Dctx dc = new Dctx(lc.getUCtx());
-      toStringPozer1Line(pozer, ctx, dc);
-      return dc.toString();
-   }
-
-   /**
     * Any context
     * @param pozer
     * @param dc
@@ -658,6 +741,19 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       int etalon = pozer.get1(POS_OFFSET_02_ETALON1);
       dc.appendVarWithSpace("val", align);
       dc.appendVarWithSpace("etalon", etalon);
+   }
+
+   /**
+    * 
+    *
+    * @param pozer 
+    * @param ctx 
+    * @return 
+    */
+   public String toStringPozer1Line(ByteObject pozer, int ctx) {
+      Dctx dc = new Dctx(lc.getUCtx());
+      toStringPozer1Line(pozer, ctx, dc);
+      return dc.toString();
    }
 
    /**
@@ -679,6 +775,30 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       int etalon = pozer.get1(POS_OFFSET_02_ETALON1);
       dc.appendVarWithSpace("val", align);
       dc.appendVarWithSpace("etalon", etalon);
+   }
+
+   /**
+    * 
+    *
+    * @param pozer 
+    * @param dc 
+    * @param layoutable 
+    */
+   public void toStringPozerBot(ByteObject pozer, Dctx dc, ILayoutable layoutable) {
+      dc.rootN(pozer, "PozerBot");
+      toStringPrivatePozerY(pozer, dc);
+   }
+
+   /**
+    * 
+    *
+    * @param pozer 
+    * @param dc 
+    * @param layoutable 
+    */
+   public void toStringPozerEnd(ByteObject pozer, Dctx dc, ILayoutable layoutable) {
+      dc.rootN(pozer, "PozerEnd");
+      toStringPrivatePozerX(pozer, dc);
    }
 
    /**
@@ -720,19 +840,7 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     * @param layoutable 
     */
    public void toStringPozerStart(ByteObject pozer, Dctx dc, ILayoutable layoutable) {
-      dc.root(pozer, "PozerStart");
-      toStringPrivatePozerX(pozer, dc);
-   }
-
-   /**
-    * 
-    *
-    * @param pozer 
-    * @param dc 
-    * @param layoutable 
-    */
-   public void toStringPozerEnd(ByteObject pozer, Dctx dc, ILayoutable layoutable) {
-      dc.root(pozer, "PozerEnd");
+      dc.rootN(pozer, "PozerStart");
       toStringPrivatePozerX(pozer, dc);
    }
 
@@ -744,19 +852,7 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     * @param layoutable 
     */
    public void toStringPozerTop(ByteObject pozer, Dctx dc, ILayoutable layoutable) {
-      dc.root(pozer, "PozerTop");
-      toStringPrivatePozerY(pozer, dc);
-   }
-
-   /**
-    * 
-    *
-    * @param pozer 
-    * @param dc 
-    * @param layoutable 
-    */
-   public void toStringPozerBot(ByteObject pozer, Dctx dc, ILayoutable layoutable) {
-      dc.root(pozer, "PozerBot");
+      dc.rootN(pozer, "PozerTop");
       toStringPrivatePozerY(pozer, dc);
    }
 
@@ -791,8 +887,14 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     * @param pozer 
     * @param dc 
     */
-   private void toStringPrivatePozerX(ByteObject pozer, Dctx dc) {
-      toStringPrivatePozerXY(pozer, dc, true);
+   public void toStringPozerY(ByteObject pozer, Dctx dc) {
+      dc.root(pozer, "PozerY");
+      int anchorSrc = pozer.get1(POS_OFFSET_07_ANCHOR_POZEE1);
+      int anchorDst = pozer.get1(POS_OFFSET_04_ANCHOR_ETALON1);
+      dc.appendVarWithSpace("anchor on pozee (src)", ToStringStaticC.toStringLogicAlignY(anchorSrc));
+      dc.appendVarWithSpace("anchor on etalon (dest)", ToStringStaticC.toStringLogicAlignY(anchorDst));
+      toStringPozerValue(pozer, dc);
+      toStringPozerEtalon(pozer, dc);
    }
 
    /**
@@ -801,8 +903,25 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     * @param pozer 
     * @param dc 
     */
-   private void toStringPrivatePozerY(ByteObject pozer, Dctx dc) {
-      toStringPrivatePozerXY(pozer, dc, false);
+   public void toStringPozerYBot(ByteObject pozer, Dctx dc) {
+      dc.root(pozer, "PozerY");
+      int anchorSrc = pozer.get1(POS_OFFSET_07_ANCHOR_POZEE1);
+      int anchorDst = pozer.get1(POS_OFFSET_04_ANCHOR_ETALON1);
+      dc.appendVarWithSpace("anchor on pozee (src)", ToStringStaticC.toStringLogicAlignY(anchorSrc));
+      dc.appendVarWithSpace("anchor on etalon (dest)", ToStringStaticC.toStringLogicAlignY(anchorDst));
+      toStringPozerValue(pozer, dc);
+      toStringPozerEtalon(pozer, dc);
+
+   }
+
+   /**
+    * 
+    *
+    * @param pozer 
+    * @param dc 
+    */
+   private void toStringPrivatePozerX(ByteObject pozer, Dctx dc) {
+      toStringPrivatePozerXY(pozer, dc, true);
    }
 
    /**
@@ -888,31 +1007,8 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     * @param pozer 
     * @param dc 
     */
-   public void toStringPozerY(ByteObject pozer, Dctx dc) {
-      dc.root(pozer, "PozerY");
-      int anchorSrc = pozer.get1(POS_OFFSET_07_ANCHOR_POZEE1);
-      int anchorDst = pozer.get1(POS_OFFSET_04_ANCHOR_ETALON1);
-      dc.appendVarWithSpace("anchor on pozee (src)", ToStringStaticC.toStringLogicAlignY(anchorSrc));
-      dc.appendVarWithSpace("anchor on etalon (dest)", ToStringStaticC.toStringLogicAlignY(anchorDst));
-      toStringPozerValue(pozer, dc);
-      toStringPozerEtalon(pozer, dc);
-   }
-
-   /**
-    * 
-    *
-    * @param pozer 
-    * @param dc 
-    */
-   public void toStringPozerYBot(ByteObject pozer, Dctx dc) {
-      dc.root(pozer, "PozerY");
-      int anchorSrc = pozer.get1(POS_OFFSET_07_ANCHOR_POZEE1);
-      int anchorDst = pozer.get1(POS_OFFSET_04_ANCHOR_ETALON1);
-      dc.appendVarWithSpace("anchor on pozee (src)", ToStringStaticC.toStringLogicAlignY(anchorSrc));
-      dc.appendVarWithSpace("anchor on etalon (dest)", ToStringStaticC.toStringLogicAlignY(anchorDst));
-      toStringPozerValue(pozer, dc);
-      toStringPozerEtalon(pozer, dc);
-
+   private void toStringPrivatePozerY(ByteObject pozer, Dctx dc) {
+      toStringPrivatePozerXY(pozer, dc, false);
    }
 
 }

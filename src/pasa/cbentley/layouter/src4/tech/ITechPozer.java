@@ -1,11 +1,14 @@
 /*
- * (c) 2018-2019 Charles-Philip Bentley
+ * (c) 2018-2020 Charles-Philip Bentley
  * This code is licensed under MIT license (see LICENSE.txt for details)
  */
 package pasa.cbentley.layouter.src4.tech;
 
 import pasa.cbentley.byteobjects.src4.tech.ITechByteObject;
 import pasa.cbentley.core.src4.interfaces.C;
+import pasa.cbentley.layouter.src4.engine.ByteObjectLayoutDelegate;
+import pasa.cbentley.layouter.src4.engine.ByteObjectLayoutable;
+import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegate;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 
 /**
@@ -60,11 +63,20 @@ public interface ITechPozer extends ITechByteObject {
    public static final int POS_ETALON_5_NAV_TOPOLOGY                = 5;
 
    /**
-    * 
+    * When Etalon is a reference inside a {@link ByteObjectLayoutable} that is 
+    * attached to the Pozer
     */
    public static final int POS_ETALON_6_LAYOUTABLE                  = 6;
+   /**
+    * {@link ILayoutDelegate} in a {@link ByteObjectLayoutDelegate}
+    */
+   public static final int POS_ETALON_7_DELEGATE                  = 7;
 
    /**
+    * A sizer will influence the final position.
+    * 
+    * <li> {@link ITechPozer#POS_FUN_0_TOWARDS_CENTER} sizer is positive/negative
+    * 
     * Positive sizer that modifies (used for positive margin).
     * 
     * The relationship of the sizer is defined by
@@ -122,6 +134,7 @@ public interface ITechPozer extends ITechByteObject {
     * This field uses the pozee anchor is located on that point
     * <li> {@link ITechPozer#POS_OFFSET_04_ANCHOR_ETALON1}
     * <li> {@link ITechPozer#POS_OFFSET_05_ANCHOR_ETALON_STRUCT1}
+    * <li> {@link ITechPozer#POS_OFFSET_06_ANCHOR_ETALON_STYLE1}
     * <li> {@link ITechPozer#POS_OFFSET_06_ANCHOR_ETALON_STYLE1}
     */
    public static final int POS_OFFSET_03_ANCHOR_ETALON_POINT_VALUE4 = A_OBJECT_BASIC_SIZE + 2;

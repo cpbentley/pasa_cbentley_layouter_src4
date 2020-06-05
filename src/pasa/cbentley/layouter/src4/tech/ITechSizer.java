@@ -1,5 +1,5 @@
 /*
- * (c) 2018-2019 Charles-Philip Bentley
+ * (c) 2018-2020 Charles-Philip Bentley
  * This code is licensed under MIT license (see LICENSE.txt for details)
  */
 package pasa.cbentley.layouter.src4.tech;
@@ -62,7 +62,8 @@ public interface ITechSizer extends ITechByteObject {
     * Allows context to shrink this size.
     * <br>
     * When contextual content is smaller than provided size.
-    * Shrink to preferred size
+    * 
+    * Shrink to preferred size.
     */
    public static final int SIZER_FLAG_2_ALLOW_SHRINK        = 1 << 1;
 
@@ -101,11 +102,20 @@ public interface ITechSizer extends ITechByteObject {
 
    /**
     * When used for {@link ITechLayout#MODE_6_POZER_DISTANCE}, the second sizer is implicit.
+    * 
+    * Otherwise, the Layouter expects 2 Pozers
     */
    public static final int SIZER_FLAG_8_IMPLICIT            = 1 << 7;
 
    /**
-    * 
+    * <li> {@link ITechSizer#SIZER_FLAG_1_ALLOW_0}
+    * <li> {@link ITechSizer#SIZER_FLAG_2_ALLOW_SHRINK}
+    * <li> {@link ITechSizer#SIZER_FLAG_3_MINIMUM}
+    * <li> {@link ITechSizer#SIZER_FLAG_4_MAXIMUM}
+    * <li> {@link ITechSizer#SIZER_FLAG_5_IS_MIN}
+    * <li> {@link ITechSizer#SIZER_FLAG_6_IS_MAX}
+    * <li> {@link ITechSizer#SIZER_FLAG_7_DEFINED}
+    * <li> {@link ITechSizer#SIZER_FLAG_8_IMPLICIT}
     */
    public static final int SIZER_OFFSET_01_FLAG             = A_OBJECT_BASIC_SIZE;
 
@@ -161,16 +171,6 @@ public interface ITechSizer extends ITechByteObject {
    public static final int SIZER_OFFSET_04_FUNCTION1        = A_OBJECT_BASIC_SIZE + 3;
 
    /**
-    * 
-    */
-   public static final int SIZER_OFFSET_05_FRAC_BOT1        = A_OBJECT_BASIC_SIZE + 4 + 1;
-
-   /**
-    * 
-    */
-   public static final int SIZER_OFFSET_05_FRAC_TOP1        = A_OBJECT_BASIC_SIZE + 4;
-
-   /**
     * Interpreation of the value depends on the {@link ITechSizer#SIZER_OFFSET_02_MODE1}
     * <li> {@link ITechLayout#MODE_0_RAW_UNITS} pixel
     * <li> {@link ITechLayout#MODE_1_DELEGATE} dip
@@ -189,6 +189,16 @@ public interface ITechSizer extends ITechByteObject {
     *  the second byte is the bottom
     */
    public static final int SIZER_OFFSET_05_VALUE2           = A_OBJECT_BASIC_SIZE + 4;
+
+   /**
+    * Instead of a value, a ratio gets a 8bits/8bits ratio
+    */
+   public static final int SIZER_OFFSET_05A_FRACTION_TOP1   = A_OBJECT_BASIC_SIZE + 4;
+
+   /**
+    * When zero, engine will assume its 1.. to avoid division by zero
+    */
+   public static final int SIZER_OFFSET_05B_FRACTION_BOT1   = A_OBJECT_BASIC_SIZE + 5;
 
    /**
     * Increase granularity on the etalon.
@@ -258,6 +268,13 @@ public interface ITechSizer extends ITechByteObject {
 
    /**
     * Size of a unit, contextual to {@link ILayoutable}.
+    * The pixel size of the height of one unit. 
+    * {@link ILayoutable} is responsible to understand one unit in its context
+    * 
+    * a for Table, it will be a default row 
+    * 
+    * Tries its best
+    *  Every component has a logic unit for W and H. A String is the height of a line, W might be the size of the biggest word 
     */
    public static final int SIZER_PROP_02_UNIT_LOGIC         = 2;
 

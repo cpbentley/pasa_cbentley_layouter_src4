@@ -1,3 +1,7 @@
+/*
+ * (c) 2018-2020 Charles-Philip Bentley
+ * This code is licensed under MIT license (see LICENSE.txt for details)
+ */
 package pasa.cbentley.layouter.src4.engine;
 
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
@@ -8,13 +12,27 @@ import pasa.cbentley.core.src4.logging.IStringable;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDependencies;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
+import pasa.cbentley.layouter.src4.interfaces.ILayoutWillListener;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
 import pasa.cbentley.layouter.src4.tech.ITechSizer;
 
 /**
+ * This class provides a base implementation of the {@link ILayoutable} for your own Gui components.
+ * 
+ * For each {@link ILayoutable} implementation, instantiate a {@link LayEngine} to help out. 
+ * 
+ * You may want an Engine that supports event hook ups.
+ * 
+ * There are several level of implementation
+ * 
+ * @see LayEngineRead
+ * @see LayEngineReal
+ * 
  * This lay engine only computes values and put them into {@link Zer2DRect}
  * 
  * Another class has to apply them
+ * 
+ * 
  * @author Charles Bentley
  *
  */
@@ -28,7 +46,17 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
 
    private int                 cycleCounterY;
 
+   private Area2DConfigurator  data;
+
    private ILayoutDependencies dependencies;
+
+   private boolean             isManualOverrideH;
+
+   private boolean             isManualOverrideW;
+
+   private boolean             isManualOverrideX;
+
+   private boolean             isManualOverrideY;
 
    /**
     * the x value in rect is up to date
@@ -41,22 +69,143 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
 
    private boolean             isValidSizeW;
 
-   private LayData             data;
-
-   protected Zer2DRect         rect;
-
    protected final LayouterCtx lac;
 
    protected ILayoutable       layoutable;
 
+   private ILayoutWillListener   layoutListener;
+
+   protected Zer2DRect         rect;
+
+   /**
+    * 
+    * @param lac
+    * @param layoutable
+    */
    public LayEngine(LayouterCtx lac, ILayoutable layoutable) {
       this.lac = lac;
       this.layoutable = layoutable;
-      data = new LayData(lac);
+      data = new Area2DConfigurator(lac);
+      rect = new Zer2DRect(lac);
+
+      //#debug
+      //toDLog().pInit("LayEngine created for ", layoutable, LayEngine.class, "LayEngine", LVL_04_FINER, true);
    }
 
-   public LayData getLay() {
+   public void addDependency(ILayoutable layout, int type) {
+      if (layout == null) {
+         throw new NullPointerException();
+      }
+      if (dependencies == null) {
+         dependencies = new LayoutDependenciesArray(lac);
+      }
+      dependencies.addDependency(layout, type);
+   }
+
+   private void generateSizerException(boolean isW) {
+      String sizerStr = "SizerH";
+      if (isW) {
+         sizerStr = "SizerW";
+      }
+      //we have a loop
+      String msg = sizerStr + " is not defined for " + layoutable.toString1Line() + " " + layoutable.toStringName();
+      //#debug
+      toDLog().pNull(msg, this, LayEngine.class, "generateSizerException", LVL_10_SEVERE, false);
+      throw new IllegalStateException(msg);
+   }
+
+   public Zer2DArea getArea() {
+      return data.getArea();
+   }
+
+   public ILayoutable[] getDependencies() {
+      if (dependencies != null) {
+         return dependencies.getDependencies();
+      }
+      return null;
+   }
+
+   public Area2DConfigurator getLay() {
       return data;
+   }
+
+   public ILayoutWillListener getLayoutListener() {
+      return layoutListener;
+   }
+
+   private int getSizeComputerFlagH() {
+      //area might not be valid because of manual overrides
+      if (isManualOverrideW || isManualOverrideX) {
+         return COMPUTE_1_NORMAL;
+      } else {
+         return getArea().getSizeComputeFlagH();
+      }
+   }
+
+   private int getSizeComputerFlagW() {
+      //area might not be valid because of manual overrides
+      if (isManualOverrideH || isManualOverrideY) {
+         return COMPUTE_1_NORMAL;
+      } else {
+         return getArea().getSizeComputeFlagW();
+      }
+   }
+
+   /**
+    * True when Etalon is {@link ITechLayout#ETALON_0_SIZEE_CTX}
+    * <br>
+    * @param sizer
+    * @return
+    */
+   public boolean isContextual(ByteObject sizer) {
+      boolean is = false;
+      if (sizer != null) {
+         int mode = sizer.get1(SIZER_OFFSET_02_MODE1);
+         if (mode == MODE_2_RATIO) {
+            if (sizer.get1(SIZER_OFFSET_03_ETALON1) == ETALON_0_SIZEE_CTX) {
+               is = true;
+            }
+         }
+      }
+      return is;
+   }
+
+   /**
+    * Is Drawable Height to be computed based on content
+    * @return
+    */
+   public boolean isContextualH() {
+      ByteObject sizerH = data.getArea().getSizerH();
+      return isContextual(sizerH);
+   }
+
+   /**
+    * Is Drawable Width to be computed based on content.
+    * <br>
+    * True when 
+    * <br>
+    * Etalon is {@link ISizer#ETALON_0_SIZEE_CTX}
+    * <br>
+    * And
+    * <br>
+    * Mode is {@link ISizer#MODE_3_UNIT} or {@link ISizer#MODE_2_RATIO}
+    * @return
+    */
+   public boolean isContextualW() {
+      ByteObject sizerW = data.getArea().getSizerW();
+      return isContextual(sizerW);
+   }
+
+   /**
+    * True when size can be computed without the context. 
+    * @return
+    */
+   public boolean isNoCtxSize() {
+      ByteObject sizerW = data.getArea().getSizerW();
+      ByteObject sizerH = data.getArea().getSizerH();
+      boolean noCtxW = sizerW == null || sizerW.hasFlag(SIZER_OFFSET_01_FLAG, SIZER_FLAG_7_DEFINED);
+      boolean noCtxH = sizerH == null || sizerH.hasFlag(SIZER_OFFSET_01_FLAG, SIZER_FLAG_7_DEFINED);
+      return noCtxW && noCtxH;
    }
 
    private void layoutCheckLoopH() {
@@ -64,8 +213,8 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
          //we have a loop
          String msg = "UI layout has a loop cycle while computing Height of " + this.toString1Line();
          //#debug
-         toDLog().pNull(msg, this, LayoutableAdapterAbstract.class, "layoutCheckLoopH", LVL_10_SEVERE, false);
-         throw new IllegalStateException("UI layout H has a loop cycle for " + layoutable.toStringName());
+         toDLog().pNull(msg, this, LayEngine.class, "layoutCheckLoopH@line197", LVL_10_SEVERE, false);
+         throw new IllegalStateException(msg);
       }
       cycleCounterH++;
    }
@@ -79,10 +228,32 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
          //we have a loop
          String msg = "UI layout has a loop cycle while computing Width of " + this.toString1Line();
          //#debug
-         toDLog().pNull(msg, this, LayoutableAdapterAbstract.class, "layoutCheckLoopW", LVL_10_SEVERE, false);
-         throw new IllegalStateException("UI layout W has a loop cycle for " + layoutable.toStringName());
+         toDLog().pNull(msg, this, LayEngine.class, "layoutCheckLoopW@line217", LVL_10_SEVERE, false);
+         throw new IllegalStateException(msg);
       }
       cycleCounterW++;
+   }
+
+   private void layoutCheckLoopX() {
+      if (cycleCounterX != 0) {
+         //we have a loop
+         String msg = "UI layout has a loop cycle while computing X of " + this.toString1Line();
+         //#debug
+         toDLog().pNull(msg, this, LayEngine.class, "layoutCheckLoopX@line228", LVL_10_SEVERE, false);
+         throw new IllegalStateException(msg);
+      }
+      cycleCounterX++;
+   }
+
+   private void layoutCheckLoopY() {
+      if (cycleCounterY != 0) {
+         //we have a loop
+         String msg = "UI layout has a loop cycle while computing Y of " + this.toString1Line();
+         //#debug
+         toDLog().pNull(msg, this, LayEngine.class, "layoutCheckLoopY@line239", LVL_10_SEVERE, false);
+         throw new IllegalStateException(msg);
+      }
+      cycleCounterY++;
    }
 
    public void layoutInvalidate() {
@@ -94,10 +265,6 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
       cycleCounterW = 0;
       cycleCounterX = 0;
       cycleCounterY = 0;
-   }
-
-   protected Zer2DArea getArea() {
-      return data.getArea();
    }
 
    /**
@@ -156,7 +323,10 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
       }
 
       //#debug
-      lac.getDebugBreaks().checkForBreakPointPos(layoutable);
+      lac.getDebugBreaks().layoutWillComputePositions(layoutable);
+      if (layoutListener != null) {
+         layoutListener.layoutWillComputePositions(layoutable);
+      }
 
       layoutUpdatePositionXCheck();
       layoutUpdatePositionYCheck();
@@ -170,12 +340,23 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
 
    private void layoutUpdatePositionX(int typeX) {
       //#debug
-      lac.getDebugBreaks().checkForBreakPointPosX(layoutable);
+      lac.getDebugBreaks().layoutWillComputePositionX(layoutable);
+      if (layoutListener != null) {
+         layoutListener.layoutWillComputePositionX(layoutable);
+      }
+
+      //check loop
+      layoutCheckLoopX();
 
       LayoutOperator operator = lac.getLayoutOperator();
       Zer2DArea area = getArea();
       if (typeX == COMPUTE_0_INVALID) {
-         throw new IllegalStateException("Cannot compute X position without at least one X pozer");
+         if (!isManualOverrideX) {
+            String msg = "LayEngine needs an area with at least one X pozer";
+            //#debug
+            toDLog().pNull(msg, this, LayEngine.class, "layoutUpdatePositionX", LVL_05_FINE, false);
+            throw new IllegalStateException(msg);
+         }
       } else if (typeX == COMPUTE_1_NORMAL) {
          ByteObject pozerXStart = area.getPozerXStart();
          int x = operator.getPozXWidth(pozerXStart, layoutable);
@@ -214,12 +395,24 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
 
    private void layoutUpdatePositionY(int typeY) {
       //#debug
-      lac.getDebugBreaks().checkForBreakPointPosY(layoutable);
+      lac.getDebugBreaks().layoutWillComputePositionY(layoutable);
+      if (layoutListener != null) {
+         layoutListener.layoutWillComputePositionY(layoutable);
+      }
+      //in override, we ignore the pozerY definition and accept the Y in rect.
+      if (isManualOverrideY) {
+         isValidPositionY = true;
+         return;
+      }
+      layoutCheckLoopY();
 
       LayoutOperator operator = lac.getLayoutOperator();
       Zer2DArea area = getArea();
       if (typeY == COMPUTE_0_INVALID) {
-         throw new IllegalStateException("Cannot compute Y position without at least one Y pozer");
+         String msg = "LayEngine needs an area with at least one Y pozer";
+         //#debug
+         toDLog().pNull(msg, this, LayEngine.class, "layoutUpdatePositionX", LVL_05_FINE, false);
+         throw new IllegalStateException(msg);
       } else if (typeY == COMPUTE_1_NORMAL) {
          int y = operator.getPozYHeight(area.getPozerYTop(), layoutable);
          rect.setY(y);
@@ -246,25 +439,6 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
       layoutUpdatePositionY();
    }
 
-   //   public void layoutUpdateSize() {
-   //
-   //      //#debug
-   //      slc.getDebugBreaks().checkForBreakPointSize(layoutable);
-   //
-   //      //check if we have a size defined
-   //      if (area.isValidSize()) {
-   //         layoutUpdateSizeH();
-   //         layoutUpdateSizeW();
-   //         Dimension size = new Dimension(rect.getW(), rect.getH());
-   //         c.setSize(size);
-   //         c.setPreferredSize(size);
-   //      } else {
-   //         c.setSize(c.getPreferredSize());
-   //         isValidSizeH = true;
-   //         isValidSizeW = true;
-   //      }
-   //   }
-
    /**
     * 
     */
@@ -273,7 +447,10 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
          return;
       }
       //#debug
-      lac.getDebugBreaks().checkForBreakPointSize(layoutable);
+      lac.getDebugBreaks().layoutWillComputeSizes(layoutable);
+      if (layoutListener != null) {
+         layoutListener.layoutWillComputeSizes(layoutable);
+      }
 
       //both methods will check the position flag and know what to do
       layoutUpdateSizeHCheck();
@@ -281,30 +458,27 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
 
    }
 
-   private void generateSizerException(boolean isW) {
-      String sizerStr = "SizerH";
-      if (isW) {
-         sizerStr = "SizerW";
-      }
-      //we have a loop
-      String msg = sizerStr + " is not defined for" + layoutable.toStringName();
-      //#debug
-      toDLog().pNull(msg, this, LayoutableAdapterAbstract.class, "generateSizerException", LVL_10_SEVERE, false);
-      throw new IllegalStateException(msg);
-   }
-
    /**
     * Update the Height Size
     */
    public void layoutUpdateSizeH() {
       //#debug
-      lac.getDebugBreaks().checkForBreakPointSizeH(layoutable);
+      lac.getDebugBreaks().layoutWillComputeSizeH(layoutable);
 
+      if (layoutListener != null) {
+         layoutListener.layoutWillComputeSizeH(layoutable);
+      }
+      if (isManualOverrideH) {
+         isValidSizeH = true;
+         return;
+      }
+      Zer2DArea area = getArea();
       layoutCheckLoopH();
       LayoutOperator operator = lac.getLayoutOperator();
-      Zer2DArea area = getArea();
-      int typeY = area.getPositionComputeFlagY();
+
+      int typeY = getSizeComputerFlagH();
       if (typeY == COMPUTE_3_BOTH) {
+         //height is defined by 2 pozers. if sizerH is not null.. compute it as ph
          ByteObject sizerH = area.getSizerH();
          if (sizerH != null) {
             //when in mode both and we do have a H sizer.. the sizer defines the preferred size
@@ -321,11 +495,18 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
          int h = operator.getPixelSizeH(sizerH, layoutable);
          rect.setH(h);
       } else if (typeY == COMPUTE_0_INVALID) {
-         throw new IllegalStateException();
+         //don't do anything, assume the raw H in the rect is absolute and correct
+         String msg = "LayEngine needs an area with at least one H pozer";
+         //#debug
+         toDLog().pNull(msg, this, LayEngine.class, "layoutUpdateSizeH", LVL_05_FINE, false);
+         throw new IllegalStateException(msg);
       }
       isValidSizeH = true;
    }
 
+   /**
+    * Check for height validity flag and update height if false.
+    */
    public void layoutUpdateSizeHCheck() {
       if (isValidSizeH) {
          return;
@@ -335,14 +516,21 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
 
    private void layoutUpdateSizeW() {
       //#debug
-      lac.getDebugBreaks().checkForBreakPointSizeW(layoutable);
-
+      lac.getDebugBreaks().layoutWillComputeSizeW(layoutable);
+      if (layoutListener != null) {
+         layoutListener.layoutWillComputeSizeW(layoutable);
+      }
+      if (isManualOverrideW) {
+         isValidSizeW = true;
+         return;
+      }
       //check loop
       layoutCheckLoopW();
 
       LayoutOperator operator = lac.getLayoutOperator();
       Zer2DArea area = getArea();
-      int typeX = area.getPositionComputeFlagX();
+
+      int typeX = getSizeComputerFlagW();
       if (typeX == COMPUTE_3_BOTH) {
          //if we have a w sizer with 2 pozers.. that's pref size
          ByteObject sizerW = area.getSizerW();
@@ -361,16 +549,88 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
          int w = operator.getPixelSizeW(sizerW, layoutable);
          rect.setW(w);
       } else if (typeX == COMPUTE_0_INVALID) {
-         throw new IllegalStateException();
+         String msg = "LayEngine needs an area with at least one Width pozer";
+         //#debug
+         toDLog().pNull(msg, this, LayEngine.class, "layoutUpdateSizeW", LVL_05_FINE, false);
+         throw new IllegalStateException(msg);
       }
       isValidSizeW = true;
    }
 
+   /**
+    * Check for width validity flag and update width if false.
+    */
    public void layoutUpdateSizeWCheck() {
       if (isValidSizeW) {
          return;
       }
       layoutUpdateSizeW();
+   }
+
+   public void removeDependency(ILayoutable layout, int type) {
+      dependencies.removeDependency(layout, type);
+   }
+
+   public void setLayoutListener(ILayoutWillListener layoutListener) {
+      this.layoutListener = layoutListener;
+   }
+
+   /**
+    * Tell the layout engine to only read {@link Zer2DRect} value directly.
+    * 
+    * {@link Area2DConfigurator} is ignored.
+    * 
+    * In manual override, the engine does not compute values from
+    * 
+    * @param isManualOverride
+    */
+   public void setManualOverride(boolean isManualOverride) {
+      this.setOverrideXYWH(isManualOverride, isManualOverride, isManualOverride, isManualOverride);
+   }
+
+   public void setManualOverrideH(boolean b) {
+      this.isManualOverrideH = b;
+   }
+
+   public void setManualOverrideW(boolean b) {
+      this.isManualOverrideW = b;
+   }
+
+   public void setManualOverrideX(boolean b) {
+      this.isManualOverrideX = b;
+   }
+
+   public void setManualOverrideY(boolean b) {
+      this.isManualOverrideY = b;
+   }
+
+   public void setOverrideH(int h) {
+      rect.setH(h);
+   }
+
+   public void setOverrideW(int w) {
+      rect.setW(w);
+   }
+
+   /**
+    * Sets x directly without changing.
+    * 
+    * Also {@link Area2DConfigurator} might not have any PozerX
+    * @param x
+    */
+   public void setOverrideX(int x) {
+      rect.setX(x);
+   }
+
+   public void setOverrideXYWH(boolean x, boolean y, boolean w, boolean h) {
+      isManualOverrideX = x;
+      isManualOverrideY = y;
+      isManualOverrideW = w;
+      isManualOverrideH = h;
+   }
+
+   public void setOverrideY(int y) {
+      rect.setY(y);
    }
 
    //#mdebug
@@ -383,14 +643,23 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
    }
 
    public void toString(Dctx dc) {
-      dc.root(this, "LayoutableAdapter");
+      dc.root(this, LayEngine.class,642);
       toStringPrivate(dc);
 
+      dc.nl();
+      dc.appendVarWithSpace("isManualOverrideX", isManualOverrideX);
+      dc.appendVarWithSpace("isManualOverrideY", isManualOverrideY);
+      dc.appendVarWithSpace("isManualOverrideW", isManualOverrideW);
+      dc.appendVarWithSpace("isManualOverrideH", isManualOverrideH);
+      dc.nl();
+      dc.appendVarWithSpace("getSizeComputerFlagW", getSizeComputerFlagW());
+      dc.appendVarWithSpace("getSizeComputerFlagH", getSizeComputerFlagH());
+
       //we want nice message
-
       dc.nlLvl(rect, "Rect");
+      dc.nlLvl(data, "Laydata");
       dc.nlLvl(dependencies, "Depedencies");
-
+      dc.nlLvl(layoutable, "layoutable");
    }
 
    public String toString1Line() {
@@ -398,7 +667,7 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
    }
 
    public void toString1Line(Dctx dc) {
-      dc.root1Line(this, "LayoutableAdapter");
+      dc.root1Line(this, LayEngine.class);
       toStringPrivate(dc);
    }
 
@@ -407,14 +676,17 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
    }
 
    private void toStringPrivate(Dctx dc) {
-      dc.appendVarWithSpace("isValidSizeW", isValidSizeW);
-      dc.appendVarWithSpace("isValidSizeH", isValidSizeH);
-      dc.appendVarWithSpace("isValidPositionX", isValidPositionX);
-      dc.appendVarWithSpace("isValidPositionY", isValidPositionY);
-      dc.appendVarWithSpace("cycleCounterW", cycleCounterW);
-      dc.appendVarWithSpace("cycleCounterH", cycleCounterH);
-      dc.appendVarWithSpace("cycleCounterX", cycleCounterX);
-      dc.appendVarWithSpace("cycleCounterY", cycleCounterY);
+      dc.append("isValid=[");
+      dc.appendVarWithSpace("W", isValidSizeW);
+      dc.appendVarWithSpace("H", isValidSizeH);
+      dc.appendVarWithSpace("X", isValidPositionX);
+      dc.appendVarWithSpace("Y", isValidPositionY);
+      dc.append("] cycleCounter=[");
+      dc.appendVarWithSpace("W", cycleCounterW);
+      dc.appendVarWithSpace("H", cycleCounterH);
+      dc.appendVarWithSpace("X", cycleCounterX);
+      dc.appendVarWithSpace("Y", cycleCounterY);
+      dc.append("]");
    }
 
    //#enddebug

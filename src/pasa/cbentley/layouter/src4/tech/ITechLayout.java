@@ -1,5 +1,5 @@
 /*
- * (c) 2018-2019 Charles-Philip Bentley
+ * (c) 2018-2020 Charles-Philip Bentley
  * This code is licensed under MIT license (see LICENSE.txt for details)
  */
 package pasa.cbentley.layouter.src4.tech;
@@ -8,6 +8,10 @@ import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.byteobjects.src4.tech.ITechByteObject;
 import pasa.cbentley.core.src4.interfaces.ITechNav;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
+import pasa.cbentley.layouter.src4.engine.ByteObjectLayoutDelegate;
+import pasa.cbentley.layouter.src4.engine.LayEngine;
+import pasa.cbentley.layouter.src4.engine.Zer2DArea;
+import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegate;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 
 /**
@@ -81,16 +85,23 @@ public interface ITechLayout extends ITechByteObject {
     */
    public static final int DELEGATE_ETALON_2_CALL                = 2;
 
+   
    /**
+    * Looks for {@link ByteObjectLayoutDelegate} in the Sizer.
+    * 
+    * This gets you an {@link ILayoutDelegate}
     * 
     */
-   public static final int DELEGATE_ETALON_3_OBJECT              = 3;
    public static final int DELEGATE_ETALON_4_REFERENCE              = 4;
 
    /**
+    * 
+    * {@link ILayoutable#getLayoutableParent()}
     * This mode, takes the biggest possible value provided by the context
     * <br>
     * The parent is responsible to find that.. Delegate mode
+    * 
+    * Ask the Parent the maximum what? example? fill
     */
    public static final int DELEGATE_ETALON_1_PARENT_MAX          = 1;
 
@@ -236,6 +247,11 @@ public interface ITechLayout extends ITechByteObject {
     * Inverse of context.
     */
    public static final int ET_FUN_7_CTX_OP                       = 7;
+   
+   /**
+    * things are computed by the delegate
+    */
+   public static final int ET_FUN_7_DELEGATE                       = 7;
 
    /**
     * Etalon link type {@link ITechSizer#SIZER_OFFSET_06_PROPERTY1}.
@@ -367,9 +383,9 @@ public interface ITechLayout extends ITechByteObject {
     * 
     * Usually used when linking to a totally unrelated object.
     * 
-    * <li> {@link ISizerDrawable#LINK_0_PARENT}
-    * <li> {@link ISizerDrawable#LINK_1_NAV}
-    * <li> {@link ISizerDrawable#LINK_2_UIID}, kinda like Android viewIDs.
+    * <li> {@link ITechLayout#LINK_0_PARENT}
+    * <li> {@link ITechLayout#LINK_1_NAV}
+    * <li> {@link ITechLayout#LINK_2_UIID}, kinda like Android viewIDs.
     * 
     * Links can be chained
     * Written to {@link ISizer#SIZER_OFFSET_03_ETALON1}
@@ -382,7 +398,8 @@ public interface ITechLayout extends ITechByteObject {
     * 
     * Pozer defines a box to position that we use 
     * {@link ITechPozer#POS_OFFSET_02_ETALON1}.
-    * 
+    * Etalon is defined by 4 pozers -> 2 points creating a rectangle
+    * a valid {@link Zer2DArea}
     */
    public static final int ETALON_6_POZER_BOX                    = 6;
 
@@ -427,6 +444,8 @@ public interface ITechLayout extends ITechByteObject {
     * The unit is decided by  {@link ITechSizer#SIZER_OFFSET_03_ETALON1}
     * <br>
     * Included in the {@link ITechCoded#CODED_BITS_1_MODE}
+    * 
+    * TODO and for the Pozer?
     */
    public static final int MODE_0_RAW_UNITS                      = 0;
 
@@ -499,6 +518,8 @@ public interface ITechLayout extends ITechByteObject {
 
    /**
     * The size is the distance between 2 pozers.
+    * 
+    * Often times, {@link LayEngine} will be used in this mode 
     */
    public static final int MODE_6_POZER_DISTANCE                 = 6;
 
@@ -548,6 +569,7 @@ public interface ITechLayout extends ITechByteObject {
     * <br>
     */
    public static final int RAW_UNIT_1_DIP                        = 1;
+
 
    /**
     * {@link IFontImgCreator#getScalePixel(int, int)} requires a scale paremeter.

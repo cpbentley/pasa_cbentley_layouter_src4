@@ -1,5 +1,10 @@
+/*
+ * (c) 2018-2020 Charles-Philip Bentley
+ * This code is licensed under MIT license (see LICENSE.txt for details)
+ */
 package pasa.cbentley.layouter.src4.engine;
 
+import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
 import pasa.cbentley.layouter.src4.interfaces.I2DReal;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
@@ -12,7 +17,15 @@ import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
  * @author Charles Bentley
  *
  */
-public class LayEngineReal extends LayEngine {
+public class LayEngineReal extends LayEngineRead {
+
+   private boolean isAppliedPositionX;
+
+   private boolean isAppliedPositionY;
+
+   private boolean isAppliedSizeH;
+
+   private boolean isAppliedSizeW;
 
    private I2DReal real;
 
@@ -26,22 +39,13 @@ public class LayEngineReal extends LayEngine {
       setAppliedPositionTrue();
    }
 
-   private boolean isAppliedPositionX;
-
-   private boolean isAppliedPositionY;
-
-   private boolean isAppliedSizeH;
-
-   private boolean isAppliedSizeW;
-
-   protected void setAppliedPositionTrue() {
-      isAppliedPositionX = true;
-      isAppliedPositionY = true;
+   private void applyRectToComponentSize() {
+      real.setSize(rect.getW(), rect.getH());
+      setAppliedSizeTrue();
    }
 
-   protected void setAppliedSizeTrue() {
-      isAppliedSizeH = true;
-      isAppliedSizeW = true;
+   public I2DReal getReal() {
+      return real;
    }
 
    public void layoutInvalidate() {
@@ -81,6 +85,25 @@ public class LayEngineReal extends LayEngine {
       }
    }
 
+   public void layoutUpdateSizeCheck() {
+      if (layoutIsValidSize()) {
+         if (!isAppliedSizeH || !isAppliedSizeW) {
+            applyRectToComponentSize();
+         }
+         return;
+      }
+      //#debug
+      lac.getDebugBreaks().layoutWillComputeSizes(layoutable);
+
+      //both methods will check the position flag and know what to do
+      layoutUpdateSizeHCheck();
+      layoutUpdateSizeWCheck();
+      applyRectToComponentSize();
+   }
+
+   /**
+    * Completely override the way it works
+    */
    public void layoutUpdatePositionCheck() {
       if (layoutIsValidPosition()) {
          if (!isAppliedPositionX || !isAppliedPositionY) {
@@ -90,11 +113,43 @@ public class LayEngineReal extends LayEngine {
       }
 
       //#debug
-      lac.getDebugBreaks().checkForBreakPointPos(layoutable);
+      lac.getDebugBreaks().layoutWillComputePositions(layoutable);
 
       layoutUpdatePositionXCheck();
       layoutUpdatePositionYCheck();
       applyRectToComponentPosition();
    }
+
+   protected void setAppliedPositionTrue() {
+      isAppliedPositionX = true;
+      isAppliedPositionY = true;
+   }
+
+   protected void setAppliedSizeTrue() {
+      isAppliedSizeH = true;
+      isAppliedSizeW = true;
+   }
+
+   //#mdebug
+   public void toString(Dctx dc) {
+      dc.root(this, LayEngineReal.class);
+      toStringPrivate(dc);
+      super.toString(dc.sup());
+   }
+
+   public void toString1Line(Dctx dc) {
+      dc.root1Line(this, LayEngineReal.class);
+      toStringPrivate(dc);
+      super.toString1Line(dc.sup1Line());
+   }
+
+   private void toStringPrivate(Dctx dc) {
+      dc.appendVarWithSpace("isAppliedPositionX", isAppliedPositionX);
+      dc.appendVarWithSpace("isAppliedPositionY", isAppliedPositionY);
+      dc.appendVarWithSpace("isAppliedSizeH", isAppliedSizeH);
+      dc.appendVarWithSpace("isAppliedSizeW", isAppliedSizeW);
+   }
+
+   //#enddebug
 
 }

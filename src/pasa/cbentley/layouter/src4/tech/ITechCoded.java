@@ -1,5 +1,5 @@
 /*
- * (c) 2018-2019 Charles-Philip Bentley
+ * (c) 2018-2020 Charles-Philip Bentley
  * This code is licensed under MIT license (see LICENSE.txt for details)
  */
 package pasa.cbentley.layouter.src4.tech;
@@ -7,8 +7,7 @@ package pasa.cbentley.layouter.src4.tech;
 import pasa.cbentley.core.src4.utils.BitUtils;
 
 /**
- * Int Coded sizers are used simple figure cases where we want to code a size
- * efficiently on 32bits.
+ * Int Coded sizers are used simple figure cases where we want to code a size efficiently on 32bits.
  * The most important modes and etalons are supported.
  * <li> {@link ITechCoded#CODED_BITS_0_VALUE}
  * <li> {@link ITechCoded#CODED_BITS_1_MODE}

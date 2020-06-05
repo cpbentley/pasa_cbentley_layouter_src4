@@ -1,26 +1,24 @@
 /*
- * (c) 2018-2019 Charles-Philip Bentley
+ * (c) 2018-2020 Charles-Philip Bentley
  * This code is licensed under MIT license (see LICENSE.txt for details)
  */
 package pasa.cbentley.layouter.src4.ctx;
 
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
-import pasa.cbentley.byteobjects.src4.ctx.ABOCtx;
 import pasa.cbentley.byteobjects.src4.ctx.BOCtx;
 import pasa.cbentley.byteobjects.src4.ctx.IBOTypesBOC;
 import pasa.cbentley.byteobjects.src4.tech.ITechRelation;
-import pasa.cbentley.core.src4.ctx.UCtx;
+import pasa.cbentley.core.src4.ctx.ACtx;
 import pasa.cbentley.core.src4.logging.Dctx;
-import pasa.cbentley.core.src4.logging.IDLog;
-import pasa.cbentley.layouter.src4.engine.DebugBreakAdapter;
 import pasa.cbentley.layouter.src4.engine.LayoutFactory;
 import pasa.cbentley.layouter.src4.engine.LayoutOperator;
+import pasa.cbentley.layouter.src4.engine.LayoutWillListenerAdapter;
 import pasa.cbentley.layouter.src4.engine.LayoutableRect;
 import pasa.cbentley.layouter.src4.engine.PozerFactory;
 import pasa.cbentley.layouter.src4.engine.SizerFactory;
 import pasa.cbentley.layouter.src4.interfaces.IBOTypesLayout;
-import pasa.cbentley.layouter.src4.interfaces.IDebugBreaks;
-import pasa.cbentley.layouter.src4.interfaces.ILayoutRequestListener;
+import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegate;
+import pasa.cbentley.layouter.src4.interfaces.ILayoutWillListener;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
 
@@ -30,35 +28,32 @@ import pasa.cbentley.layouter.src4.tech.ITechLayout;
  *
  * @author Charles Bentley
  */
-public class LayouterCtx extends ABOCtx {
+public class LayouterCtx extends ACtx {
 
    public static final int          CTX_ID = 60;
 
-   /**
-    * 
-    */
-   //#debug
-   private IDebugBreaks             debugBreaks;
+   protected final BOCtx            boc;
+
+   protected final IConfigLayouter  config;
 
    /**
     * Value is given by the outisde and changed by an event.
     */
    private int                      dpi;
 
+   private ILayoutDelegate          layoutDelegate;
+
    /**
     * 
     */
    private LayoutFactory            layoutFactory;
 
-   /**
-    * 
-    */
-   private LayoutOperator           layoutOperator;
+   private int                      layoutIDGenerator;
 
    /**
     * 
     */
-   private ILayoutRequestListener   layoutRequestListener;
+   private LayoutOperator           layoutOperator;
 
    /**
     * 
@@ -73,7 +68,7 @@ public class LayouterCtx extends ABOCtx {
    /**
     * 
     */
-   protected final LayoutableRect   sc;
+   protected final LayoutableRect   rect;
 
    /**
     * 
@@ -82,13 +77,24 @@ public class LayouterCtx extends ABOCtx {
 
    /**
     * 
+    */
+   //#debug
+   private ILayoutWillListener      toStringDebugBreaks;
+
+   /**
+    * 
     *
-    * @param uc 
     * @param boc 
     */
-   public LayouterCtx(UCtx uc, BOCtx boc) {
-      super(boc);
-      sc = new LayoutableRect(this);
+   public LayouterCtx(BOCtx boc) {
+      this(new ConfigLayouterDef(boc.getUCtx()), boc);
+   }
+
+   public LayouterCtx(IConfigLayouter config, BOCtx boc) {
+      super(boc.getUCtx());
+      this.config = config;
+      this.boc = boc;
+      rect = new LayoutableRect(this);
       module = new BOModuleLayouter(this);
    }
 
@@ -114,17 +120,25 @@ public class LayouterCtx extends ABOCtx {
       return ITechCtxSettingsLayouter.CTX_LAY_BASIC_SIZE;
    }
 
+   public IConfigLayouter getConfigLayouter() {
+      return config;
+   }
+
+   public int getCtxID() {
+      return CTX_ID;
+   }
+
    /**
     * 
     *
     * @return 
     */
    //#mdebug
-   public IDebugBreaks getDebugBreaks() {
-      if (debugBreaks == null) {
-         debugBreaks = new DebugBreakAdapter();
+   public ILayoutWillListener getDebugBreaks() {
+      if (toStringDebugBreaks == null) {
+         toStringDebugBreaks = new LayoutWillListenerAdapter();
       }
-      return debugBreaks;
+      return toStringDebugBreaks;
    }
    //#enddebug
 
@@ -134,7 +148,7 @@ public class LayouterCtx extends ABOCtx {
     * @return 
     */
    public LayoutableRect getDefaultSizeContext() {
-      return sc;
+      return rect;
    }
 
    /**
@@ -169,8 +183,8 @@ public class LayouterCtx extends ABOCtx {
     * Used when
     * @return
     */
-   public ILayoutRequestListener getGlobalLayoutRequestListener() {
-      return layoutRequestListener;
+   public ILayoutDelegate getGlobalLayoutDelegate() {
+      return layoutDelegate;
    }
 
    /**
@@ -207,8 +221,13 @@ public class LayouterCtx extends ABOCtx {
       return layoutOperator;
    }
 
-   public int getCtxID() {
-      return CTX_ID;
+   /**
+    * Generates a new unique id
+    * @return
+    */
+   public int getNewLayoutID() {
+      layoutIDGenerator++;
+      return layoutIDGenerator;
    }
 
    /**
@@ -281,36 +300,36 @@ public class LayouterCtx extends ABOCtx {
       return sizerFactory;
    }
 
-   /**
-    * 
-    *
-    * @param debugBreaks 
-    */
-   //#mdebug
-   public void setDebugBreaks(IDebugBreaks debugBreaks) {
-      this.debugBreaks = debugBreaks;
-   }
-   //#enddebug
-
-
    //#mdebug
    public void toString(Dctx dc) {
-      dc.root(this, "LayouterCtx");
+      dc.root(this, LayouterCtx.class, "@line307");
       toStringPrivate(dc);
       super.toString(dc.sup());
    }
 
-   private void toStringPrivate(Dctx dc) {
-      
-   }
-
    public void toString1Line(Dctx dc) {
-      dc.root1Line(this, "LayouterCtx");
+      dc.root1Line(this, LayouterCtx.class);
       toStringPrivate(dc);
       super.toString1Line(dc.sup1Line());
    }
 
+   private void toStringPrivate(Dctx dc) {
+
+   }
+
+   /**
+    * This is a unique kind of listener only used for debugging purposes.
+    * 
+    * All engines can use it, even speed optimized one since its code will be completely removed in production.
+    *
+    * Its global and unique
+    * 
+    * @param debugBreaks 
+    */
+   public void toStringSetDebugBreaks(ILayoutWillListener debugBreaks) {
+      this.toStringDebugBreaks = debugBreaks;
+   }
+
    //#enddebug
-   
 
 }

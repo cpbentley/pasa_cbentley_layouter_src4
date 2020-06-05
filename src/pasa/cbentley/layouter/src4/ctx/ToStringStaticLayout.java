@@ -1,5 +1,5 @@
 /*
- * (c) 2018-2019 Charles-Philip Bentley
+ * (c) 2018-2020 Charles-Philip Bentley
  * This code is licensed under MIT license (see LICENSE.txt for details)
  */
 package pasa.cbentley.layouter.src4.ctx;
@@ -215,6 +215,7 @@ public class ToStringStaticLayout extends ToStringStaticBase {
          case ITechLayout.RAW_UNIT_0_PIXEL:
             return "Pixel";
          case ITechLayout.RAW_UNIT_1_DIP:
+            return "DIP";
          default:
             return "Unknown " + unit;
       }
