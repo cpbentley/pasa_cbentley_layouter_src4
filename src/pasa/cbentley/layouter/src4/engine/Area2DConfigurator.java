@@ -39,64 +39,6 @@ public class Area2DConfigurator implements IStringable {
       this.area = area;
    }
 
-   public void layPoz_Corner_OfParent(int cornerPozee, int cornerLay) {
-      layPoz_Corner_Of(cornerPozee, cornerLay, null);
-   }
-
-   public void layPoz_Corner_Of(int cornerPozee, int cornerLay, ILayoutable lay) {
-      if (cornerPozee == 1) {
-         if (cornerLay == 1) {
-            layPoz_Corner_1To1_Of(lay);
-         } else if (cornerLay == 2) {
-            layPoz_Corner_1To2_Of(lay);
-         } else if (cornerLay == 3) {
-            layPoz_Corner_1To3_Of(lay);
-         } else if (cornerLay == 4) {
-            layPoz_Corner_1To4_Of(lay);
-         } else {
-            throw new IllegalArgumentException();
-         }
-      } else if (cornerPozee == 2) {
-         if (cornerLay == 1) {
-            layPoz_Corner_2To1_Of(lay);
-         } else if (cornerLay == 2) {
-            layPoz_Corner_2To2_Of(lay);
-         } else if (cornerLay == 3) {
-            layPoz_Corner_2To3_Of(lay);
-         } else if (cornerLay == 4) {
-            layPoz_Corner_2To4_Of(lay);
-         } else {
-            throw new IllegalArgumentException();
-         }
-      } else if (cornerPozee == 3) {
-         if (cornerLay == 1) {
-            layPoz_Corner_3To1_Of(lay);
-         } else if (cornerLay == 2) {
-            layPoz_Corner_3To2_Of(lay);
-         } else if (cornerLay == 3) {
-            layPoz_Corner_3To3_Of(lay);
-         } else if (cornerLay == 4) {
-            layPoz_Corner_3To4_Of(lay);
-         } else {
-            throw new IllegalArgumentException();
-         }
-      } else if (cornerPozee == 4) {
-         if (cornerLay == 1) {
-            layPoz_Corner_4To1_Of(lay);
-         } else if (cornerLay == 2) {
-            layPoz_Corner_4To2_Of(lay);
-         } else if (cornerLay == 3) {
-            layPoz_Corner_4To3_Of(lay);
-         } else if (cornerLay == 4) {
-            layPoz_Corner_4To4_Of(lay);
-         } else {
-            throw new IllegalArgumentException();
-         }
-      } else {
-         throw new IllegalArgumentException();
-      }
-   }
-
    public Zer2DArea getArea() {
       return area;
    }
@@ -126,6 +68,22 @@ public class Area2DConfigurator implements IStringable {
    public void layPoz_BotToBot_Of(ILayoutable lay) {
       ByteObject pozerY = lac.getPozerFactory().getPozerBotToBot();
       layPozYBot(lay, pozerY);
+   }
+
+   public void layPoz_BotToBot_Of_Margin(ILayoutable lay, ByteObject sizer) {
+      layPoz_BotToBot_Of_With(lay, ITechPozer.POS_FUN_1_AWAY_CENTER, sizer);
+   }
+
+   public void layPoz_BotToBot_Of_Padding(ILayoutable lay, ByteObject sizer) {
+      layPoz_BotToBot_Of_With(lay, ITechPozer.POS_FUN_0_TOWARDS_CENTER, sizer);
+   }
+
+   public void layPoz_BotToBot_Of_With(ILayoutable lay, int fun, ByteObject sizer) {
+      ByteObject pozerX = lac.getPozerFactory().getPozerBotToBot();
+      if (sizer != null) {
+         lac.getPozerFactory().setPoserWithSizer(pozerX, fun, sizer);
+      }
+      layPozYBot(lay, pozerX);
    }
 
    public void layPoz_BotToBot_OfParent() {
@@ -192,7 +150,7 @@ public class Area2DConfigurator implements IStringable {
       layPoz_StartToStart_Of(lay);
    }
 
-   public void layPoz_Corner_2To4_OfParent() {
+   public void layPoz_Corner_1To4_OfParent() {
       layPoz_Corner_2To4_Of(null);
    }
 
@@ -244,8 +202,44 @@ public class Area2DConfigurator implements IStringable {
       layPoz_EndToStart_Of(lay);
    }
 
-   public void layPoz_Corner_4To4_OfParent() {
-      layPoz_Corner_4To4_Of(null);
+   public void layPoz_Corner_2To4_OfParent() {
+      layPoz_Corner_2To4_Of(null);
+   }
+
+   public void layPoz_Corner_3To1_Of(ILayoutable lay) {
+      layPoz_BotToTop_Of(lay);
+      layPoz_EndToStart_Of(lay);
+   }
+
+   public void layPoz_Corner_3To1_OfParent() {
+      layPoz_Corner_3To1_Of(null);
+   }
+
+   public void layPoz_Corner_3To2_Of(ILayoutable lay) {
+      layPoz_BotToTop_Of(lay);
+      layPoz_EndToEnd_Of(lay);
+   }
+
+   public void layPoz_Corner_3To2_OfParent() {
+      layPoz_Corner_3To2_Of(null);
+   }
+
+   public void layPoz_Corner_3To3_Of(ILayoutable lay) {
+      layPoz_BotToBot_Of(lay);
+      layPoz_EndToEnd_Of(lay);
+   }
+
+   public void layPoz_Corner_3To3_OfParent() {
+      layPoz_Corner_3To3_Of(null);
+   }
+
+   public void layPoz_Corner_3To4_Of(ILayoutable lay) {
+      layPoz_BotToBot_Of(lay);
+      layPoz_EndToStart_Of(lay);
+   }
+
+   public void layPoz_Corner_3To4_OfParent() {
+      layPoz_Corner_3To4_Of(null);
    }
 
    /**
@@ -296,44 +290,66 @@ public class Area2DConfigurator implements IStringable {
       layPoz_StartToStart_Of(lay);
    }
 
-   public void layPoz_Corner_1To4_OfParent() {
-      layPoz_Corner_2To4_Of(null);
+   public void layPoz_Corner_4To4_OfParent() {
+      layPoz_Corner_4To4_Of(null);
    }
 
-   public void layPoz_Corner_3To1_Of(ILayoutable lay) {
-      layPoz_BotToTop_Of(lay);
-      layPoz_EndToStart_Of(lay);
+   public void layPoz_Corner_Of(int cornerPozee, int cornerLay, ILayoutable lay) {
+      if (cornerPozee == 1) {
+         if (cornerLay == 1) {
+            layPoz_Corner_1To1_Of(lay);
+         } else if (cornerLay == 2) {
+            layPoz_Corner_1To2_Of(lay);
+         } else if (cornerLay == 3) {
+            layPoz_Corner_1To3_Of(lay);
+         } else if (cornerLay == 4) {
+            layPoz_Corner_1To4_Of(lay);
+         } else {
+            throw new IllegalArgumentException();
+         }
+      } else if (cornerPozee == 2) {
+         if (cornerLay == 1) {
+            layPoz_Corner_2To1_Of(lay);
+         } else if (cornerLay == 2) {
+            layPoz_Corner_2To2_Of(lay);
+         } else if (cornerLay == 3) {
+            layPoz_Corner_2To3_Of(lay);
+         } else if (cornerLay == 4) {
+            layPoz_Corner_2To4_Of(lay);
+         } else {
+            throw new IllegalArgumentException();
+         }
+      } else if (cornerPozee == 3) {
+         if (cornerLay == 1) {
+            layPoz_Corner_3To1_Of(lay);
+         } else if (cornerLay == 2) {
+            layPoz_Corner_3To2_Of(lay);
+         } else if (cornerLay == 3) {
+            layPoz_Corner_3To3_Of(lay);
+         } else if (cornerLay == 4) {
+            layPoz_Corner_3To4_Of(lay);
+         } else {
+            throw new IllegalArgumentException();
+         }
+      } else if (cornerPozee == 4) {
+         if (cornerLay == 1) {
+            layPoz_Corner_4To1_Of(lay);
+         } else if (cornerLay == 2) {
+            layPoz_Corner_4To2_Of(lay);
+         } else if (cornerLay == 3) {
+            layPoz_Corner_4To3_Of(lay);
+         } else if (cornerLay == 4) {
+            layPoz_Corner_4To4_Of(lay);
+         } else {
+            throw new IllegalArgumentException();
+         }
+      } else {
+         throw new IllegalArgumentException();
+      }
    }
 
-   public void layPoz_Corner_3To1_OfParent() {
-      layPoz_Corner_3To1_Of(null);
-   }
-
-   public void layPoz_Corner_3To2_Of(ILayoutable lay) {
-      layPoz_BotToTop_Of(lay);
-      layPoz_EndToEnd_Of(lay);
-   }
-
-   public void layPoz_Corner_3To2_OfParent() {
-      layPoz_Corner_3To2_Of(null);
-   }
-
-   public void layPoz_Corner_3To3_Of(ILayoutable lay) {
-      layPoz_BotToBot_Of(lay);
-      layPoz_EndToEnd_Of(lay);
-   }
-
-   public void layPoz_Corner_3To3_OfParent() {
-      layPoz_Corner_3To3_Of(null);
-   }
-
-   public void layPoz_Corner_3To4_Of(ILayoutable lay) {
-      layPoz_BotToBot_Of(lay);
-      layPoz_EndToStart_Of(lay);
-   }
-
-   public void layPoz_Corner_3To4_OfParent() {
-      layPoz_Corner_3To4_Of(null);
+   public void layPoz_Corner_OfParent(int cornerPozee, int cornerLay) {
+      layPoz_Corner_Of(cornerPozee, cornerLay, null);
    }
 
    public void layPoz_EndToCenter_Of(ILayoutable lay) {
@@ -343,6 +359,29 @@ public class Area2DConfigurator implements IStringable {
 
    public void layPoz_EndToEnd_Of(ILayoutable lay) {
       ByteObject pozerX = lac.getPozerFactory().getPozerEndToEnd();
+      layPozXEnd(lay, pozerX);
+   }
+
+   public void layPoz_EndToEnd_Of_Margin(ILayoutable lay, ByteObject sizer) {
+      layPoz_EndToEnd_Of_With(lay, ITechPozer.POS_FUN_1_AWAY_CENTER, sizer);
+   }
+
+   public void layPoz_EndToEnd_Of_Padding(ILayoutable lay, ByteObject sizer) {
+      layPoz_EndToEnd_Of_With(lay, ITechPozer.POS_FUN_0_TOWARDS_CENTER, sizer);
+   }
+
+   /**
+    * <li>{@link ITechPozer#POS_FUN_0_TOWARDS_CENTER} XX towards the center of this object, in effect negative margin
+    * <li>{@link ITechPozer#POS_FUN_1_AWAY_CENTER} XX away the center of this object, in effect postive margin
+    * @param lay
+    * @param fun {@link ITechPozer#POS_OFFSET_10_SIZER_FUN1}
+    * @param sizer
+    */
+   public void layPoz_EndToEnd_Of_With(ILayoutable lay, int fun, ByteObject sizer) {
+      ByteObject pozerX = lac.getPozerFactory().getPozerEndToEnd();
+      if (sizer != null) {
+         lac.getPozerFactory().setPoserWithSizer(pozerX, fun, sizer);
+      }
       layPozXEnd(lay, pozerX);
    }
 
@@ -458,6 +497,10 @@ public class Area2DConfigurator implements IStringable {
       layPoz_StartToStart_Of_With(lay, ITechPozer.POS_FUN_1_AWAY_CENTER, sizer);
    }
 
+   public void layPoz_StartToStart_Of_Padding(ILayoutable lay, ByteObject sizer) {
+      layPoz_StartToStart_Of_With(lay, ITechPozer.POS_FUN_0_TOWARDS_CENTER, sizer);
+   }
+
    /**
     * <li>{@link ITechPozer#POS_FUN_0_TOWARDS_CENTER} XX towards the center of this object, in effect negative margin
     * <li>{@link ITechPozer#POS_FUN_1_AWAY_CENTER} XX away the center of this object, in effect postive margin
@@ -499,6 +542,22 @@ public class Area2DConfigurator implements IStringable {
    public void layPoz_TopToTop_Of(ILayoutable lay) {
       ByteObject pozerY = lac.getPozerFactory().getPozerTopToTop();
       layPozYTop(lay, pozerY);
+   }
+
+   public void layPoz_TopToTop_Of_Margin(ILayoutable lay, ByteObject sizer) {
+      layPoz_TopToTop_Of_With(lay, ITechPozer.POS_FUN_1_AWAY_CENTER, sizer);
+   }
+
+   public void layPoz_TopToTop_Of_Padding(ILayoutable lay, ByteObject sizer) {
+      layPoz_TopToTop_Of_With(lay, ITechPozer.POS_FUN_0_TOWARDS_CENTER, sizer);
+   }
+
+   public void layPoz_TopToTop_Of_With(ILayoutable lay, int fun, ByteObject sizer) {
+      ByteObject pozerX = lac.getPozerFactory().getPozerTopToTop();
+      if (sizer != null) {
+         lac.getPozerFactory().setPoserWithSizer(pozerX, fun, sizer);
+      }
+      layPozYTop(lay, pozerX);
    }
 
    public void layPoz_TopToTop_OfParent() {
