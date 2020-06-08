@@ -8,6 +8,11 @@ import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegate;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 
+/**
+ * 
+ * @author Charles Bentley
+ *
+ */
 public class LayoutDelegateAdapter implements ILayoutDelegate {
 
    protected final LayouterCtx lac;

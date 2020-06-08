@@ -24,7 +24,7 @@ public class LayoutableRect implements ILayoutable {
    /**
     * 
     */
-   protected final LayouterCtx lc;
+   protected final LayouterCtx lac;
 
    /**
     * 
@@ -47,7 +47,7 @@ public class LayoutableRect implements ILayoutable {
     * @param lc 
     */
    public LayoutableRect(LayouterCtx lc) {
-      this.lc = lc;
+      this.lac = lc;
    }
 
    /**
@@ -58,7 +58,7 @@ public class LayoutableRect implements ILayoutable {
     * @param h 
     */
    public LayoutableRect(LayouterCtx lc, int w, int h) {
-      this.lc = lc;
+      this.lac = lc;
       set(w, h);
    }
 
@@ -175,7 +175,6 @@ public class LayoutableRect implements ILayoutable {
       return 0;
    }
 
-
    /**
     * 
     *
@@ -212,7 +211,6 @@ public class LayoutableRect implements ILayoutable {
       return y;
    }
 
-
    /**
     * 
     *
@@ -231,7 +229,6 @@ public class LayoutableRect implements ILayoutable {
       return w;
    }
 
-
    /**
     * 
     *
@@ -249,7 +246,6 @@ public class LayoutableRect implements ILayoutable {
    public int getSizeFontWidth() {
       return w;
    }
-
 
    /**
     * 
@@ -466,7 +462,7 @@ public class LayoutableRect implements ILayoutable {
     * @param dc 
     */
    public void toString(Dctx dc) {
-      dc.root(this, "LayoutableRect");
+      dc.root(this, LayoutableRect.class, 469);
       toStringPrivate(dc);
    }
 
@@ -485,7 +481,7 @@ public class LayoutableRect implements ILayoutable {
     * @param dc 
     */
    public void toString1Line(Dctx dc) {
-      dc.root1Line(this, "LayoutableRect");
+      dc.root1Line(this,  LayoutableRect.class);
       toStringPrivate(dc);
    }
 
@@ -495,7 +491,7 @@ public class LayoutableRect implements ILayoutable {
     * @return 
     */
    public UCtx toStringGetUCtx() {
-      return lc.getUCtx();
+      return lac.getUCtx();
    }
 
    /**

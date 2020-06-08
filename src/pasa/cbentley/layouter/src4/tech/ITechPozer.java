@@ -31,7 +31,8 @@ public interface ITechPozer extends ITechByteObject {
     * It can be seen as a point reference and mostly used in dynamic pozers used
     * to move a {@link ILayoutable} on a pixel path.
     * 
-    * {@link ITechPozer#POS_OFFSET_10_SIZER_FUN1} holds the unit.
+    * {@link ITechPozer#POS_OFFSET_10_SIZER_FUN1} holds the unit. wrong as you can have a margin/padding
+    * around a point
     * 
     * This is a shortcut for a Sizer defined value. 
     */
@@ -67,6 +68,7 @@ public interface ITechPozer extends ITechByteObject {
     * attached to the Pozer
     */
    public static final int POS_ETALON_6_LAYOUTABLE                  = 6;
+   
    /**
     * {@link ILayoutDelegate} in a {@link ByteObjectLayoutDelegate}
     */
@@ -218,4 +220,6 @@ public interface ITechPozer extends ITechByteObject {
     * <li> {@link ITechLayout#RAW_UNIT_1_DIP}
     */
    public static final int POS_OFFSET_10_SIZER_FUN1                 = A_OBJECT_BASIC_SIZE + 9;
+   
+   public static final int DELEGATE_POINT_VALUE = -1;
 }

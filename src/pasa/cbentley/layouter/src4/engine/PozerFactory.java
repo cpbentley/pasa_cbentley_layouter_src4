@@ -108,7 +108,7 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     * <br>
     * Position will be dependent on object size.
     * @param alignSrc
-    * @param cx
+    * @param cx The point
     * @return
     */
    public ByteObject getPozerAtPixel(int alignSrc, int cx) {
@@ -135,6 +135,23 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       return pozerAtPixel0Lazy;
    }
 
+   /**
+    * The delegate decides a point
+    * @param delegate
+    * @return
+    */
+   public ByteObject getPozerDelegatePoint(ILayoutDelegate delegate, int alignSrc) {
+      ByteObject bo = getBOFactory().createByteObject(FTYPE_4_POSITION, POS_BASIC_SIZE);
+      bo.set1(POS_OFFSET_02_ETALON1, POS_ETALON_0_POINT);
+      bo.set1(POS_OFFSET_07_ANCHOR_POZEE1, alignSrc);
+      //special value for delegate call
+      bo.set4(POS_OFFSET_03_ANCHOR_ETALON_POINT_VALUE4, DELEGATE_POINT_VALUE);
+      
+      ByteObjectLayoutDelegate delegateBO = new ByteObjectLayoutDelegate(lc.getBOC(), delegate);
+      bo.addByteObject(delegateBO);
+
+      return bo;
+   }
    /**
     * Position the top of the pozee at the pixel value
     * Position the start of the pozee at the pixel value.
@@ -394,6 +411,14 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       return bo;
    }
 
+   /**
+    * The anchor is decided dynamically by the {@link ILayoutDelegate}
+    * @param delegate
+    * @param anchorSrc
+    * @param anchorDest
+    * @param atStyle
+    * @return
+    */
    public ByteObject getPozerOnDelegateAt(ILayoutDelegate delegate, int anchorSrc, int anchorDest, int atStyle) {
       ByteObject bo = getBOFactory().createByteObject(FTYPE_4_POSITION, POS_BASIC_SIZE);
       bo.set1(POS_OFFSET_02_ETALON1, ITechPozer.POS_ETALON_7_DELEGATE);
