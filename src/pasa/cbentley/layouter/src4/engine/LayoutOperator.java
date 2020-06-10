@@ -678,7 +678,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
          if (bo instanceof ByteObjectLayoutDelegate) {
             ByteObjectLayoutDelegate bol = (ByteObjectLayoutDelegate) bo;
             ILayoutDelegate delegate = bol.getDelegate();
-            layoutableEtalon = delegate.getDelegateSizer(sizer, layoutable, ctx);
+            layoutableEtalon = delegate.getDelegateEtaloneSizer(sizer, layoutable, ctx);
          } else if (bo instanceof ByteObjectLayoutable) {
             ByteObjectLayoutable bol = (ByteObjectLayoutable) bo;
             layoutableEtalon = bol.getLayoutable();
@@ -853,7 +853,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
    }
 
    /**
-    * 
+    * Called when mode is {@link ITechLayout#MODE_1_DELEGATE}
     *
     * @param sizer 
     * @param layoutable 
@@ -862,13 +862,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     */
    private int getPixelSizeDelegate(ByteObject sizer, ILayoutable layoutable, int ctx) {
       int delegateEtalon = sizer.get1(SIZER_OFFSET_03_ETALON1);
-      if (delegateEtalon == DELEGATE_ETALON_0_PREFERRED) {
-         if (ctx == CTX_1_WIDTH) {
-            return layoutable.getSizePreferredWidth();
-         } else {
-            return layoutable.getSizePreferredHeight();
-         }
-      } else if (delegateEtalon == DELEGATE_ETALON_1_PARENT_MAX) {
+      if (delegateEtalon == DELEGATE_ETALON_1_PARENT_MAX) {
          ILayoutable layoutableParent = layoutable.getLayoutableParent();
          if (layoutableParent == null) {
             throw new IllegalArgumentException();
@@ -884,7 +878,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
             throw new IllegalArgumentException("Not an instance of " + ILayoutDelegateMax.class);
          }
 
-      } else if (delegateEtalon == DELEGATE_ETALON_4_REFERENCE) {
+      } else if (delegateEtalon == DELEGATE_ETALON_0_REFERENCE) {
          ByteObject bo = sizer.getSubFirst(IBOTypesBOC.TYPE_017_REFERENCE_OBJECT);
          if (bo instanceof ByteObjectLayoutDelegate) {
             ByteObjectLayoutDelegate bol = (ByteObjectLayoutDelegate) bo;
@@ -900,6 +894,35 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       } else {
          throw new IllegalArgumentException();
       }
+   }
+
+   /**
+    * 
+    * @param sizer a sizer with a delegate
+    * @return never null
+    * @throws LayoutException if sizer malformed, its supposed to have one.
+    */
+   public ILayoutDelegate getDelegateFromSizer(ByteObject sizer) {
+      ILayoutDelegate del = getDelegateFromSizerNull(sizer);
+      if (del == null) {
+         throw new LayoutException(lc, "malformed sizer. should have a delegate");
+      }
+      return del;
+   }
+
+   /**
+    * 
+    * @param sizer a sizer with a delegate
+    * @return null if none
+    */
+   public ILayoutDelegate getDelegateFromSizerNull(ByteObject sizer) {
+      ByteObject bo = sizer.getSubFirst(IBOTypesBOC.TYPE_017_REFERENCE_OBJECT);
+      if (bo instanceof ByteObjectLayoutDelegate) {
+         ByteObjectLayoutDelegate bol = (ByteObjectLayoutDelegate) bo;
+         ILayoutDelegate delegate = bol.getDelegate();
+         return delegate;
+      }
+      return null;
    }
 
    /**

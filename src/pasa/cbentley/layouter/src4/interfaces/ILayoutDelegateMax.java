@@ -4,6 +4,11 @@
  */
 package pasa.cbentley.layouter.src4.interfaces;
 
+/**
+ * 
+ * @author Charles Bentley
+ *
+ */
 public interface ILayoutDelegateMax {
    /**
     * 
@@ -15,6 +20,7 @@ public interface ILayoutDelegateMax {
 
    /**
     * Ask on the Parent of {@link ILayoutable},
+    * 
     * the parent returns the maximum size,
     * might be preferred size or something else
     * The parent acts as a delegate.

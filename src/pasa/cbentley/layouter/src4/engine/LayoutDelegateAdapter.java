@@ -22,23 +22,13 @@ public class LayoutDelegateAdapter implements ILayoutDelegate {
 
    }
 
-   public int getDelegateSizeHeight(ByteObject sizer, ILayoutable layoutable) {
-      return 0;
-   }
 
-   public ILayoutable getDelegateEtalonePozer(ByteObject pozer, ILayoutable layoutable) {
+   public ILayoutable getDelegateEtalonePozer(ByteObject pozer, ILayoutable layoutable, int ctx) {
       return null;
    }
 
-   public ILayoutable getDelegateEtaloneSizer(ByteObject sizer, ILayoutable layoutable) {
-      return null;
-   }
 
-   public int getDelegateSizeWidth(ByteObject sizer, ILayoutable layoutable) {
-      return 0;
-   }
-
-   public ILayoutable getDelegateSizer(ByteObject sizer, ILayoutable layoutable, int ctx) {
+   public ILayoutable getDelegateEtaloneSizer(ByteObject sizer, ILayoutable layoutable, int ctx) {
       return null;
    }
 
@@ -47,6 +37,14 @@ public class LayoutDelegateAdapter implements ILayoutDelegate {
    }
 
    public int getDelegatePozerY(ByteObject pozer, ILayoutable layoutable) {
+      return 0;
+   }
+
+   public int getDelegateSizeHeight(ByteObject sizer, ILayoutable layoutable) {
+      return 0;
+   }
+
+   public int getDelegateSizeWidth(ByteObject sizer, ILayoutable layoutable) {
       return 0;
    }
 

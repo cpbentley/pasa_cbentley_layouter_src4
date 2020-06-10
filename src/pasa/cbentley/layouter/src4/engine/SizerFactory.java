@@ -177,6 +177,20 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
    }
 
    /**
+    * Size value is a ratio of the preferred size
+    * @return
+    */
+   public ByteObject getSizerRatio100OwnPreferred(int percent) {
+      ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
+      bo.set1(SIZER_OFFSET_02_MODE1, MODE_0_RAW_UNITS);
+      bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_0_SIZEE_CTX);
+      bo.set1(SIZER_OFFSET_04_FUNCTION1, ET_FUN_0_CTX); //when computing w, use pw
+      bo.set1(SIZER_OFFSET_06_PROPERTY1, SIZER_PROP_01_PREFERRED); //when computing w, use pw
+      setSizerRatio100(bo, percent);
+      return bo;
+   }
+   
+   /**
     * 
     * @return
     */
@@ -272,13 +286,13 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     * @param delegate
     * @return
     */
-   public ByteObject getSizerListener(ILayoutDelegate delegate) {
+   public ByteObject getSizerDelegate(ILayoutDelegate delegate) {
       ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
       bo.set1(SIZER_OFFSET_02_MODE1, MODE_1_DELEGATE);
-      bo.set1(SIZER_OFFSET_03_ETALON1, DELEGATE_ETALON_4_REFERENCE);
+      bo.set1(SIZER_OFFSET_03_ETALON1, DELEGATE_ETALON_0_REFERENCE);
       ByteObjectLayoutDelegate boLayoutable = new ByteObjectLayoutDelegate(lac.getBOC(), delegate);
       bo.addByteObject(boLayoutable);
-      return null;
+      return bo;
    }
 
    /**
@@ -327,6 +341,7 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     */
    public ByteObject getSizerNav(int ratio, int dir) {
       ByteObject bo = getSizerNew(MODE_2_RATIO, ratio, ETALON_5_LINK, LINK_1_NAV, 0);
+
       ByteObject linker = lac.getLayoutFactory().createLink(LINK_1_NAV, dir);
       bo.addByteObject(linker);
       return bo;
@@ -668,8 +683,10 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       int etalon = sizer.get1(SIZER_OFFSET_03_ETALON1);
       int type = sizer.get1(SIZER_OFFSET_06_PROPERTY1);
       int fun = sizer.get1(SIZER_OFFSET_04_FUNCTION1);
-      if (mode == MODE_0_RAW_UNITS || mode == MODE_1_DELEGATE) {
+      if (mode == MODE_0_RAW_UNITS) {
          return value + " " + ToStringStaticLayout.toStringMod(mode);
+      } else if( mode == MODE_1_DELEGATE) {
+         return "delegate =>"+ lac.getLayoutOperator().getDelegateFromSizerNull(sizer);
       } else {
          String strFun = ToStringStaticLayout.toStringFunShort(fun);
          String strEtalon = ToStringStaticLayout.toStringEtalonShort(etalon);

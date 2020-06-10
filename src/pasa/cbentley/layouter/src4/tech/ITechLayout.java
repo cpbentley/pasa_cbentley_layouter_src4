@@ -12,6 +12,7 @@ import pasa.cbentley.layouter.src4.engine.ByteObjectLayoutDelegate;
 import pasa.cbentley.layouter.src4.engine.LayEngine;
 import pasa.cbentley.layouter.src4.engine.Zer2DArea;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegate;
+import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegateMax;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 
 /**
@@ -80,28 +81,33 @@ public interface ITechLayout extends ITechByteObject {
     */
    public static final int DELEGATE_ETALON_0_PREFERRED           = 0;
 
-   /**
-    * 
-    */
-   public static final int DELEGATE_ETALON_2_CALL                = 2;
-
    
    /**
-    * Looks for {@link ByteObjectLayoutDelegate} in the Sizer.
+    * 
+    * Looks for an {@link ILayoutDelegate} from a {@link ByteObjectLayoutDelegate} in the Sizer.
     * 
     * This gets you an {@link ILayoutDelegate}
     * 
+    * For the mode {@link ITechLayout#MODE_1_DELEGATE}, 
+    * 
+    * <li> {@link ILayoutDelegate#getDelegateSizeWidth(ByteObject, ILayoutable)}
+    * 
+    * Used when value is a custom function
     */
-   public static final int DELEGATE_ETALON_4_REFERENCE              = 4;
+   public static final int DELEGATE_ETALON_0_REFERENCE              = 0;
 
    /**
     * 
     * {@link ILayoutable#getLayoutableParent()}
+    * 
     * This mode, takes the biggest possible value provided by the context
     * <br>
     * The parent is responsible to find that.. Delegate mode
     * 
     * Ask the Parent the maximum what? example? fill
+    * 
+    * {@link ILayoutDelegateMax}
+    * 
     */
    public static final int DELEGATE_ETALON_1_PARENT_MAX          = 1;
 
@@ -454,9 +460,8 @@ public interface ITechLayout extends ITechByteObject {
     * decides what its size should be with 
     * {@link ILayoutable#getSizePreferredHeight()}
     * 
-    * <li> {@link ITechLayout#DELEGATE_ETALON_0_PREFERRED}
-    * <li> {@link ITechLayout#DELEGATE_ETALON_2_CALL}
-    * <li> {@link ITechLayout#DELEGATE_ETALON_3_OBJECT}.
+    * <li> {@link ITechLayout#DELEGATE_ETALON_0_REFERENCE}
+    * <li> {@link ITechLayout#DELEGATE_ETALON_1_PARENT_MAX}
     * 
     * Dynamic listener
     * 
