@@ -10,6 +10,7 @@ import pasa.cbentley.core.src4.logging.IDLog;
 import pasa.cbentley.core.src4.structs.IntToObjects;
 import pasa.cbentley.core.src4.utils.BitUtils;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
+import pasa.cbentley.layouter.src4.ctx.ToStringStaticLayout;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDependencies;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
@@ -120,12 +121,16 @@ public class LayoutDependenciesArray implements ILayoutDependencies {
                layoutable.layoutInvalidate();
                layoutable.layoutUpdateSizeCheck();
                layoutable.layoutUpdatePositionCheck();
-            } else if (flags == ITechLayout.DEPENDENCY_2_POZE && isMatchPosition(flagsLayoutable)) {
-               layoutable.layoutInvalidatePosition();
-               layoutable.layoutUpdatePositionCheck();
-            } else if (flags == ITechLayout.DEPENDENCY_1_SIZE && isMatchSize(flagsLayoutable)) {
-               layoutable.layoutInvalidateSize();
-               layoutable.layoutUpdatePositionCheck();
+            } else if (flags == ITechLayout.DEPENDENCY_2_POZE) {
+               if (isMatchPosition(flagsLayoutable)) {
+                  layoutable.layoutInvalidatePosition();
+                  layoutable.layoutUpdatePositionCheck();
+               }
+            } else if (flags == ITechLayout.DEPENDENCY_1_SIZE) {
+               if (isMatchSize(flagsLayoutable)) {
+                  layoutable.layoutInvalidateSize();
+                  layoutable.layoutUpdatePositionCheck();
+               }
             }
          }
       }
@@ -183,8 +188,17 @@ public class LayoutDependenciesArray implements ILayoutDependencies {
     * @param dc 
     */
    public void toString(Dctx dc) {
-      dc.root(this, "LayoutDependenciesArray");
+      dc.root(this, LayoutDependenciesArray.class, "@line189");
       toStringPrivate(dc);
+      dc.appendVarWithNewLine("#dependencies", array.getLength());
+      for (int index = 0; index < array.getLength(); index++) {
+         ILayoutable o = (ILayoutable) array.getObjectAtIndex(index);
+         int flags = array.getInt(index);
+         dc.nl();
+         dc.appendVar("Type", ToStringStaticLayout.dependencies(flags));
+         dc.append(" ");
+         dc.oneLine(o);
+      }
    }
 
    /**
@@ -196,15 +210,12 @@ public class LayoutDependenciesArray implements ILayoutDependencies {
       return Dctx.toString1Line(this);
    }
 
-   /**
-    * 
-    *
-    * @param dc 
-    */
    public void toString1Line(Dctx dc) {
-      dc.root1Line(this, "LayoutDependenciesArray");
+      dc.root1Line(this, LayoutDependenciesArray.class);
       toStringPrivate(dc);
    }
+
+   //#enddebug
 
    /**
     * 
@@ -215,11 +226,6 @@ public class LayoutDependenciesArray implements ILayoutDependencies {
       return lc.getUCtx();
    }
 
-   /**
-    * 
-    *
-    * @param dc 
-    */
    private void toStringPrivate(Dctx dc) {
 
    }

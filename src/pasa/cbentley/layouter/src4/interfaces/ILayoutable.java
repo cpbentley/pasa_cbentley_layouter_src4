@@ -36,7 +36,8 @@ import pasa.cbentley.layouter.src4.tech.ITechSizer;
 public interface ILayoutable extends IStringable {
 
    /**
-    * Adding a dependency
+    * Adding a dependency. Which means that the {@link ILayoutable} parameter is using
+    * you for computing its sizes and/or positions.
     * 
     * A {@link ILayoutable} can find its children by looking at.
     * <li>{@link ITechLayout#DEPENDENCY_0_NONE}
@@ -44,6 +45,9 @@ public interface ILayoutable extends IStringable {
     * <li>{@link ITechLayout#DEPENDENCY_2_POZE}
     * <li>{@link ITechLayout#DEPENDENCY_3_BOTH}
     * <li>{@link ITechLayout#DEPENDENCY_4_PARENT}
+    * <br>
+    * When an local event that modifies your XY positions or WH sizes, the engine can request
+    * the computation of those {@link ILayoutable}s that depend on the changed values.
     * @param lay 
     * @param flags  
     */
@@ -57,7 +61,7 @@ public interface ILayoutable extends IStringable {
    public Zer2DArea getArea();
 
    /**
-    * Return the {@link ILayoutable} that depends on this.
+    * Return the {@link ILayoutable}s that depends on this {@link ILayoutable} for their wh sizes and/or xy positions.
     *
     * @return null if none
     */

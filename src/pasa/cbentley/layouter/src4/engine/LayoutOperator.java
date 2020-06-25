@@ -1297,7 +1297,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
    }
 
    /**
-    * 
+    * When layoutable has 2 pozers, constraining the width
     *
     * @param pozerX 
     * @param layoutable 
@@ -1306,9 +1306,15 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
    public int getPozXPure(ByteObject pozerX, ILayoutable layoutable) {
       //#debug
       checkNull(layoutable);
+      
+      //construct for each layoutable, its dependencies
+      //own sort them in asc. it will first layout those without dependencies.
+      //
 
       ILayoutable layoutableEtalon = getEtalonPozer(pozerX, layoutable, CTX_1_WIDTH);
+      layoutableEtalon.getDependencies(); //TODO get depedencies for X
       layoutableEtalon.layoutUpdatePositionXCheck();
+      
       layoutableEtalon.layoutUpdateSizeWCheck();
 
       int xEtalon = layoutableEtalon.getPozeX();

@@ -47,8 +47,8 @@ public class ToStringStaticLayout extends ToStringStaticBase {
 
    public static String toStringTypes(int type) {
       String str = toStringTypesNull(type);
-      if(str == null) {
-         return "UnknownType "+ type;
+      if (str == null) {
+         return "UnknownType " + type;
       }
       return str;
    }
@@ -61,6 +61,33 @@ public class ToStringStaticLayout extends ToStringStaticBase {
             return "Pozer";
          case IBOTypesLayout.FTYPE_6_LINK:
             return "Link";
+         default:
+            return null;
+      }
+   }
+
+   public static String dependencies(int type) {
+      String str = dependenciesNull(type);
+      if (str == null) {
+         return "Unknown dependency " + type;
+      }
+      return str;
+   }
+
+   public static String dependenciesNull(int type) {
+      switch (type) {
+         case ITechLayout.DEPENDENCY_0_NONE:
+            return "None";
+         case ITechLayout.DEPENDENCY_1_SIZE:
+            return "Size";
+         case ITechLayout.DEPENDENCY_2_POZE:
+            return "Position";
+         case ITechLayout.DEPENDENCY_3_BOTH:
+            return "SizeAndPosition";
+         case ITechLayout.DEPENDENCY_4_PARENT:
+            return "Parent";
+         case ITechLayout.DEPENDENCY_X_DELETE:
+            return "Delete";
          default:
             return null;
       }

@@ -73,7 +73,7 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
 
    protected ILayoutable       layoutable;
 
-   private ILayoutWillListener   layoutListener;
+   private ILayoutWillListener layoutListener;
 
    protected Zer2DRect         rect;
 
@@ -311,6 +311,12 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
       return isValidSizeH && isValidSizeW;
    }
 
+   /**
+    * <li> {@link ITechLayout#DEPENDENCY_0_NONE}
+    * <li> {@link ITechLayout#DEPENDENCY_1_SIZE}
+    * <li> {@link ITechLayout#DEPENDENCY_2_POZE}
+    * @param flags
+    */
    public void layoutUpdateDependencies(int flags) {
       if (dependencies != null) {
          dependencies.layoutUpdateDependencies(flags);
@@ -643,7 +649,7 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
    }
 
    public void toString(Dctx dc) {
-      dc.root(this, LayEngine.class,642);
+      dc.root(this, LayEngine.class, 642);
       toStringPrivate(dc);
 
       dc.nl();

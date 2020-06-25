@@ -667,6 +667,11 @@ public class Area2DConfigurator implements IStringable {
       laySiz_H_Ratio100OfParent(h);
    }
 
+   public void setSizePixel(int w, int h) {
+      setSizerW(lac.getSizerFactory().getSizerPix(w));
+      setSizerH(lac.getSizerFactory().getSizerPix(h));
+   }
+   
    public void setArea(Zer2DArea area) {
       this.area = area;
    }
