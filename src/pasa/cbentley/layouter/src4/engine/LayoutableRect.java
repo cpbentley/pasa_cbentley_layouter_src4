@@ -68,7 +68,7 @@ public class LayoutableRect implements ILayoutable {
     * @param lay 
     * @param flags 
     */
-   public void addDependency(ILayoutable lay, int flags) {
+   public void setDependency(ILayoutable lay, int flags) {
 
    }
 

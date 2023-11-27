@@ -5,12 +5,11 @@
 package pasa.cbentley.layouter.src4.engine;
 
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
-import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.helpers.StringBBuilder;
 import pasa.cbentley.core.src4.logging.Dctx;
-import pasa.cbentley.core.src4.logging.IDLog;
 import pasa.cbentley.core.src4.logging.IStringable;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
+import pasa.cbentley.layouter.src4.ctx.ObjectLayouter;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
 import pasa.cbentley.layouter.src4.tech.ITechPozer;
@@ -28,37 +27,32 @@ import pasa.cbentley.layouter.src4.tech.ITechSizer;
  * @author Charles Bentley
  *
  */
-public class Zer2DArea implements IStringable, ITechLayout {
+public class Zer2DArea extends ObjectLayouter implements IStringable, ITechLayout {
+
+   /**
+    * Can be null
+    */
+   protected ByteObject pozerXEnd;
+
+   /**
+    * Can be null
+    */
+   protected ByteObject pozerXStart;
+
+   /**
+    * Can be null
+    */
+   protected ByteObject pozerYBot;
+
+   /**
+    * Can be null
+    */
+   protected ByteObject pozerYTop;
 
    /**
     * 
     */
-   protected final LayouterCtx lc;
-
-   /**
-    * Can be null
-    */
-   protected ByteObject        pozerXEnd;
-
-   /**
-    * Can be null
-    */
-   protected ByteObject        pozerXStart;
-
-   /**
-    * Can be null
-    */
-   protected ByteObject        pozerYBot;
-
-   /**
-    * Can be null
-    */
-   protected ByteObject        pozerYTop;
-
-   /**
-    * 
-    */
-   protected Zer2DSizer        sizer;
+   protected Zer2DSizer sizer;
 
    /**
     * 
@@ -66,7 +60,7 @@ public class Zer2DArea implements IStringable, ITechLayout {
     * @param lc 
     */
    public Zer2DArea(LayouterCtx lc) {
-      this.lc = lc;
+      super(lc);
    }
 
    /**
@@ -101,6 +95,22 @@ public class Zer2DArea implements IStringable, ITechLayout {
     */
    public Zer2DArea cloneMe() {
       return (Zer2DArea) clone();
+   }
+
+   /**
+    * Minimum is 1
+    * @param decr
+    */
+   public void decrementSizerH(int decr) {
+      this.getSizerH().decrementMin(ITechSizer.SIZER_OFFSET_05_VALUE2, 2, decr, 1);
+   }
+
+   /**
+    * Minimum is 1
+    * @param decr
+    */
+   public void decrementSizerW(int decr) {
+      this.getSizerW().decrementMin(ITechSizer.SIZER_OFFSET_05_VALUE2, 2, decr, 1);
    }
 
    /**
@@ -156,31 +166,6 @@ public class Zer2DArea implements IStringable, ITechLayout {
          } else {
             return COMPUTE_0_INVALID;
          }
-      }
-   }
-
-   /**
-    * COMPUTE_3_BOTH if both pozers are defined.
-    * 
-    * @return
-    */
-   public int getSizeComputeFlagH() {
-      if (pozerYTop != null && pozerYBot != null) {
-         return COMPUTE_3_BOTH;
-      } else if (sizer != null && sizer.getSizerH() != null) {
-         return COMPUTE_1_NORMAL;
-      } else {
-         return COMPUTE_0_INVALID;
-      }
-   }
-
-   public int getSizeComputeFlagW() {
-      if (pozerXStart != null && pozerXEnd != null) {
-         return COMPUTE_3_BOTH;
-      } else if (sizer != null && sizer.getSizerW() != null) {
-         return COMPUTE_1_NORMAL;
-      } else {
-         return COMPUTE_0_INVALID;
       }
    }
 
@@ -261,6 +246,31 @@ public class Zer2DArea implements IStringable, ITechLayout {
    }
 
    /**
+    * COMPUTE_3_BOTH if both pozers are defined.
+    * 
+    * @return
+    */
+   public int getSizeComputeFlagH() {
+      if (pozerYTop != null && pozerYBot != null) {
+         return COMPUTE_3_BOTH;
+      } else if (sizer != null && sizer.getSizerH() != null) {
+         return COMPUTE_1_NORMAL;
+      } else {
+         return COMPUTE_0_INVALID;
+      }
+   }
+
+   public int getSizeComputeFlagW() {
+      if (pozerXStart != null && pozerXEnd != null) {
+         return COMPUTE_3_BOTH;
+      } else if (sizer != null && sizer.getSizerW() != null) {
+         return COMPUTE_1_NORMAL;
+      } else {
+         return COMPUTE_0_INVALID;
+      }
+   }
+
+   /**
     * 
     * {@link Zer2DSizer}
     * 
@@ -305,6 +315,14 @@ public class Zer2DArea implements IStringable, ITechLayout {
          return null;
       }
       return sizer.getSizerW();
+   }
+
+   public void incrementSizerH(int incr) {
+      this.getSizerH().increment(ITechSizer.SIZER_OFFSET_05_VALUE2, 2, incr);
+   }
+
+   public void incrementSizerW(int incr) {
+      this.getSizerW().increment(ITechSizer.SIZER_OFFSET_05_VALUE2, 2, incr);
    }
 
    /**
@@ -534,34 +552,18 @@ public class Zer2DArea implements IStringable, ITechLayout {
       getSizerLazy().setSizerWH(sizerW, sizerH);
    }
 
-   /**
-    * 
-    *
-    * @return 
-    */
    //#mdebug
-   public IDLog toDLog() {
-      return toStringGetUCtx().toDLog();
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public String toString() {
-      return Dctx.toString(this);
-   }
-
    /**
     * 
     *
     * @param dc 
     */
    public void toString(Dctx dc) {
-      dc.root(this, "Zer2DArea");
+      dc.root(this, Zer2DArea.class, "@line589");
       toStringPrivate(dc);
+      super.toString(dc.sup());
 
+      dc.nl();
       dc.appendVarWithSpace("isValidArea", isValidArea());
       dc.appendVarWithSpace("isValidSize", isValidSize());
       dc.appendVarWithSpace("isValidPosition", isValidPosition());
@@ -571,7 +573,7 @@ public class Zer2DArea implements IStringable, ITechLayout {
 
       dc.appendVarWithSpace("getSizeComputeFlagW", getSizeComputeFlagW());
       dc.appendVarWithSpace("getSizeComputeFlagH", getSizeComputeFlagH());
-      
+
       dc.nlLvl(sizer, "Sizer");
       toStringPozerLayout(dc, null);
    }
@@ -583,39 +585,18 @@ public class Zer2DArea implements IStringable, ITechLayout {
     * @param layoutable 
     */
    public void toString(Dctx dc, ILayoutable layoutable) {
-      dc.root(this, "Zer2DArea");
+      dc.root(this, Zer2DArea.class, "@line605");
       toStringPrivate(dc);
+      super.toString(dc.sup());
 
       dc.nlLvl(sizer, "Sizer");
       toStringPozerLayout(dc, layoutable);
    }
 
-   /**
-    * 
-    *
-    * @return 
-    */
-   public String toString1Line() {
-      return Dctx.toString1Line(this);
-   }
-
-   /**
-    * 
-    *
-    * @param dc 
-    */
    public void toString1Line(Dctx dc) {
-      dc.root1Line(this, "Zer2DArea");
+      dc.root1Line(this, Zer2DArea.class);
       toStringPrivate(dc);
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public UCtx toStringGetUCtx() {
-      return lc.getUCtx();
+      super.toString1Line(dc.sup1Line());
    }
 
    /**

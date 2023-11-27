@@ -10,9 +10,10 @@ import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.core.src4.logging.IDLog;
 import pasa.cbentley.core.src4.logging.IStringable;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
+import pasa.cbentley.layouter.src4.ctx.ObjectLayouter;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDependencies;
-import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutWillListener;
+import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
 import pasa.cbentley.layouter.src4.tech.ITechSizer;
 
@@ -71,6 +72,9 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
 
    protected final LayouterCtx lac;
 
+   /**
+    * invariant:not null
+    */
    protected ILayoutable       layoutable;
 
    private ILayoutWillListener layoutListener;
@@ -84,6 +88,10 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
     */
    public LayEngine(LayouterCtx lac, ILayoutable layoutable) {
       this.lac = lac;
+
+      //#debug
+      lac.toStringCheckNull(layoutable);
+
       this.layoutable = layoutable;
       data = new Area2DConfigurator(lac);
       rect = new Zer2DRect(lac);
@@ -92,14 +100,26 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
       //toDLog().pInit("LayEngine created for ", layoutable, LayEngine.class, "LayEngine", LVL_04_FINER, true);
    }
 
-   public void addDependency(ILayoutable layout, int type) {
+   /**
+    * <p>
+    * <li> {@link ITechLayout#DEPENDENCY_0_NONE}
+    * <li> {@link ITechLayout#DEPENDENCY_1_SIZE}
+    * <li> {@link ITechLayout#DEPENDENCY_2_POZE}
+    * <li> {@link ITechLayout#DEPENDENCY_3_BOTH}
+    * <li> {@link ITechLayout#DEPENDENCY_4_PARENT}
+    * <li> {@link ITechLayout#DEPENDENCY_X_DELETE}
+    * </p>
+    * @param layout
+    * @param type
+    */
+   public void setDependency(ILayoutable layout, int type) {
       if (layout == null) {
          throw new NullPointerException();
       }
       if (dependencies == null) {
          dependencies = new LayoutDependenciesArray(lac);
       }
-      dependencies.addDependency(layout, type);
+      dependencies.setDependency(layout, type);
    }
 
    private void generateSizerException(boolean isW) {
@@ -312,6 +332,8 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
    }
 
    /**
+    * Called when {@link ILayoutable} of this {@link LayEngine} has been modified
+    * 
     * <li> {@link ITechLayout#DEPENDENCY_0_NONE}
     * <li> {@link ITechLayout#DEPENDENCY_1_SIZE}
     * <li> {@link ITechLayout#DEPENDENCY_2_POZE}
@@ -365,11 +387,11 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
          }
       } else if (typeX == COMPUTE_1_NORMAL) {
          ByteObject pozerXStart = area.getPozerXStart();
-         int x = operator.getPozXWidth(pozerXStart, layoutable);
+         int x = operator.getPixelPozXWidth(pozerXStart, layoutable);
          rect.setX(x);
       } else if (typeX == COMPUTE_2_INVERSE) {
          ByteObject pozerXEnd = area.getPozerXEnd();
-         int x2 = operator.getPozXWidth(pozerXEnd, layoutable);
+         int x2 = operator.getPixelPozXWidth(pozerXEnd, layoutable);
          //we need a valid computed width
          layoutUpdateSizeWCheck();
          //int x = x2 - rect.getW();
@@ -377,8 +399,8 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
       } else if (typeX == COMPUTE_3_BOTH) {
          ByteObject pozerXStart = area.getPozerXStart();
          ByteObject pozerXEnd = area.getPozerXEnd();
-         int x = operator.getPozXPure(pozerXStart, layoutable);
-         int x2 = operator.getPozXPure(pozerXEnd, layoutable);
+         int x = operator.getPixelPozXPure(pozerXStart, layoutable);
+         int x2 = operator.getPixelPozXPure(pozerXEnd, layoutable);
          int width = x2 - x;
          rect.setX(x);
          rect.setW(width);
@@ -420,17 +442,17 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
          toDLog().pNull(msg, this, LayEngine.class, "layoutUpdatePositionX", LVL_05_FINE, false);
          throw new IllegalStateException(msg);
       } else if (typeY == COMPUTE_1_NORMAL) {
-         int y = operator.getPozYHeight(area.getPozerYTop(), layoutable);
+         int y = operator.getPixelPozYHeight(area.getPozerYTop(), layoutable);
          rect.setY(y);
       } else if (typeY == COMPUTE_2_INVERSE) {
-         int y2 = operator.getPozYHeight(area.getPozerYBot(), layoutable);
+         int y2 = operator.getPixelPozYHeight(area.getPozerYBot(), layoutable);
          //we need to make sure the H is correct
          layoutUpdateSizeHCheck();
          //int y = y2 - rect.getH();
          rect.setY(y2);
       } else if (typeY == COMPUTE_3_BOTH) {
-         int y = operator.getPozYPure(area.getPozerYTop(), layoutable);
-         int y2 = operator.getPozYPure(area.getPozerYBot(), layoutable);
+         int y = operator.getPixelPozYPure(area.getPozerYTop(), layoutable);
+         int y2 = operator.getPixelPozYPure(area.getPozerYBot(), layoutable);
          int h = y2 - y;
          rect.setY(y);
          rect.setH(h);
@@ -651,7 +673,8 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
    public void toString(Dctx dc) {
       dc.root(this, LayEngine.class, 642);
       toStringPrivate(dc);
-
+      //show from the start for which layoutable this engine is working for
+      dc.nlLvl(layoutable, "layoutable for which engine is working for");
       dc.nl();
       dc.appendVarWithSpace("isManualOverrideX", isManualOverrideX);
       dc.appendVarWithSpace("isManualOverrideY", isManualOverrideY);
@@ -664,8 +687,8 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
       //we want nice message
       dc.nlLvl(rect, "Rect");
       dc.nlLvl(data, "Laydata");
-      dc.nlLvl(dependencies, "Depedencies");
-      dc.nlLvl(layoutable, "layoutable");
+      //objects that depend on this for layout
+      dc.nlLvl(dependencies, "Dependencies: Objects that depend on "+layoutable.toStringName()+" for layout"); 
    }
 
    public String toString1Line() {

@@ -30,8 +30,8 @@ public abstract class LayoutableAbstract implements ILayoutable {
       engine = new LayEngineRead(lac, this);
    }
 
-   public void addDependency(ILayoutable lay, int flags) {
-      engine.addDependency(lay, flags);
+   public void setDependency(ILayoutable lay, int flags) {
+      engine.setDependency(lay, flags);
    }
 
    public Zer2DArea getArea() {

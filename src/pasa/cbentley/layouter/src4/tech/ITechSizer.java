@@ -174,7 +174,11 @@ public interface ITechSizer extends ITechByteObject {
     * Interpreation of the value depends on the {@link ITechSizer#SIZER_OFFSET_02_MODE1}
     * <li> {@link ITechLayout#MODE_0_RAW_UNITS} pixel
     * <li> {@link ITechLayout#MODE_1_DELEGATE} dip
-    * <li> {@link ITechLayout#MODE_2_RATIO} 2 bytes float with 4 bits above 0, 12 bits below
+    * <li> {@link ITechLayout#MODE_2_RATIO} Then use Fractions fields
+         <ol>
+         <li> {@link ITechLayout#SIZER_OFFSET_05A_FRACTION_TOP1}
+         <li> {@link ITechLayout#SIZER_OFFSET_05B_FRACTION_BOT1}
+         </ol>
     * <li> {@link ITechLayout#MODE_3_SCALE} The pixel are predefined from an etalon function
     *   <ol>
     *   <li> {@link ITechLayout#SIZE_0_NONE} ...
@@ -191,12 +195,18 @@ public interface ITechSizer extends ITechByteObject {
    public static final int SIZER_OFFSET_05_VALUE2           = A_OBJECT_BASIC_SIZE + 4;
 
    /**
-    * Instead of a value, a ratio gets a 8bits/8bits ratio
+    * Instead of a value, a ratio gets a 8bits/8bits ratio.
+    * <p>
+    * See {@link ITechSizer#SIZER_OFFSET_05_VALUE2} for more details
+    * </p>
     */
    public static final int SIZER_OFFSET_05A_FRACTION_TOP1   = A_OBJECT_BASIC_SIZE + 4;
 
    /**
-    * When zero, engine will assume its 1.. to avoid division by zero
+    * When zero, engine will assume its 1.. to avoid division by zero.
+    * <p>
+    * See {@link ITechSizer#SIZER_OFFSET_05_VALUE2} for more details
+    * </p>
     */
    public static final int SIZER_OFFSET_05B_FRACTION_BOT1   = A_OBJECT_BASIC_SIZE + 5;
 

@@ -34,11 +34,18 @@ public interface ILayoutDependencies extends IStringable {
 
    /**
     * 
-    *
+    * <p>
+    * <li> {@link ITechLayout#DEPENDENCY_0_NONE}
+    * <li> {@link ITechLayout#DEPENDENCY_1_SIZE}
+    * <li> {@link ITechLayout#DEPENDENCY_2_POZE}
+    * <li> {@link ITechLayout#DEPENDENCY_3_BOTH}
+    * <li> {@link ITechLayout#DEPENDENCY_4_PARENT}
+    * <li> {@link ITechLayout#DEPENDENCY_X_DELETE}
+    * </P>
     * @param lay 
     * @param flags 
     */
-   public void addDependency(ILayoutable lay, int flags);
+   public void setDependency(ILayoutable lay, int flags);
 
    /**
     * Remove the dependency to {@link ILayoutable} for the flags.

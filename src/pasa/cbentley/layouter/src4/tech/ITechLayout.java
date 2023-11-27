@@ -112,29 +112,29 @@ public interface ITechLayout extends ITechByteObject {
    public static final int DELEGATE_ETALON_1_PARENT_MAX          = 1;
 
    /**
-    * Keep in memory.
+    * Keep in memory. Contrast with {@link ITechLayout#DEPENDENCY_X_DELETE}
     */
    public static final int DEPENDENCY_0_NONE                     = 0;
 
    /**
     * {@link ILayoutable} depends on the size of another {@link ILayoutable}.
     */
-   public static final int DEPENDENCY_1_SIZE                     = 1;
+   public static final int DEPENDENCY_1_SIZE                     = 1 << 0;
 
    /**
     * 
     */
-   public static final int DEPENDENCY_2_POZE                     = 2;
+   public static final int DEPENDENCY_2_POZE                     = 1 << 1;
 
    /**
     * {@link ILayoutable} depends on the size anb position of the {@link ILayoutable}.
     */
-   public static final int DEPENDENCY_3_BOTH                     = 3;
+   public static final int DEPENDENCY_3_BOTH                     = DEPENDENCY_1_SIZE | DEPENDENCY_2_POZE;
 
    /**
-    * 
+    * Flag is set the dependency is parental
     */
-   public static final int DEPENDENCY_4_PARENT                   = 4;
+   public static final int DEPENDENCY_4_PARENT                   = 1 << 3;
 
    /**
     * 

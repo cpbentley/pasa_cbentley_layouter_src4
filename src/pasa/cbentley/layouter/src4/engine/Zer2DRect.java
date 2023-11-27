@@ -4,11 +4,10 @@
  */
 package pasa.cbentley.layouter.src4.engine;
 
-import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.logging.Dctx;
-import pasa.cbentley.core.src4.logging.IDLog;
 import pasa.cbentley.core.src4.logging.IStringable;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
+import pasa.cbentley.layouter.src4.ctx.ObjectLayouter;
 
 /**
  * Encapsulates x,y,w,h of a rectangle.
@@ -22,42 +21,37 @@ import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
  * 
  * It can also simply record a domain specific size to be used later.
  */
-public class Zer2DRect implements IStringable {
+public class Zer2DRect extends ObjectLayouter implements IStringable {
 
    /**
     * 
     */
-   private int                 h;
+   private int h;
 
    /**
     * 
     */
-   protected final LayouterCtx lc;
+   private int ph;
 
    /**
     * 
     */
-   private int                 ph;
+   private int pw;
 
    /**
     * 
     */
-   private int                 pw;
+   private int w;
 
    /**
     * 
     */
-   private int                 w;
+   private int x;
 
    /**
     * 
     */
-   private int                 x;
-
-   /**
-    * 
-    */
-   private int                 y;
+   private int y;
 
    /**
     * 
@@ -65,7 +59,7 @@ public class Zer2DRect implements IStringable {
     * @param lc 
     */
    public Zer2DRect(LayouterCtx lc) {
-      this.lc = lc;
+      super(lc);
    }
 
    /**
@@ -176,61 +170,27 @@ public class Zer2DRect implements IStringable {
       this.y = y;
    }
 
-   /**
-    * 
-    *
-    * @return 
-    */
    //#mdebug
-   public IDLog toDLog() {
-      return toStringGetUCtx().toDLog();
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public String toString() {
-      return Dctx.toString(this);
-   }
-
-   /**
-    * 
-    *
-    * @param dc 
-    */
    public void toString(Dctx dc) {
-      dc.root(this, "Zer2DRect");
+      dc.root(this, Zer2DRect.class, "@line175");
       toStringPrivate(dc);
+      super.toString(dc.sup());
+      dc.nl();
+      dc.append("[");
+      dc.append(x);
+      dc.append(',');
+      dc.append('y');
+      dc.append(' ');
+      dc.append(w);
+      dc.append(',');
+      dc.append(h);
+      dc.append(']');
    }
 
-   /**
-    * 
-    *
-    * @return 
-    */
-   public String toString1Line() {
-      return Dctx.toString1Line(this);
-   }
-
-   /**
-    * 
-    *
-    * @param dc 
-    */
    public void toString1Line(Dctx dc) {
-      dc.root1Line(this, "Zer2DRect");
+      dc.root1Line(this, Zer2DRect.class);
       toStringPrivate(dc);
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public UCtx toStringGetUCtx() {
-      return lc.getUCtx();
+      super.toString1Line(dc.sup1Line());
    }
 
    /**

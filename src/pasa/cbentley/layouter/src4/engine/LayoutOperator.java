@@ -8,10 +8,8 @@ import pasa.cbentley.byteobjects.src4.core.BOAbstractOperator;
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.byteobjects.src4.ctx.IBOTypesBOC;
 import pasa.cbentley.byteobjects.src4.tech.ITechRelation;
-import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.interfaces.C;
 import pasa.cbentley.core.src4.logging.Dctx;
-import pasa.cbentley.core.src4.logging.IDLog;
 import pasa.cbentley.layouter.src4.ctx.LayoutException;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
 import pasa.cbentley.layouter.src4.ctx.ToStringStaticLayout;
@@ -474,6 +472,35 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
 
    /**
     * 
+    * @param sizer a sizer with a delegate
+    * @return never null
+    * @throws LayoutException if sizer malformed, its supposed to have one.
+    */
+   public ILayoutDelegate getDelegateFromSizer(ByteObject sizer) {
+      ILayoutDelegate del = getDelegateFromSizerNull(sizer);
+      if (del == null) {
+         throw new LayoutException(lc, "malformed sizer. should have a delegate");
+      }
+      return del;
+   }
+
+   /**
+    * 
+    * @param sizer a sizer with a delegate
+    * @return null if none
+    */
+   public ILayoutDelegate getDelegateFromSizerNull(ByteObject sizer) {
+      ByteObject bo = sizer.getSubFirst(IBOTypesBOC.TYPE_017_REFERENCE_OBJECT);
+      if (bo instanceof ByteObjectLayoutDelegate) {
+         ByteObjectLayoutDelegate bol = (ByteObjectLayoutDelegate) bo;
+         ILayoutDelegate delegate = bol.getDelegate();
+         return delegate;
+      }
+      return null;
+   }
+
+   /**
+    * 
     *
     * @param value 
     * @return 
@@ -543,12 +570,13 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
    }
 
    /**
-    * 
+    * Return the {@link ILayoutable} that is used 
     *
-    * @param pozer 
+    * @param pozer the {@link ITechPozer} object defining how to select the Etalon for computing the position of <code>layoutable</code>
     * @param layoutable the {@link ILayoutable} to get the position for
-    * @param ctx 
-    * @return null if etalon not found
+    * @param ctx define x or y for positioning
+    * @return a not null {@link ILayoutable}
+    * @throws LayoutException if etalon not found
     */
    public ILayoutable getEtalonPozer(ByteObject pozer, ILayoutable layoutable, int ctx) {
       int etalon = pozer.get1(POS_OFFSET_02_ETALON1);
@@ -565,13 +593,13 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
             //#debug
             toDLog().pNull("getLayoutableParent() is null", layoutable, LayoutOperator.class, "getEtalonPozer", LVL_10_SEVERE, false);
          }
-         layoutableEtalon.addDependency(layoutable, ITechLayout.DEPENDENCY_2_POZE);
+         layoutableEtalon.setDependency(layoutable, ITechLayout.DEPENDENCY_2_POZE);
       } else if (etalon == ITechPozer.POS_ETALON_5_NAV_TOPOLOGY) {
          ByteObject litteral = pozer.getSubFirst(IBOTypesBOC.TYPE_002_LIT_INT);
          int idValue = lc.getBOC().getLitteralIntOperator().getIntValueFromBO(litteral);
          layoutableEtalon = layoutable.getLayoutableNav(idValue);
          //relation de dependance est actée
-         layoutableEtalon.addDependency(layoutable, ITechLayout.DEPENDENCY_2_POZE);
+         layoutableEtalon.setDependency(layoutable, ITechLayout.DEPENDENCY_2_POZE);
       } else if (etalon == ITechPozer.POS_ETALON_6_LAYOUTABLE) {
          ByteObject bo = pozer.getSubFirst(IBOTypesBOC.TYPE_017_REFERENCE_OBJECT);
          if (bo instanceof ByteObjectLayoutable) {
@@ -580,12 +608,12 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
          } else {
             throw new LayoutException(lc, "");
          }
-         layoutableEtalon.addDependency(layoutable, ITechLayout.DEPENDENCY_2_POZE);
+         layoutableEtalon.setDependency(layoutable, ITechLayout.DEPENDENCY_2_POZE);
       } else if (etalon == ITechPozer.POS_ETALON_3_LINK) {
          ByteObject litteral = pozer.getSubFirst(IBOTypesBOC.TYPE_002_LIT_INT);
          int idValue = lc.getBOC().getLitteralIntOperator().getIntValueFromBO(litteral);
          layoutableEtalon = layoutable.getLayoutableID(idValue);
-         layoutableEtalon.addDependency(layoutable, ITechLayout.DEPENDENCY_2_POZE);
+         layoutableEtalon.setDependency(layoutable, ITechLayout.DEPENDENCY_2_POZE);
       } else {
          String message = "Etalon value is not valid for pozer ->" + etalon;
          //#debug
@@ -692,9 +720,13 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
          int index = sizer.get1(SIZER_OFFSET_07_ETALON_SUBTYPE1); //type of linked defined in payload
          int param = sizer.get1(SIZER_OFFSET_09_ETALON_DATA2); //65k ids
          layoutableEtalon = getEtalonLink(sizer, index, param, layoutable);
-         layoutableEtalon.addDependency(layoutable, ITechLayout.DEPENDENCY_1_SIZE);
+         layoutableEtalon.setDependency(layoutable, ITechLayout.DEPENDENCY_1_SIZE);
       }
       return layoutableEtalon;
+   }
+
+   public LayouterCtx getLC() {
+      return lc;
    }
 
    /**
@@ -777,6 +809,129 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
          }
       }
       return -1;
+   }
+
+   /**
+    * Computes a pixel position value on the x axis for {@link ILayoutable}
+    * 
+    * When layoutable has 2 pozers, constraining the width
+    *
+    * @param pozerX 
+    * @param layoutable 
+    * @return 
+    */
+   public int getPixelPozXPure(ByteObject pozerX, ILayoutable layoutable) {
+      //#debug
+      checkNull(layoutable);
+
+      //construct for each layoutable, its dependencies
+      //own sort them in asc. it will first layout those without dependencies.
+      //
+
+      ILayoutable layoutableEtalon = getEtalonPozer(pozerX, layoutable, CTX_1_WIDTH);
+      layoutableEtalon.getDependencies(); //TODO get depedencies for X
+      layoutableEtalon.layoutUpdatePositionXCheck();
+
+      layoutableEtalon.layoutUpdateSizeWCheck();
+
+      int xEtalon = layoutableEtalon.getPozeX();
+      int wEtalon = layoutableEtalon.getSizeDrawnWidth();
+      int alignDest = pozerX.get1(POS_OFFSET_04_ANCHOR_ETALON1); //this decides the dependency
+      int x = getPosPure(alignDest, wEtalon, xEtalon);
+
+      //check for margin/padding
+      if (pozerX.hasFlag(ITechPozer.POS_OFFSET_01_FLAG, POS_FLAG_1_SIZER)) {
+         ByteObject sizer = pozerX.getSubFirst(IBOTypesLayout.FTYPE_3_SIZER);
+         int sizerValue = getPixelSize(sizer, layoutable, CTX_1_WIDTH);
+         int fun = pozerX.get1(POS_OFFSET_10_SIZER_FUN1);
+         x = funPos(alignDest, x, fun, sizerValue);
+      }
+
+      return x;
+   }
+
+   /**
+    * Computes the x position for {@link ILayoutable} using the given pozer.
+    * 
+    * @param pozerX
+    * @param layoutable the {@link ILayoutable} to get the position for
+    * @return
+    */
+   public int getPixelPozXWidth(ByteObject pozerX, ILayoutable layoutable) {
+
+      //#debug
+      checkNull(layoutable);
+
+      //get a reference to our etalon
+      ILayoutable layoutableEtalon = getEtalonPozer(pozerX, layoutable, CTX_1_WIDTH);
+      //the pozer compute position relative to the box
+      //compute relative or absolute?
+      layoutableEtalon.layoutUpdatePositionXCheck(); //make sure the etalon has been sized and positioned
+      layoutableEtalon.layoutUpdateSizeWCheck(); //make sure the etalon has been sized and positioned
+
+      int etalonX = layoutableEtalon.getPozeX();
+      int etalonW = layoutableEtalon.getSizeDrawnWidth();
+
+      layoutable.layoutUpdateSizeWCheck(); //we need our width computed to be able locate endof
+      int objectSize = layoutable.getSizeDrawnWidth();
+
+      int x = getPos(pozerX, etalonX, etalonW, objectSize, layoutable, CTX_1_WIDTH);
+      return x;
+   }
+
+   /**
+    * The value is valid in the reference of the etalon.
+    * @param pozerY
+    * @param layoutable
+    * @return
+    */
+   public int getPixelPozYHeight(ByteObject pozerY, ILayoutable layoutable) {
+      ILayoutable layoutableEtalon = getEtalonPozer(pozerY, layoutable, CTX_2_HEIGHT);
+      //the pozer compute position relative to the box
+      //compute relative or absolute?
+
+      layoutableEtalon.layoutUpdatePositionYCheck(); //make sure the etalon has been sized and positioned
+      layoutableEtalon.layoutUpdateSizeHCheck(); //make sure the etalon has been sized and positioned
+
+      int fx = layoutableEtalon.getPozeY();
+      int fw = layoutableEtalon.getSizeDrawnHeight();
+
+      layoutable.layoutUpdateSizeHCheck();
+      int objectSize = layoutable.getSizeDrawnHeight();
+
+      int y = getPos(pozerY, fx, fw, objectSize, layoutable, CTX_2_HEIGHT);
+      return y;
+   }
+
+   /**
+    * 
+    *
+    * @param pozerX 
+    * @param layoutable 
+    * @return 
+    */
+   public int getPixelPozYPure(ByteObject pozerX, ILayoutable layoutable) {
+      //#debug
+      checkNull(layoutable);
+
+      ILayoutable layoutableEtalon = getEtalonPozer(pozerX, layoutable, CTX_2_HEIGHT);
+      layoutableEtalon.layoutUpdatePositionYCheck();
+      layoutableEtalon.layoutUpdateSizeHCheck();
+
+      int fy = layoutableEtalon.getPozeY();
+      int fh = layoutableEtalon.getSizeDrawnHeight();
+      int alignDest = pozerX.get1(POS_OFFSET_04_ANCHOR_ETALON1);
+      int x = getPosPure(alignDest, fh, fy);
+
+      //check for margin/padding
+      if (pozerX.hasFlag(ITechPozer.POS_OFFSET_01_FLAG, POS_FLAG_1_SIZER)) {
+         ByteObject sizer = pozerX.getSubFirst(IBOTypesLayout.FTYPE_3_SIZER);
+         int sizerValue = getPixelSize(sizer, layoutable, CTX_2_HEIGHT);
+         int fun = pozerX.get1(POS_OFFSET_10_SIZER_FUN1);
+         x = funPos(alignDest, x, fun, sizerValue);
+      }
+
+      return x;
    }
 
    /**
@@ -897,43 +1052,14 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
    }
 
    /**
-    * 
-    * @param sizer a sizer with a delegate
-    * @return never null
-    * @throws LayoutException if sizer malformed, its supposed to have one.
-    */
-   public ILayoutDelegate getDelegateFromSizer(ByteObject sizer) {
-      ILayoutDelegate del = getDelegateFromSizerNull(sizer);
-      if (del == null) {
-         throw new LayoutException(lc, "malformed sizer. should have a delegate");
-      }
-      return del;
-   }
-
-   /**
-    * 
-    * @param sizer a sizer with a delegate
-    * @return null if none
-    */
-   public ILayoutDelegate getDelegateFromSizerNull(ByteObject sizer) {
-      ByteObject bo = sizer.getSubFirst(IBOTypesBOC.TYPE_017_REFERENCE_OBJECT);
-      if (bo instanceof ByteObjectLayoutDelegate) {
-         ByteObjectLayoutDelegate bol = (ByteObjectLayoutDelegate) bo;
-         ILayoutDelegate delegate = bol.getDelegate();
-         return delegate;
-      }
-      return null;
-   }
-
-   /**
-    * 
+    * Compute the height of the {@link ILayoutable} 
     *
-    * @param s 
-    * @param sc 
+    * @param sizer 
+    * @param lay 
     * @return 
     */
-   public int getPixelSizeH(ByteObject s, ILayoutable sc) {
-      return getPixelSize(s, sc, CTX_2_HEIGHT);
+   public int getPixelSizeH(ByteObject sizer, ILayoutable lay) {
+      return getPixelSize(sizer, lay, CTX_2_HEIGHT);
    }
 
    /**
@@ -986,9 +1112,11 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
    /**
     * 
     *
-    * @param sizer 
-    * @param layoutable 
-    * @param ctx 
+    * @param sizer The {@link ByteObject} size
+    * @param layoutable {@link ILayoutable} 
+    * @param ctx Context type of computation. Are we computing a width or an height
+    * <li> {@link ITechLayout#CTX_1_WIDTH}
+    * <li> {@link ITechLayout#CTX_2_HEIGHT}
     * @return 
     */
    private int getPixelSizeRatioEtalon(ByteObject sizer, ILayoutable layoutable, int ctx) {
@@ -1079,6 +1207,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     */
    public int getPos(ByteObject s, int etalonOrigin, int etalonSize, int objectSize, ILayoutable sc, int ctx) {
       s.checkType(FTYPE_4_POSITION);
+
       int alignSrc = s.get1(POS_OFFSET_07_ANCHOR_POZEE1);
       int alignDest = s.get1(POS_OFFSET_04_ANCHOR_ETALON1);
       int res = 0;
@@ -1269,9 +1398,9 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
    private int getPosition(ILayoutable layoutable, int ctx, ByteObject pozer1) {
       int val2;
       if (ctx == CTX_1_WIDTH) {
-         val2 = getPozXWidth(pozer1, layoutable);
+         val2 = getPixelPozXWidth(pozer1, layoutable);
       } else {
-         val2 = getPozYHeight(pozer1, layoutable);
+         val2 = getPixelPozYHeight(pozer1, layoutable);
       }
       return val2;
    }
@@ -1294,125 +1423,6 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
          val = xyLeftTop + objectSize;
       }
       return val;
-   }
-
-   /**
-    * When layoutable has 2 pozers, constraining the width
-    *
-    * @param pozerX 
-    * @param layoutable 
-    * @return 
-    */
-   public int getPozXPure(ByteObject pozerX, ILayoutable layoutable) {
-      //#debug
-      checkNull(layoutable);
-      
-      //construct for each layoutable, its dependencies
-      //own sort them in asc. it will first layout those without dependencies.
-      //
-
-      ILayoutable layoutableEtalon = getEtalonPozer(pozerX, layoutable, CTX_1_WIDTH);
-      layoutableEtalon.getDependencies(); //TODO get depedencies for X
-      layoutableEtalon.layoutUpdatePositionXCheck();
-      
-      layoutableEtalon.layoutUpdateSizeWCheck();
-
-      int xEtalon = layoutableEtalon.getPozeX();
-      int wEtalo = layoutableEtalon.getSizeDrawnWidth();
-      int alignDest = pozerX.get1(POS_OFFSET_04_ANCHOR_ETALON1);
-      int x = getPosPure(alignDest, wEtalo, xEtalon);
-
-      //check for margin/padding
-      if (pozerX.hasFlag(ITechPozer.POS_OFFSET_01_FLAG, POS_FLAG_1_SIZER)) {
-         ByteObject sizer = pozerX.getSubFirst(IBOTypesLayout.FTYPE_3_SIZER);
-         int sizerValue = getPixelSize(sizer, layoutable, CTX_1_WIDTH);
-         int fun = pozerX.get1(POS_OFFSET_10_SIZER_FUN1);
-         x = funPos(alignDest, x, fun, sizerValue);
-      }
-
-      return x;
-   }
-
-   /**
-    * Computes the x position for {@link ILayoutable} using the given pozer.
-    * @param pozerX
-    * @param layoutable the {@link ILayoutable} to get the position for
-    * @return
-    */
-   public int getPozXWidth(ByteObject pozerX, ILayoutable layoutable) {
-
-      //#debug
-      checkNull(layoutable);
-
-      ILayoutable layoutableEtalon = getEtalonPozer(pozerX, layoutable, CTX_1_WIDTH);
-      //the pozer compute position relative to the box
-      //compute relative or absolute?
-      layoutableEtalon.layoutUpdatePositionXCheck(); //make sure the etalon has been sized and positioned
-      layoutableEtalon.layoutUpdateSizeWCheck(); //make sure the etalon has been sized and positioned
-
-      int fx = layoutableEtalon.getPozeX();
-      int fw = layoutableEtalon.getSizeDrawnWidth();
-
-      layoutable.layoutUpdateSizeWCheck();
-      int objectSize = layoutable.getSizeDrawnWidth();
-
-      int x = getPos(pozerX, fx, fw, objectSize, layoutable, CTX_1_WIDTH);
-      return x;
-   }
-
-   /**
-    * The value is valid in the reference of the etalon.
-    * @param pozerY
-    * @param layoutable
-    * @return
-    */
-   public int getPozYHeight(ByteObject pozerY, ILayoutable layoutable) {
-      ILayoutable layoutableEtalon = getEtalonPozer(pozerY, layoutable, CTX_2_HEIGHT);
-      //the pozer compute position relative to the box
-      //compute relative or absolute?
-
-      layoutableEtalon.layoutUpdatePositionYCheck(); //make sure the etalon has been sized and positioned
-      layoutableEtalon.layoutUpdateSizeHCheck(); //make sure the etalon has been sized and positioned
-
-      int fx = layoutableEtalon.getPozeY();
-      int fw = layoutableEtalon.getSizeDrawnHeight();
-
-      layoutable.layoutUpdateSizeHCheck();
-      int objectSize = layoutable.getSizeDrawnHeight();
-
-      int y = getPos(pozerY, fx, fw, objectSize, layoutable, CTX_2_HEIGHT);
-      return y;
-   }
-
-   /**
-    * 
-    *
-    * @param pozerX 
-    * @param layoutable 
-    * @return 
-    */
-   public int getPozYPure(ByteObject pozerX, ILayoutable layoutable) {
-      //#debug
-      checkNull(layoutable);
-
-      ILayoutable layoutableEtalon = getEtalonPozer(pozerX, layoutable, CTX_2_HEIGHT);
-      layoutableEtalon.layoutUpdatePositionYCheck();
-      layoutableEtalon.layoutUpdateSizeHCheck();
-
-      int fy = layoutableEtalon.getPozeY();
-      int fh = layoutableEtalon.getSizeDrawnHeight();
-      int alignDest = pozerX.get1(POS_OFFSET_04_ANCHOR_ETALON1);
-      int x = getPosPure(alignDest, fh, fy);
-
-      //check for margin/padding
-      if (pozerX.hasFlag(ITechPozer.POS_OFFSET_01_FLAG, POS_FLAG_1_SIZER)) {
-         ByteObject sizer = pozerX.getSubFirst(IBOTypesLayout.FTYPE_3_SIZER);
-         int sizerValue = getPixelSize(sizer, layoutable, CTX_2_HEIGHT);
-         int fun = pozerX.get1(POS_OFFSET_10_SIZER_FUN1);
-         x = funPos(alignDest, x, fun, sizerValue);
-      }
-
-      return x;
    }
 
    /**
@@ -1541,16 +1551,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       obj.set4(index, val);
    }
 
-   /**
-    * 
-    *
-    * @return 
-    */
    //#mdebug
-   public IDLog toDLog() {
-      return lc.toDLog();
-   }
-
    /**
     * 
     *
@@ -1575,68 +1576,18 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       toDLog().pNull(msg, sizer, LayoutOperator.class, "toDLogMalformedSizer", LVL_05_FINE, true);
    }
 
-   /**
-    * 
-    *
-    * @return 
-    */
-   public String toString() {
-      return Dctx.toString(this);
-   }
-
-   /**
-    * 
-    *
-    * @param dc 
-    */
    public void toString(Dctx dc) {
-      dc.root(this, "BasicSizer");
+      dc.root(this, LayoutOperator.class, "@line5");
       toStringPrivate(dc);
+      super.toString(dc.sup());
    }
 
-   /**
-    * 
-    *
-    * @param dc 
-    * @param sizer 
-    */
-   public void toString(Dctx dc, ByteObject sizer) {
-      sizer.toString(dc);
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public String toString1Line() {
-      return Dctx.toString1Line(this);
-   }
-
-   /**
-    * 
-    *
-    * @param dc 
-    */
    public void toString1Line(Dctx dc) {
-      dc.root1Line(this, "BasicSizer");
+      dc.root1Line(this, LayoutOperator.class);
       toStringPrivate(dc);
+      super.toString1Line(dc.sup1Line());
    }
 
-   /**
-    * 
-    *
-    * @return 
-    */
-   public UCtx toStringGetUCtx() {
-      return lc.getUCtx();
-   }
-
-   /**
-    * 
-    *
-    * @param dc 
-    */
    private void toStringPrivate(Dctx dc) {
 
    }

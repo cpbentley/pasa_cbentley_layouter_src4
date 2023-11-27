@@ -137,7 +137,7 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
    }
 
    /**
-    * 
+    * If mode is ratio, value is assumed to be value/100
     *
     * @param mode {@link ITechSizer#MODE_2_RATIO}
     * @param value any value
@@ -152,7 +152,13 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       bo.set1(SIZER_OFFSET_03_ETALON1, etalon);
       bo.set1(SIZER_OFFSET_06_PROPERTY1, etype);
       bo.set1(SIZER_OFFSET_04_FUNCTION1, efun);
-      bo.set2(SIZER_OFFSET_05_VALUE2, value);
+      if(mode == MODE_2_RATIO) {
+         //assume 100
+         bo.set1(SIZER_OFFSET_05A_FRACTION_TOP1, value);
+         bo.set1(SIZER_OFFSET_05B_FRACTION_BOT1, 100);
+      } else {
+         bo.set2(SIZER_OFFSET_05_VALUE2, value);
+      }
       return bo;
    }
 

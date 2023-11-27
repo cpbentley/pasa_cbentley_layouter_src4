@@ -10,25 +10,21 @@ import pasa.cbentley.core.src4.logging.IDLog;
 import pasa.cbentley.core.src4.structs.IntToObjects;
 import pasa.cbentley.core.src4.utils.BitUtils;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
+import pasa.cbentley.layouter.src4.ctx.ObjectLayouter;
 import pasa.cbentley.layouter.src4.ctx.ToStringStaticLayout;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDependencies;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
 
 /**
- * Helper class for implementing the {@link ILayoutable#addDependency(ILayoutable, int)} method.
+ * Helper class for implementing the {@link ILayoutable#setDependency(ILayoutable, int)} method.
  */
-public class LayoutDependenciesArray implements ILayoutDependencies {
+public class LayoutDependenciesArray extends ObjectLayouter implements ILayoutDependencies {
 
    /**
     * int is the dependency type.
     */
-   private IntToObjects        array;
-
-   /**
-    * 
-    */
-   protected final LayouterCtx lc;
+   private IntToObjects array;
 
    /**
     * 
@@ -36,7 +32,7 @@ public class LayoutDependenciesArray implements ILayoutDependencies {
     * @param lc 
     */
    public LayoutDependenciesArray(LayouterCtx lc) {
-      this.lc = lc;
+      super(lc);
       array = new IntToObjects(lc.getUCtx());
    }
 
@@ -46,7 +42,7 @@ public class LayoutDependenciesArray implements ILayoutDependencies {
     * @param lay 
     * @param flags 
     */
-   public void addDependency(ILayoutable lay, int flags) {
+   public void setDependency(ILayoutable lay, int flags) {
       int index = array.getObjectIndex(lay);
       if (index == -1) {
          array.add(lay, flags);
@@ -163,73 +159,34 @@ public class LayoutDependenciesArray implements ILayoutDependencies {
 
    }
 
-   /**
-    * 
-    *
-    * @return 
-    */
+
    //#mdebug
-   public IDLog toDLog() {
-      return toStringGetUCtx().toDLog();
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public String toString() {
-      return Dctx.toString(this);
-   }
-
-   /**
-    * 
-    *
-    * @param dc 
-    */
    public void toString(Dctx dc) {
-      dc.root(this, LayoutDependenciesArray.class, "@line189");
+      dc.root(this, LayoutDependenciesArray.class, "@line5");
       toStringPrivate(dc);
+      super.toString(dc.sup());
       dc.appendVarWithNewLine("#dependencies", array.getLength());
       for (int index = 0; index < array.getLength(); index++) {
          ILayoutable o = (ILayoutable) array.getObjectAtIndex(index);
          int flags = array.getInt(index);
          dc.nl();
          dc.appendVar("Type", ToStringStaticLayout.dependencies(flags));
-         dc.append(" ");
+         dc.append("->");
          dc.oneLine(o);
       }
    }
 
-   /**
-    * 
-    *
-    * @return 
-    */
-   public String toString1Line() {
-      return Dctx.toString1Line(this);
+   private void toStringPrivate(Dctx dc) {
+      
    }
 
    public void toString1Line(Dctx dc) {
       dc.root1Line(this, LayoutDependenciesArray.class);
       toStringPrivate(dc);
+      super.toString1Line(dc.sup1Line());
    }
 
    //#enddebug
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public UCtx toStringGetUCtx() {
-      return lc.getUCtx();
-   }
-
-   private void toStringPrivate(Dctx dc) {
-
-   }
-
-   //#enddebug
+   
 
 }

@@ -5,21 +5,16 @@
 package pasa.cbentley.layouter.src4.engine;
 
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
-import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.logging.Dctx;
-import pasa.cbentley.core.src4.logging.IDLog;
 import pasa.cbentley.core.src4.logging.IStringable;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
+import pasa.cbentley.layouter.src4.ctx.ObjectLayouter;
 
 /**
  * 
  */
-public abstract class Zer2DAbstract implements IStringable {
+public abstract class Zer2DAbstract extends ObjectLayouter implements IStringable {
 
-   /**
-    * 
-    */
-   protected final LayouterCtx lc;
 
    /**
     * 
@@ -39,7 +34,7 @@ public abstract class Zer2DAbstract implements IStringable {
     * @param sizerH 
     */
    public Zer2DAbstract(LayouterCtx lc, ByteObject sizerW, ByteObject sizerH) {
-      this.lc = lc;
+      super(lc);
       this.er2dW = sizerW;
       this.er2dH = sizerH;
    }
@@ -67,72 +62,26 @@ public abstract class Zer2DAbstract implements IStringable {
       }
    }
 
-   /**
-    * 
-    *
-    * @return 
-    */
+
    //#mdebug
-   public IDLog toDLog() {
-      return toStringGetUCtx().toDLog();
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public String toString() {
-      return Dctx.toString(this);
-   }
-
-   /**
-    * 
-    *
-    * @param dc 
-    */
    public void toString(Dctx dc) {
-      dc.root(this, Zer2DAbstract.class, "@line95");
+      dc.root(this, Zer2DAbstract.class, "@line70");
       toStringPrivate(dc);
+      super.toString(dc.sup());
    }
 
-   /**
-    * 
-    *
-    * @return 
-    */
-   public String toString1Line() {
-      return Dctx.toString1Line(this);
-   }
-
-   /**
-    * 
-    *
-    * @param dc 
-    */
    private void toStringPrivate(Dctx dc) {
-
+      
    }
 
-   /**
-    * 
-    *
-    * @param dc 
-    */
    public void toString1Line(Dctx dc) {
-      dc.root1Line(this, "Zer2DAbstract");
+      dc.root1Line(this, Zer2DAbstract.class);
       toStringPrivate(dc);
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public UCtx toStringGetUCtx() {
-      return lc.getUCtx();
+      super.toString1Line(dc.sup1Line());
    }
 
    //#enddebug
+   
 
+   
 }
