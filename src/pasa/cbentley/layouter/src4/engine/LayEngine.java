@@ -468,7 +468,9 @@ public class LayEngine implements IStringable, ITechLayout, ITechSizer {
    }
 
    /**
-    * 
+    * When layout size is invalid do
+    * <li> {@link LayEngine#layoutUpdateSizeWCheck()}
+    * <li> {@link LayEngine#layoutUpdateSizeHCheck()}
     */
    public void layoutUpdateSizeCheck() {
       if (layoutIsValidSize()) {
