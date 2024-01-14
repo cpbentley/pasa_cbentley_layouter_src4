@@ -4,7 +4,7 @@
  */
 package pasa.cbentley.layouter.src4.tech;
 
-import pasa.cbentley.byteobjects.src4.tech.ITechByteObject;
+import pasa.cbentley.byteobjects.src4.core.interfaces.IByteObject;
 import pasa.cbentley.core.src4.interfaces.C;
 import pasa.cbentley.layouter.src4.engine.ByteObjectLayoutDelegate;
 import pasa.cbentley.layouter.src4.engine.ByteObjectLayoutable;
@@ -16,7 +16,7 @@ import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
  *
  * @author Charles Bentley
  */
-public interface ITechPozer extends ITechByteObject {
+public interface ITechPozer extends IByteObject {
 
    /**
     * 

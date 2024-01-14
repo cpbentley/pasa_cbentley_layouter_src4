@@ -7,7 +7,7 @@ package pasa.cbentley.layouter.src4.ctx;
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.byteobjects.src4.ctx.BOCtx;
 import pasa.cbentley.byteobjects.src4.ctx.IBOTypesBOC;
-import pasa.cbentley.byteobjects.src4.tech.ITechRelation;
+import pasa.cbentley.byteobjects.src4.objects.function.ITechRelation;
 import pasa.cbentley.core.src4.ctx.ACtx;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.layouter.src4.engine.LayoutFactory;
@@ -99,8 +99,7 @@ public class LayouterCtx extends ACtx {
    }
 
    /**
-    * 
-    *
+    * {@link BOCtx}
     * @return 
     */
    public BOCtx getBOC() {
@@ -108,8 +107,7 @@ public class LayouterCtx extends ACtx {
    }
 
    /**
-    * 
-    *
+    * {@link BOModuleLayouter}
     * @return 
     */
    public BOModuleLayouter getBOModule() {

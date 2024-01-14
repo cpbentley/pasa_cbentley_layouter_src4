@@ -29,13 +29,13 @@ public class BOModuleLayouter extends BOModuleAbstract implements IBOTypesLayout
       this.lc = lc;
    }
 
-   public ByteObject getFlagOrdered(ByteObject bo, int offset, int flag) {
-      // TODO Auto-generated method stub
+   public ByteObject getFlagOrderedBO(ByteObject bo, int offset, int flag) {
+      //no orderd flags in this module
       return null;
    }
 
-   public String getIDString(int did, int value) {
-      // TODO Auto-generated method stub
+   public String toStringGetDIDString(int did, int value) {
+      //DID in this module
       return null;
    }
 

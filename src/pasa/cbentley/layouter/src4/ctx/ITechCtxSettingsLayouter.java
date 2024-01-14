@@ -4,9 +4,9 @@
  */
 package pasa.cbentley.layouter.src4.ctx;
 
-import pasa.cbentley.byteobjects.src4.tech.ITechCtxSettings;
+import pasa.cbentley.byteobjects.src4.core.interfaces.IBOCtxSettings;
 
-public interface ITechCtxSettingsLayouter extends ITechCtxSettings {
+public interface ITechCtxSettingsLayouter extends IBOCtxSettings {
 
    public static final int CTX_LAY_BASIC_SIZE      = CTX_BASIC_SIZE + 5;
 

@@ -5,7 +5,7 @@
 package pasa.cbentley.layouter.src4.tech;
 
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
-import pasa.cbentley.byteobjects.src4.tech.ITechByteObject;
+import pasa.cbentley.byteobjects.src4.core.interfaces.IByteObject;
 import pasa.cbentley.layouter.src4.engine.SizerFactory;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 
@@ -34,7 +34,7 @@ import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
  * @author Charles Bentley
  *
  */
-public interface IBoSizer extends ITechByteObject {
+public interface IBoSizer extends IByteObject {
 
    /**
     * 

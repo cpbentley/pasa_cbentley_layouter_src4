@@ -4,14 +4,14 @@
  */
 package pasa.cbentley.layouter.src4.tech;
 
-import pasa.cbentley.byteobjects.src4.tech.ITechByteObject;
+import pasa.cbentley.byteobjects.src4.core.interfaces.IByteObject;
 
 /**
  * Linker provides a reference to an etalon.
  *
  * @author Charles Bentley
  */
-public interface ITechLinker extends ITechByteObject {
+public interface ITechLinker extends IByteObject {
    
    /**
     * 
