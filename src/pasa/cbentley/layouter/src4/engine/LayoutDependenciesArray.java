@@ -10,7 +10,7 @@ import pasa.cbentley.core.src4.logging.IDLog;
 import pasa.cbentley.core.src4.structs.IntToObjects;
 import pasa.cbentley.core.src4.utils.BitUtils;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
-import pasa.cbentley.layouter.src4.ctx.ObjectLayouter;
+import pasa.cbentley.layouter.src4.ctx.ObjectLC;
 import pasa.cbentley.layouter.src4.ctx.ToStringStaticLayout;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDependencies;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
@@ -19,7 +19,7 @@ import pasa.cbentley.layouter.src4.tech.ITechLayout;
 /**
  * Helper class for implementing the {@link ILayoutable#setDependency(ILayoutable, int)} method.
  */
-public class LayoutDependenciesArray extends ObjectLayouter implements ILayoutDependencies {
+public class LayoutDependenciesArray extends ObjectLC implements ILayoutDependencies {
 
    /**
     * int is the dependency type.

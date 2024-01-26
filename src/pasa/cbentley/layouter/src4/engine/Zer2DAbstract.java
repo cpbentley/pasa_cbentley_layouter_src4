@@ -8,12 +8,12 @@ import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.core.src4.logging.IStringable;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
-import pasa.cbentley.layouter.src4.ctx.ObjectLayouter;
+import pasa.cbentley.layouter.src4.ctx.ObjectLC;
 
 /**
  * 
  */
-public abstract class Zer2DAbstract extends ObjectLayouter implements IStringable {
+public abstract class Zer2DAbstract extends ObjectLC implements IStringable {
 
 
    /**

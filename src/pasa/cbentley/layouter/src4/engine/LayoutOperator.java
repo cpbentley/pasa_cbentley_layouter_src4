@@ -10,17 +10,18 @@ import pasa.cbentley.byteobjects.src4.ctx.IBOTypesBOC;
 import pasa.cbentley.byteobjects.src4.objects.function.ITechRelation;
 import pasa.cbentley.core.src4.interfaces.C;
 import pasa.cbentley.core.src4.logging.Dctx;
+import pasa.cbentley.layouter.src4.ctx.IBOTypesLayout;
 import pasa.cbentley.layouter.src4.ctx.LayoutException;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
 import pasa.cbentley.layouter.src4.ctx.ToStringStaticLayout;
-import pasa.cbentley.layouter.src4.interfaces.IBOTypesLayout;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegate;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegateMax;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 import pasa.cbentley.layouter.src4.tech.ITechCoded;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
-import pasa.cbentley.layouter.src4.tech.ITechPozer;
 import pasa.cbentley.layouter.src4.tech.ITechSizer;
+import pasa.cbentley.layouter.src4.tech.IBOPozer;
+import pasa.cbentley.layouter.src4.tech.IBOSizer;
 
 /**
  * How to use molecular sizes?
@@ -49,7 +50,7 @@ import pasa.cbentley.layouter.src4.tech.ITechSizer;
  * @author Charles-Philip
  *
  */
-public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout, ITechPozer, ITechSizer, ITechLayout, ITechCoded {
+public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout, IBOPozer, IBOSizer, ITechLayout, ITechCoded {
 
    public static boolean hasSubFlag(int value) {
       return ((value >> 30) & 0x3) == 2;
@@ -390,7 +391,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     *
     * @param val {@link C#LOGIC_1_TOP_LEFT} /  {@link C#LOGIC_2_CENTER} /  {@link C#LOGIC_3_BOTTOM_RIGHT}
     * @param ref the value to modify
-    * @param cfun {@link ITechPozer#POS_FUN_0_TOWARDS_CENTER} / {@link ITechPozer#POS_FUN_1_AWAY_CENTER}
+    * @param cfun {@link IBOPozer#POS_FUN_0_TOWARDS_CENTER} / {@link IBOPozer#POS_FUN_1_AWAY_CENTER}
     * @param extraSizing 
     * @return 
     */
@@ -572,7 +573,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
    /**
     * Return the {@link ILayoutable} that is used 
     *
-    * @param pozer the {@link ITechPozer} object defining how to select the Etalon for computing the position of <code>layoutable</code>
+    * @param pozer the {@link IBOPozer} object defining how to select the Etalon for computing the position of <code>layoutable</code>
     * @param layoutable the {@link ILayoutable} to get the position for
     * @param ctx define x or y for positioning
     * @return a not null {@link ILayoutable}
@@ -583,24 +584,24 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       ILayoutable layoutableEtalon = null;
       if (etalon == POS_ETALON_0_POINT) {
          layoutableEtalon = getEtalonPozer0Point(pozer, ctx);
-      } else if (etalon == ITechPozer.POS_ETALON_4_SIZER) {
+      } else if (etalon == IBOPozer.POS_ETALON_4_SIZER) {
          layoutableEtalon = getEtalonPozerSizer(pozer, ctx, layoutableEtalon);
-      } else if (etalon == ITechPozer.POS_ETALON_2_VIEWCTX) {
+      } else if (etalon == IBOPozer.POS_ETALON_2_VIEWCTX) {
          layoutableEtalon = layoutable.getLayoutableViewContext();
-      } else if (etalon == ITechPozer.POS_ETALON_1_PARENT) {
+      } else if (etalon == IBOPozer.POS_ETALON_1_PARENT) {
          layoutableEtalon = layoutable.getLayoutableParent();
          if (layoutableEtalon == null) {
             //#debug
             toDLog().pNull("getLayoutableParent() is null", layoutable, LayoutOperator.class, "getEtalonPozer", LVL_10_SEVERE, false);
          }
          layoutableEtalon.setDependency(layoutable, ITechLayout.DEPENDENCY_2_POZE);
-      } else if (etalon == ITechPozer.POS_ETALON_5_NAV_TOPOLOGY) {
+      } else if (etalon == IBOPozer.POS_ETALON_5_NAV_TOPOLOGY) {
          ByteObject litteral = pozer.getSubFirst(IBOTypesBOC.TYPE_002_LIT_INT);
          int idValue = lc.getBOC().getLitteralIntOperator().getIntValueFromBO(litteral);
          layoutableEtalon = layoutable.getLayoutableNav(idValue);
          //relation de dependance est actée
          layoutableEtalon.setDependency(layoutable, ITechLayout.DEPENDENCY_2_POZE);
-      } else if (etalon == ITechPozer.POS_ETALON_6_LAYOUTABLE) {
+      } else if (etalon == IBOPozer.POS_ETALON_6_LAYOUTABLE) {
          ByteObject bo = pozer.getSubFirst(IBOTypesBOC.TYPE_017_REFERENCE_OBJECT);
          if (bo instanceof ByteObjectLayoutable) {
             ByteObjectLayoutable bol = (ByteObjectLayoutable) bo;
@@ -609,7 +610,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
             throw new LayoutException(lc, "");
          }
          layoutableEtalon.setDependency(layoutable, ITechLayout.DEPENDENCY_2_POZE);
-      } else if (etalon == ITechPozer.POS_ETALON_3_LINK) {
+      } else if (etalon == IBOPozer.POS_ETALON_3_LINK) {
          ByteObject litteral = pozer.getSubFirst(IBOTypesBOC.TYPE_002_LIT_INT);
          int idValue = lc.getBOC().getLitteralIntOperator().getIntValueFromBO(litteral);
          layoutableEtalon = layoutable.getLayoutableID(idValue);
@@ -840,7 +841,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       int x = getPosPure(alignDest, wEtalon, xEtalon);
 
       //check for margin/padding
-      if (pozerX.hasFlag(ITechPozer.POS_OFFSET_01_FLAG, POS_FLAG_1_SIZER)) {
+      if (pozerX.hasFlag(IBOPozer.POS_OFFSET_01_FLAG, POS_FLAG_1_SIZER)) {
          ByteObject sizer = pozerX.getSubFirst(IBOTypesLayout.FTYPE_3_SIZER);
          int sizerValue = getPixelSize(sizer, layoutable, CTX_1_WIDTH);
          int fun = pozerX.get1(POS_OFFSET_10_SIZER_FUN1);
@@ -924,7 +925,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       int x = getPosPure(alignDest, fh, fy);
 
       //check for margin/padding
-      if (pozerX.hasFlag(ITechPozer.POS_OFFSET_01_FLAG, POS_FLAG_1_SIZER)) {
+      if (pozerX.hasFlag(IBOPozer.POS_OFFSET_01_FLAG, POS_FLAG_1_SIZER)) {
          ByteObject sizer = pozerX.getSubFirst(IBOTypesLayout.FTYPE_3_SIZER);
          int sizerValue = getPixelSize(sizer, layoutable, CTX_2_HEIGHT);
          int fun = pozerX.get1(POS_OFFSET_10_SIZER_FUN1);
@@ -938,7 +939,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     * 
     * {@link LayouterCtx} provides global value such as DPI, Scaling etc.
     * 
-    * @param sizer {@link ITechSizer}
+    * @param sizer {@link IBOSizer}
     * @param layoutable the sizing context on which to compute etalon size of The Layoutable
     * @param ctx width or heigth
     * @return
@@ -1437,9 +1438,9 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       switch (type) {
          case ITechSizer.SIZER_PROP_00_DRAWN:
             return layoutable.getSizeDrawnHeight();
-         case SIZER_PROP_01_PREFERRED:
+         case ITechSizer.SIZER_PROP_01_PREFERRED:
             return layoutable.getSizePreferredHeight();
-         case SIZER_PROP_02_UNIT_LOGIC:
+         case ITechSizer.SIZER_PROP_02_UNIT_LOGIC:
             //TODO with style, including artifacts etc, number, current number
             return layoutable.getSizePropertyValueH(ITechSizer.SIZER_PROP_02_UNIT_LOGIC);
          default:
@@ -1459,9 +1460,9 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       switch (type) {
          case ITechSizer.SIZER_PROP_00_DRAWN:
             return layoutable.getSizeDrawnWidth();
-         case SIZER_PROP_01_PREFERRED:
+         case ITechSizer.SIZER_PROP_01_PREFERRED:
             return layoutable.getSizePreferredWidth();
-         case SIZER_PROP_02_UNIT_LOGIC:
+         case ITechSizer.SIZER_PROP_02_UNIT_LOGIC:
             return layoutable.getSizePropertyValueW(ITechSizer.SIZER_PROP_02_UNIT_LOGIC);
          default:
             return layoutable.getSizeDrawnWidth();

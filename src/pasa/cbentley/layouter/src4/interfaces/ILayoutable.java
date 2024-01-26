@@ -11,8 +11,9 @@ import pasa.cbentley.layouter.src4.engine.ByteObjectLayoutDelegate;
 import pasa.cbentley.layouter.src4.engine.LayEngine;
 import pasa.cbentley.layouter.src4.engine.Zer2DArea;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
-import pasa.cbentley.layouter.src4.tech.ITechPozer;
 import pasa.cbentley.layouter.src4.tech.ITechSizer;
+import pasa.cbentley.layouter.src4.tech.IBOPozer;
+import pasa.cbentley.layouter.src4.tech.IBOSizer;
 
 /**
  * 2D UI object able to be used in the Layouter engine.
@@ -70,8 +71,8 @@ public interface ILayoutable extends IStringable {
    /**
     * Enables custom etalon types for
     * 
-    * {@link ITechSizer#SIZER_OFFSET_07_ETALON_SUBTYPE1}
-    * {@link ITechPozer#POS_OFFSET_02_ETALON1}
+    * {@link IBOSizer#SIZER_OFFSET_07_ETALON_SUBTYPE1}
+    * {@link IBOPozer#POS_OFFSET_02_ETALON1}
     * 
     * TODO add the layout context to help choose the etalon, provides others parameteres
     * the target layoutable etc

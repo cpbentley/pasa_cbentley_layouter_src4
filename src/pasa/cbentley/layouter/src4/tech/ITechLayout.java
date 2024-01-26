@@ -5,7 +5,7 @@
 package pasa.cbentley.layouter.src4.tech;
 
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
-import pasa.cbentley.byteobjects.src4.core.interfaces.IByteObject;
+import pasa.cbentley.core.src4.interfaces.ITech;
 import pasa.cbentley.core.src4.interfaces.ITechNav;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
 import pasa.cbentley.layouter.src4.engine.ByteObjectLayoutDelegate;
@@ -19,7 +19,7 @@ import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
  * @author Charles-Philip Bentley
  *
  */
-public interface ITechLayout extends IByteObject {
+public interface ITechLayout extends ITech {
 
    /**
     * 
@@ -260,7 +260,7 @@ public interface ITechLayout extends IByteObject {
    public static final int ET_FUN_7_DELEGATE                       = 7;
 
    /**
-    * Etalon link type {@link ITechSizer#SIZER_OFFSET_06_PROPERTY1}.
+    * Etalon link type {@link IBOSizer#SIZER_OFFSET_06_PROPERTY1}.
     */
    public static final int ET_LINK_0_ID                          = 0;
 
@@ -295,7 +295,7 @@ public interface ITechLayout extends IByteObject {
     * 
     * In a table, contextual width is the width of one column.
     * <br>
-    * For this etalon, the {@link ITechSizer#SIZER_OFFSET_06_PROPERTY1} is
+    * For this etalon, the {@link IBOSizer#SIZER_OFFSET_06_PROPERTY1} is
     * 
     * Included in the {@link ITechCoded#CODED_BITS_2_ETALON}
     */
@@ -385,7 +385,7 @@ public interface ITechLayout extends IByteObject {
    public static final int ETALON_4_PARENT                       = 4;
 
    /**
-    * Etalon is defined as {@link ITechLinker} in this {@link ByteObject}.
+    * Etalon is defined as {@link IBOLinker} in this {@link ByteObject}.
     * 
     * Usually used when linking to a totally unrelated object.
     * 
@@ -399,11 +399,11 @@ public interface ITechLayout extends IByteObject {
    public static final int ETALON_5_LINK                         = 5;
 
    /**
-    * This etalon is valid for {@link ITechSizer} where sizee has a corresponding 
+    * This etalon is valid for {@link IBOSizer} where sizee has a corresponding 
     * pozer defined. We use the etalon defined there.
     * 
     * Pozer defines a box to position that we use 
-    * {@link ITechPozer#POS_OFFSET_02_ETALON1}.
+    * {@link IBOPozer#POS_OFFSET_02_ETALON1}.
     * Etalon is defined by 4 pozers -> 2 points creating a rectangle
     * a valid {@link Zer2DArea}
     */
@@ -445,9 +445,9 @@ public interface ITechLayout extends IByteObject {
    public static final int LINK_2_UIID                           = 6;
 
    /**
-    * Interprets {@link ITechSizer#SIZER_OFFSET_05_VALUE2} as absolute raw value pixel. 
+    * Interprets {@link IBOSizer#SIZER_OFFSET_05_VALUE2} as absolute raw value pixel. 
     * 
-    * The unit is decided by  {@link ITechSizer#SIZER_OFFSET_03_ETALON1}
+    * The unit is decided by  {@link IBOSizer#SIZER_OFFSET_03_ETALON1}
     * <br>
     * Included in the {@link ITechCoded#CODED_BITS_1_MODE}
     * 
@@ -470,9 +470,9 @@ public interface ITechLayout extends IByteObject {
    public static final int MODE_1_DELEGATE                       = 1;
 
    /**
-    * Interprets {@link ITechSizer#SIZER_OFFSET_05_VALUE2} as a Ratio of an Etalon.
+    * Interprets {@link IBOSizer#SIZER_OFFSET_05_VALUE2} as a Ratio of an Etalon.
     * <br>
-    * Etalon is defined by {@link ITechSizer#SIZER_OFFSET_03_ETALON1}.
+    * Etalon is defined by {@link IBOSizer#SIZER_OFFSET_03_ETALON1}.
     * <br>
     * <br>
     * Q:How do you define a 16/9 ratio ? 
@@ -483,7 +483,7 @@ public interface ITechLayout extends IByteObject {
    public static final int MODE_2_RATIO                          = 2;
 
    /**
-    *  Interprets {@link ITechSizer#SIZER_OFFSET_05_VALUE2} as belonging to the set
+    *  Interprets {@link IBOSizer#SIZER_OFFSET_05_VALUE2} as belonging to the set
     * <li> {@link ITechLayout#SIZE_0_NONE}
     * <li> {@link ITechLayout#SIZE_1_SMALLEST}
     * <li> {@link ITechLayout#SIZE_2_SMALL}
@@ -492,19 +492,19 @@ public interface ITechLayout extends IByteObject {
     * <li> {@link ITechLayout#SIZE_5_BIGGEST}
     * <br>
     * 
-    * {@link ITechSizer#SIZER_OFFSET_03_ETALON1} provides the scale of things.
+    * {@link IBOSizer#SIZER_OFFSET_03_ETALON1} provides the scale of things.
     * <li> {@link ITechLayout#SCALE_0_PADDING}
     * <li> {@link ITechLayout#SCALE_1_EXPO}
     * <li> {@link ITechLayout#SCALE_2_FONT}
     * <br>
-    * {@link ITechSizer#SIZER_OFFSET_06_PROPERTY1} provides ?
-    * {@link ITechSizer#SIZER_OFFSET_04_FUNCTION1} provides ?
+    * {@link IBOSizer#SIZER_OFFSET_06_PROPERTY1} provides ?
+    * {@link IBOSizer#SIZER_OFFSET_04_FUNCTION1} provides ?
     * <br>
     * Usually it will be related to the font size
     * <br>
     * <br>
     * 
-    * Type of scale is defined by {@link ITechSizer#SIZER_OFFSET_03_ETALON1}.
+    * Type of scale is defined by {@link IBOSizer#SIZER_OFFSET_03_ETALON1}.
     * 
     * The idea of this mode is to define margins as small/medium/big.
     * Those values are centralized
@@ -516,7 +516,7 @@ public interface ITechLayout extends IByteObject {
     * <br>
     * The 2 sizers used are the 2 first found.
     * 
-    * The only relevant field is {@link ITechSizer#SIZER_OFFSET_04_FUNCTION1} that defines the operator
+    * The only relevant field is {@link IBOSizer#SIZER_OFFSET_04_FUNCTION1} that defines the operator
     * to use between the 2 sizes.
     */
    public static final int MODE_5_FUNCTION                       = 5;
@@ -559,7 +559,7 @@ public interface ITechLayout extends IByteObject {
    public static final int RAW_UNIT_0_PIXEL                      = 0;
 
    /**
-    * Interprets {@link ITechSizer#SIZER_OFFSET_05_VALUE2} as DPI (Density Independent Pixel)
+    * Interprets {@link IBOSizer#SIZER_OFFSET_05_VALUE2} as DPI (Density Independent Pixel)
     * <br>
     * When a value is express in DIPs, the engine computes the number of pixels using
     * 

@@ -7,7 +7,7 @@ package pasa.cbentley.layouter.src4.engine;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.core.src4.logging.IStringable;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
-import pasa.cbentley.layouter.src4.ctx.ObjectLayouter;
+import pasa.cbentley.layouter.src4.ctx.ObjectLC;
 
 /**
  * Encapsulates x,y,w,h of a rectangle.
@@ -21,7 +21,7 @@ import pasa.cbentley.layouter.src4.ctx.ObjectLayouter;
  * 
  * It can also simply record a domain specific size to be used later.
  */
-public class Zer2DRect extends ObjectLayouter implements IStringable {
+public class Zer2DRect extends ObjectLC implements IStringable {
 
    /**
     * 

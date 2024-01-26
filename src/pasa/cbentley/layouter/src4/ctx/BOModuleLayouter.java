@@ -7,7 +7,6 @@ package pasa.cbentley.layouter.src4.ctx;
 import pasa.cbentley.byteobjects.src4.core.BOModuleAbstract;
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.core.src4.logging.Dctx;
-import pasa.cbentley.layouter.src4.interfaces.IBOTypesLayout;
 
 /**
  * 

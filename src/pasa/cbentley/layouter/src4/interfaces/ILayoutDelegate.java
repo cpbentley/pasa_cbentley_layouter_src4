@@ -8,7 +8,7 @@ import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.core.src4.logging.IStringable;
 import pasa.cbentley.layouter.src4.engine.LayoutOperator;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
-import pasa.cbentley.layouter.src4.tech.ITechSizer;
+import pasa.cbentley.layouter.src4.tech.IBOSizer;
 
 /**
  * When the function is too complex or dynamic to be expressed by {@link ITechLayout}
@@ -60,7 +60,7 @@ public interface ILayoutDelegate extends IStringable {
     * <br>
     * The sizer {@link ByteObject} that generated this call in the {@link LayoutOperator} is provided 
     * <br>
-    * Used when the function for computing the height is too complex or dynamic to be expressed using the {@link ITechSizer}
+    * Used when the function for computing the height is too complex or dynamic to be expressed using the {@link IBOSizer}
     * @param sizer 
     * @param layoutable
     * @return 

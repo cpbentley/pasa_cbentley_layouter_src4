@@ -7,21 +7,22 @@ package pasa.cbentley.layouter.src4.engine;
 import pasa.cbentley.byteobjects.src4.core.BOAbstractFactory;
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.core.src4.logging.Dctx;
+import pasa.cbentley.layouter.src4.ctx.IBOTypesLayout;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
 import pasa.cbentley.layouter.src4.ctx.ToStringStaticLayout;
-import pasa.cbentley.layouter.src4.interfaces.IBOTypesLayout;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegate;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 import pasa.cbentley.layouter.src4.tech.ITechCoded;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
-import pasa.cbentley.layouter.src4.tech.ITechLinker;
-import pasa.cbentley.layouter.src4.tech.ITechPozer;
 import pasa.cbentley.layouter.src4.tech.ITechSizer;
+import pasa.cbentley.layouter.src4.tech.IBOLinker;
+import pasa.cbentley.layouter.src4.tech.IBOPozer;
+import pasa.cbentley.layouter.src4.tech.IBOSizer;
 
 /**
  * 
  */
-public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOTypesLayout, ITechCoded, ITechSizer, ITechPozer, ITechLayout {
+public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTypesLayout, ITechCoded, IBOSizer, IBOPozer, ITechLayout {
 
    /**
     * 
@@ -129,7 +130,7 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
       bo.set1(SIZER_OFFSET_02_MODE1, MODE_2_RATIO);
       bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_0_SIZEE_CTX);
-      bo.set1(SIZER_OFFSET_06_PROPERTY1, SIZER_PROP_02_UNIT_LOGIC);
+      bo.set1(SIZER_OFFSET_06_PROPERTY1, ITechSizer.SIZER_PROP_02_UNIT_LOGIC);
       bo.set1(SIZER_OFFSET_04_FUNCTION1, ET_FUN_0_CTX);
       bo.set1(SIZER_OFFSET_05A_FRACTION_TOP1, times);
       bo.set1(SIZER_OFFSET_05B_FRACTION_BOT1, 1);
@@ -139,11 +140,11 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
    /**
     * If mode is ratio, value is assumed to be value/100
     *
-    * @param mode {@link ITechSizer#MODE_2_RATIO}
+    * @param mode {@link IBOSizer#MODE_2_RATIO}
     * @param value any value
-    * @param etalon {@link ITechSizer#ETALON_1_VIEWCONTEXT}
-    * @param etype {@link ITechSizer#E_VIEWCONTEXT_1_APPLI}
-    * @param efun {@link ITechSizer#ET_FUN_3_MIN}
+    * @param etalon {@link IBOSizer#ETALON_1_VIEWCONTEXT}
+    * @param etype {@link IBOSizer#E_VIEWCONTEXT_1_APPLI}
+    * @param efun {@link IBOSizer#ET_FUN_3_MIN}
     * @return 
     */
    public ByteObject getSizer(int mode, int value, int etalon, int etype, int efun) {
@@ -191,7 +192,7 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       bo.set1(SIZER_OFFSET_02_MODE1, MODE_0_RAW_UNITS);
       bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_0_SIZEE_CTX);
       bo.set1(SIZER_OFFSET_04_FUNCTION1, ET_FUN_0_CTX); //when computing w, use pw
-      bo.set1(SIZER_OFFSET_06_PROPERTY1, SIZER_PROP_01_PREFERRED); //when computing w, use pw
+      bo.set1(SIZER_OFFSET_06_PROPERTY1, ITechSizer.SIZER_PROP_01_PREFERRED); //when computing w, use pw
       setSizerRatio100(bo, percent);
       return bo;
    }
@@ -204,7 +205,7 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
       setSizerRatio1(bo, 1);
       bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_0_SIZEE_CTX);
-      bo.set1(SIZER_OFFSET_06_PROPERTY1, SIZER_PROP_03_FONT);
+      bo.set1(SIZER_OFFSET_06_PROPERTY1, ITechSizer.SIZER_PROP_03_FONT);
       bo.set1(SIZER_OFFSET_04_FUNCTION1, ET_FUN_0_CTX);
       return bo;
    }
@@ -237,7 +238,7 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
    public ByteObject getSizerFromOldValue(int value) {
       ByteObject sizer = null;
       if (value == 0) {
-         int etalonType = SIZER_PROP_01_PREFERRED;
+         int etalonType = ITechSizer.SIZER_PROP_01_PREFERRED;
          int etalon = ETALON_0_SIZEE_CTX;
          //0 value equal preferred size
          sizer = getSizer(MODE_2_RATIO, 0, etalon, etalonType, 0);
@@ -254,8 +255,8 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
 
    /**
     * Function is
-    * <li> {@link ITechSizer#ET_FUN_6_DIFF}
-    * <li> {@link ITechSizer#ET_FUN_5_ADD}.
+    * <li> {@link IBOSizer#ET_FUN_6_DIFF}
+    * <li> {@link IBOSizer#ET_FUN_5_ADD}.
     *
     * @param function 
     * @param sizer1 
@@ -458,7 +459,7 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       setSizerRatio100(bo, 100);
       bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_0_SIZEE_CTX);
       bo.set1(SIZER_OFFSET_04_FUNCTION1, ET_FUN_0_CTX);
-      bo.set1(SIZER_OFFSET_06_PROPERTY1, SIZER_PROP_01_PREFERRED);
+      bo.set1(SIZER_OFFSET_06_PROPERTY1, ITechSizer.SIZER_PROP_01_PREFERRED);
       return bo;
    }
 
@@ -475,7 +476,7 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
       setSizerRatio100(bo, 100);
       bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_0_SIZEE_CTX);
-      bo.set1(SIZER_OFFSET_06_PROPERTY1, SIZER_PROP_01_PREFERRED);
+      bo.set1(SIZER_OFFSET_06_PROPERTY1, ITechSizer.SIZER_PROP_01_PREFERRED);
       addMax(bo, maximuSizer);
       return bo;
    }
@@ -500,11 +501,11 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
    /**
     * A ration definition with the etalon ID and 
     * 
-    * {@link ITechSizer#SIZER_OFFSET_02_MODE1} is {@link ITechLayout#MODE_2_RATIO}
+    * {@link IBOSizer#SIZER_OFFSET_02_MODE1} is {@link ITechLayout#MODE_2_RATIO}
     * 
     * Etalon .
-    * @param etalon {@link ITechSizer#SIZER_OFFSET_03_ETALON1}
-    * @param ratioValue {@link ITechSizer#SIZER_OFFSET_05_VALUE2}
+    * @param etalon {@link IBOSizer#SIZER_OFFSET_03_ETALON1}
+    * @param ratioValue {@link IBOSizer#SIZER_OFFSET_05_VALUE2}
     * @return 
     */
    public ByteObject getSizerRatio100(int etalon, int ratioValue) {
@@ -538,7 +539,7 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       setSizerRatio100(bo, ratioValue);
       bo.set1(SIZER_OFFSET_03_ETALON1, etalon);
       bo.set1(SIZER_OFFSET_04_FUNCTION1, ET_FUN_1_WIDTH);
-      bo.set1(SIZER_OFFSET_06_PROPERTY1, SIZER_PROP_00_DRAWN);
+      bo.set1(SIZER_OFFSET_06_PROPERTY1, ITechSizer.SIZER_PROP_00_DRAWN);
       return bo;
    }
 
@@ -546,7 +547,7 @@ public class SizerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     * 
     * @param ratioValue
     * @param etalon
-    * @param etalonFun {@link ITechSizer#SIZER_OFFSET_04_FUNCTION1} {@link ITechLayout#ET_FUN_0_CTX}
+    * @param etalonFun {@link IBOSizer#SIZER_OFFSET_04_FUNCTION1} {@link ITechLayout#ET_FUN_0_CTX}
     * @param etalonType
     * @return
     */

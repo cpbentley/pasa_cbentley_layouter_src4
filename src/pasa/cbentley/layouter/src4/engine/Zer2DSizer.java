@@ -8,12 +8,12 @@ import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
-import pasa.cbentley.layouter.src4.tech.ITechSizer;
+import pasa.cbentley.layouter.src4.tech.IBOSizer;
 
 /**
  * 
  */
-public class Zer2DSizer extends Zer2DAbstract implements ITechSizer {
+public class Zer2DSizer extends Zer2DAbstract implements IBOSizer {
 
    /**
     * 

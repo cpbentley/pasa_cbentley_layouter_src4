@@ -16,7 +16,7 @@ import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
  *
  * @author Charles Bentley
  */
-public interface ITechPozer extends IByteObject {
+public interface IBOPozer extends IByteObject {
 
    /**
     * 
@@ -24,14 +24,14 @@ public interface ITechPozer extends IByteObject {
    public static final int POS_BASIC_SIZE                           = A_OBJECT_BASIC_SIZE + 10;
 
    /**
-    * Value {@link ITechPozer#POS_OFFSET_03_ANCHOR_ETALON_POINT_VALUE4} is taken literally.
+    * Value {@link IBOPozer#POS_OFFSET_03_ANCHOR_ETALON_POINT_VALUE4} is taken literally.
     * 
-    * {@link ITechPozer#POS_OFFSET_07_ANCHOR_POZEE1} is used.
+    * {@link IBOPozer#POS_OFFSET_07_ANCHOR_POZEE1} is used.
     * 
     * It can be seen as a point reference and mostly used in dynamic pozers used
     * to move a {@link ILayoutable} on a pixel path.
     * 
-    * {@link ITechPozer#POS_OFFSET_10_SIZER_FUN1} holds the unit. wrong as you can have a margin/padding
+    * {@link IBOPozer#POS_OFFSET_10_SIZER_FUN1} holds the unit. wrong as you can have a margin/padding
     * around a point
     * 
     * This is a shortcut for a Sizer defined value. 
@@ -54,7 +54,7 @@ public interface ITechPozer extends IByteObject {
    public static final int POS_ETALON_3_LINK                        = 3;
 
    /**
-    * A sizer is defined and will be used instead of {@link ITechPozer#POS_OFFSET_03_ANCHOR_ETALON_POINT_VALUE4}.
+    * A sizer is defined and will be used instead of {@link IBOPozer#POS_OFFSET_03_ANCHOR_ETALON_POINT_VALUE4}.
     */
    public static final int POS_ETALON_4_SIZER                       = 4;
 
@@ -77,7 +77,7 @@ public interface ITechPozer extends IByteObject {
    /**
     * A sizer will influence the final position.
     * 
-    * <li> {@link ITechPozer#POS_FUN_0_TOWARDS_CENTER} sizer is positive/negative
+    * <li> {@link IBOPozer#POS_FUN_0_TOWARDS_CENTER} sizer is positive/negative
     * 
     * Positive sizer that modifies (used for positive margin).
     * 
@@ -113,8 +113,8 @@ public interface ITechPozer extends IByteObject {
    /**
     * Etalon used to compute this x,w or y,h of the box
     * 
-    * <li> {@link ITechPozer#POS_ETALON_0_POINT}
-    * <li> {@link ITechPozer#POS_ETALON_1_PARENT}
+    * <li> {@link IBOPozer#POS_ETALON_0_POINT}
+    * <li> {@link IBOPozer#POS_ETALON_1_PARENT}
     * 
     * <li> {@link ITechLayout#ETALON_0_SIZEE_CTX}
     * <li> {@link ITechLayout#ETALON_1_VIEWCONTEXT}
@@ -129,15 +129,15 @@ public interface ITechPozer extends IByteObject {
    public static final int POS_OFFSET_02_ETALON1                    = A_OBJECT_BASIC_SIZE + 1;
 
    /**
-    * Coding data only valid when etalon is {@link ITechPozer#POS_ETALON_0_POINT}.
+    * Coding data only valid when etalon is {@link IBOPozer#POS_ETALON_0_POINT}.
     * 
     * Signed 4 bytes
     * 
     * This field uses the pozee anchor is located on that point
-    * <li> {@link ITechPozer#POS_OFFSET_04_ANCHOR_ETALON1}
-    * <li> {@link ITechPozer#POS_OFFSET_05_ANCHOR_ETALON_STRUCT1}
-    * <li> {@link ITechPozer#POS_OFFSET_06_ANCHOR_ETALON_STYLE1}
-    * <li> {@link ITechPozer#POS_OFFSET_06_ANCHOR_ETALON_STYLE1}
+    * <li> {@link IBOPozer#POS_OFFSET_04_ANCHOR_ETALON1}
+    * <li> {@link IBOPozer#POS_OFFSET_05_ANCHOR_ETALON_STRUCT1}
+    * <li> {@link IBOPozer#POS_OFFSET_06_ANCHOR_ETALON_STYLE1}
+    * <li> {@link IBOPozer#POS_OFFSET_06_ANCHOR_ETALON_STYLE1}
     */
    public static final int POS_OFFSET_03_ANCHOR_ETALON_POINT_VALUE4 = A_OBJECT_BASIC_SIZE + 2;
 
@@ -209,17 +209,15 @@ public interface ITechPozer extends IByteObject {
    /**
     * When sizer is defined, this field is a function that modifies the anchor on pozee.
     * 
-    * <li> {@link ITechPozer#POS_FUN_0_TOWARDS_CENTER} when outside of center, x is towards the center
-    * <li> {@link ITechPozer#POS_FUN_1_AWAY_CENTER}
-    * <li> {@link ITechPozer#POS_FUN_2_TO_LEFT_TOP}
-    * <li> {@link ITechPozer#POS_FUN_3_TO_RIGHT_BOT}
+    * <li> {@link IBOPozer#POS_FUN_0_TOWARDS_CENTER} when outside of center, x is towards the center
+    * <li> {@link IBOPozer#POS_FUN_1_AWAY_CENTER}
+    * <li> {@link IBOPozer#POS_FUN_2_TO_LEFT_TOP}
+    * <li> {@link IBOPozer#POS_FUN_3_TO_RIGHT_BOT}
     * 
-    * When etalon is {@link ITechPozer#POS_ETALON_0_POINT};
+    * When etalon is {@link IBOPozer#POS_ETALON_0_POINT};
     * this field holds the unit
     * <li> {@link ITechLayout#RAW_UNIT_0_PIXEL}
     * <li> {@link ITechLayout#RAW_UNIT_1_DIP}
     */
    public static final int POS_OFFSET_10_SIZER_FUN1                 = A_OBJECT_BASIC_SIZE + 9;
-   
-   public static final int DELEGATE_POINT_VALUE = -1;
 }

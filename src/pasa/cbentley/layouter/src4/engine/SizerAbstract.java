@@ -6,18 +6,18 @@ package pasa.cbentley.layouter.src4.engine;
 
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
-import pasa.cbentley.layouter.src4.ctx.ObjectLayouter;
+import pasa.cbentley.layouter.src4.ctx.ObjectLC;
 import pasa.cbentley.layouter.src4.interfaces.ISizeCtx;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
-import pasa.cbentley.layouter.src4.tech.ITechPozer;
-import pasa.cbentley.layouter.src4.tech.ITechSizer;
+import pasa.cbentley.layouter.src4.tech.IBOPozer;
+import pasa.cbentley.layouter.src4.tech.IBOSizer;
 
 /**
  * Effectively computes the pixel sizes.
  *
  * @author Charles Bentley
  */
-public abstract class SizerAbstract extends ObjectLayouter implements ISizeCtx, ITechLayout, ITechSizer, ITechPozer {
+public abstract class SizerAbstract extends ObjectLC implements ISizeCtx, ITechLayout, IBOSizer, IBOPozer {
 
    /**
     * 

@@ -1,5 +1,7 @@
 package pasa.cbentley.layouter.src4.tech;
 
+import pasa.cbentley.core.src4.interfaces.ITech;
+
 /**
  * Sizer for a WH box
  * 
@@ -12,6 +14,6 @@ package pasa.cbentley.layouter.src4.tech;
  * @author Charles Bentley
  *
  */
-public interface ITechBoxSizer {
+public interface ITechBoxSizer extends ITech {
 
 }

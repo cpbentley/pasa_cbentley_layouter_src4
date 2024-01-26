@@ -10,12 +10,12 @@ import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.core.src4.logging.IDLog;
 import pasa.cbentley.core.src4.logging.IStringable;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
-import pasa.cbentley.layouter.src4.ctx.ObjectLayouter;
+import pasa.cbentley.layouter.src4.ctx.ObjectLC;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDependencies;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutWillListener;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
-import pasa.cbentley.layouter.src4.tech.ITechSizer;
+import pasa.cbentley.layouter.src4.tech.IBOSizer;
 
 /**
  * This class provides a base implementation of the {@link ILayoutable} for your own Gui components.
@@ -37,7 +37,7 @@ import pasa.cbentley.layouter.src4.tech.ITechSizer;
  * @author Charles Bentley
  *
  */
-public class LayEngine implements IStringable, ITechLayout, ITechSizer {
+public class LayEngine implements IStringable, ITechLayout, IBOSizer {
 
    private int                 cycleCounterH;
 

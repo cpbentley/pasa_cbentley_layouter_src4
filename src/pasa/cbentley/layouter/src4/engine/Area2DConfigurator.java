@@ -10,9 +10,9 @@ import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.core.src4.logging.IDLog;
 import pasa.cbentley.core.src4.logging.IStringable;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
-import pasa.cbentley.layouter.src4.ctx.ObjectLayouter;
+import pasa.cbentley.layouter.src4.ctx.ObjectLC;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
-import pasa.cbentley.layouter.src4.tech.ITechPozer;
+import pasa.cbentley.layouter.src4.tech.IBOPozer;
 
 /**
  * Configurator for the {@link Zer2DArea} class.
@@ -24,7 +24,7 @@ import pasa.cbentley.layouter.src4.tech.ITechPozer;
  * @author Charles Bentley
  *
  */
-public class Area2DConfigurator extends ObjectLayouter implements IStringable {
+public class Area2DConfigurator extends ObjectLC implements IStringable {
 
    private Zer2DArea area;
 
@@ -60,7 +60,7 @@ public class Area2DConfigurator extends ObjectLayouter implements IStringable {
     * @param pozer
     */
    private void layPoz(ILayoutable lay, ByteObject pozer) {
-      pozer.set1(ITechPozer.POS_OFFSET_02_ETALON1, ITechPozer.POS_ETALON_6_LAYOUTABLE);
+      pozer.set1(IBOPozer.POS_OFFSET_02_ETALON1, IBOPozer.POS_ETALON_6_LAYOUTABLE);
       ByteObjectLayoutable boLayoutable = new ByteObjectLayoutable(lc.getBOC(), lay);
       pozer.addByteObject(boLayoutable);
    }
@@ -71,11 +71,11 @@ public class Area2DConfigurator extends ObjectLayouter implements IStringable {
    }
 
    public void layPoz_BotToBot_Of_Margin(ILayoutable lay, ByteObject sizer) {
-      layPoz_BotToBot_Of_With(lay, ITechPozer.POS_FUN_1_AWAY_CENTER, sizer);
+      layPoz_BotToBot_Of_With(lay, IBOPozer.POS_FUN_1_AWAY_CENTER, sizer);
    }
 
    public void layPoz_BotToBot_Of_Padding(ILayoutable lay, ByteObject sizer) {
-      layPoz_BotToBot_Of_With(lay, ITechPozer.POS_FUN_0_TOWARDS_CENTER, sizer);
+      layPoz_BotToBot_Of_With(lay, IBOPozer.POS_FUN_0_TOWARDS_CENTER, sizer);
    }
 
    public void layPoz_BotToBot_Of_With(ILayoutable lay, int fun, ByteObject sizer) {
@@ -363,18 +363,18 @@ public class Area2DConfigurator extends ObjectLayouter implements IStringable {
    }
 
    public void layPoz_EndToEnd_Of_Margin(ILayoutable lay, ByteObject sizer) {
-      layPoz_EndToEnd_Of_With(lay, ITechPozer.POS_FUN_1_AWAY_CENTER, sizer);
+      layPoz_EndToEnd_Of_With(lay, IBOPozer.POS_FUN_1_AWAY_CENTER, sizer);
    }
 
    public void layPoz_EndToEnd_Of_Padding(ILayoutable lay, ByteObject sizer) {
-      layPoz_EndToEnd_Of_With(lay, ITechPozer.POS_FUN_0_TOWARDS_CENTER, sizer);
+      layPoz_EndToEnd_Of_With(lay, IBOPozer.POS_FUN_0_TOWARDS_CENTER, sizer);
    }
 
    /**
-    * <li>{@link ITechPozer#POS_FUN_0_TOWARDS_CENTER} XX towards the center of this object, in effect negative margin
-    * <li>{@link ITechPozer#POS_FUN_1_AWAY_CENTER} XX away the center of this object, in effect postive margin
+    * <li>{@link IBOPozer#POS_FUN_0_TOWARDS_CENTER} XX towards the center of this object, in effect negative margin
+    * <li>{@link IBOPozer#POS_FUN_1_AWAY_CENTER} XX away the center of this object, in effect postive margin
     * @param lay
-    * @param fun {@link ITechPozer#POS_OFFSET_10_SIZER_FUN1}
+    * @param fun {@link IBOPozer#POS_OFFSET_10_SIZER_FUN1}
     * @param sizer
     */
    public void layPoz_EndToEnd_Of_With(ILayoutable lay, int fun, ByteObject sizer) {
@@ -494,18 +494,18 @@ public class Area2DConfigurator extends ObjectLayouter implements IStringable {
     * @param sizer
     */
    public void layPoz_StartToStart_Of_Margin(ILayoutable lay, ByteObject sizer) {
-      layPoz_StartToStart_Of_With(lay, ITechPozer.POS_FUN_1_AWAY_CENTER, sizer);
+      layPoz_StartToStart_Of_With(lay, IBOPozer.POS_FUN_1_AWAY_CENTER, sizer);
    }
 
    public void layPoz_StartToStart_Of_Padding(ILayoutable lay, ByteObject sizer) {
-      layPoz_StartToStart_Of_With(lay, ITechPozer.POS_FUN_0_TOWARDS_CENTER, sizer);
+      layPoz_StartToStart_Of_With(lay, IBOPozer.POS_FUN_0_TOWARDS_CENTER, sizer);
    }
 
    /**
-    * <li>{@link ITechPozer#POS_FUN_0_TOWARDS_CENTER} XX towards the center of this object, in effect negative margin
-    * <li>{@link ITechPozer#POS_FUN_1_AWAY_CENTER} XX away the center of this object, in effect postive margin
+    * <li>{@link IBOPozer#POS_FUN_0_TOWARDS_CENTER} XX towards the center of this object, in effect negative margin
+    * <li>{@link IBOPozer#POS_FUN_1_AWAY_CENTER} XX away the center of this object, in effect postive margin
     * @param lay
-    * @param fun {@link ITechPozer#POS_OFFSET_10_SIZER_FUN1}
+    * @param fun {@link IBOPozer#POS_OFFSET_10_SIZER_FUN1}
     * @param sizer
     */
    public void layPoz_StartToStart_Of_With(ILayoutable lay, int fun, ByteObject sizer) {
@@ -545,11 +545,11 @@ public class Area2DConfigurator extends ObjectLayouter implements IStringable {
    }
 
    public void layPoz_TopToTop_Of_Margin(ILayoutable lay, ByteObject sizer) {
-      layPoz_TopToTop_Of_With(lay, ITechPozer.POS_FUN_1_AWAY_CENTER, sizer);
+      layPoz_TopToTop_Of_With(lay, IBOPozer.POS_FUN_1_AWAY_CENTER, sizer);
    }
 
    public void layPoz_TopToTop_Of_Padding(ILayoutable lay, ByteObject sizer) {
-      layPoz_TopToTop_Of_With(lay, ITechPozer.POS_FUN_0_TOWARDS_CENTER, sizer);
+      layPoz_TopToTop_Of_With(lay, IBOPozer.POS_FUN_0_TOWARDS_CENTER, sizer);
    }
 
    public void layPoz_TopToTop_Of_With(ILayoutable lay, int fun, ByteObject sizer) {
@@ -565,7 +565,7 @@ public class Area2DConfigurator extends ObjectLayouter implements IStringable {
    }
 
    private void layPozParent(ByteObject pozer) {
-      pozer.set1(ITechPozer.POS_OFFSET_02_ETALON1, ITechPozer.POS_ETALON_1_PARENT);
+      pozer.set1(IBOPozer.POS_OFFSET_02_ETALON1, IBOPozer.POS_ETALON_1_PARENT);
    }
 
    /**

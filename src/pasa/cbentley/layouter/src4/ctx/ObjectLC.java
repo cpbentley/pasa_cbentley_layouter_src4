@@ -10,11 +10,11 @@ import pasa.cbentley.core.src4.logging.IStringable;
  * @author Charles Bentley
  *
  */
-public class ObjectLayouter implements IStringable {
+public class ObjectLC implements IStringable {
 
    protected final LayouterCtx lc;
 
-   public ObjectLayouter(LayouterCtx lc) {
+   public ObjectLC(LayouterCtx lc) {
       this.lc = lc;
    }
 
@@ -28,7 +28,7 @@ public class ObjectLayouter implements IStringable {
    }
 
    public void toString(Dctx dc) {
-      dc.root(this, ObjectLayouter.class, "@line31");
+      dc.root(this, ObjectLC.class, 32);
       toStringPrivate(dc);
    }
 
@@ -41,7 +41,7 @@ public class ObjectLayouter implements IStringable {
    }
 
    public void toString1Line(Dctx dc) {
-      dc.root1Line(this, ObjectLayouter.class);
+      dc.root1Line(this, ObjectLC.class);
       toStringPrivate(dc);
    }
 

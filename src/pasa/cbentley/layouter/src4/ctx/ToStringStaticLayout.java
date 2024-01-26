@@ -6,10 +6,10 @@ package pasa.cbentley.layouter.src4.ctx;
 
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.core.src4.logging.ToStringStaticBase;
-import pasa.cbentley.layouter.src4.interfaces.IBOTypesLayout;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
-import pasa.cbentley.layouter.src4.tech.ITechPozer;
 import pasa.cbentley.layouter.src4.tech.ITechSizer;
+import pasa.cbentley.layouter.src4.tech.IBOPozer;
+import pasa.cbentley.layouter.src4.tech.IBOSizer;
 
 /**
  * 
@@ -101,15 +101,15 @@ public class ToStringStaticLayout extends ToStringStaticBase {
     */
    public static String toStringEtalonPozer(int etalon) {
       switch (etalon) {
-         case ITechPozer.POS_ETALON_0_POINT:
+         case IBOPozer.POS_ETALON_0_POINT:
             return "none";
-         case ITechPozer.POS_ETALON_1_PARENT:
+         case IBOPozer.POS_ETALON_1_PARENT:
             return "parent";
-         case ITechPozer.POS_ETALON_2_VIEWCTX:
+         case IBOPozer.POS_ETALON_2_VIEWCTX:
             return "viewctx";
-         case ITechPozer.POS_ETALON_3_LINK:
+         case IBOPozer.POS_ETALON_3_LINK:
             return "link";
-         case ITechPozer.POS_ETALON_4_SIZER:
+         case IBOPozer.POS_ETALON_4_SIZER:
             return "sizer";
          default:
             return "Unknown " + etalon;
@@ -187,15 +187,15 @@ public class ToStringStaticLayout extends ToStringStaticBase {
     */
    public static String toStringSizerField(int offset) {
       switch (offset) {
-         case ITechSizer.SIZER_OFFSET_01_FLAG:
+         case IBOSizer.SIZER_OFFSET_01_FLAG:
             return "flag";
-         case ITechSizer.SIZER_OFFSET_02_MODE1:
+         case IBOSizer.SIZER_OFFSET_02_MODE1:
             return "mode";
-         case ITechSizer.SIZER_OFFSET_03_ETALON1:
+         case IBOSizer.SIZER_OFFSET_03_ETALON1:
             return "etalon";
-         case ITechSizer.SIZER_OFFSET_04_FUNCTION1:
+         case IBOSizer.SIZER_OFFSET_04_FUNCTION1:
             return "func";
-         case ITechSizer.SIZER_OFFSET_05_VALUE2:
+         case IBOSizer.SIZER_OFFSET_05_VALUE2:
             return "value";
          default:
             return "Unknown offset " + offset;
@@ -329,21 +329,21 @@ public class ToStringStaticLayout extends ToStringStaticBase {
     */
    public static String toStringPozerField(int offset) {
       switch (offset) {
-         case ITechPozer.POS_OFFSET_01_FLAG:
+         case IBOPozer.POS_OFFSET_01_FLAG:
             return "flag";
-         case ITechPozer.POS_OFFSET_02_ETALON1:
+         case IBOPozer.POS_OFFSET_02_ETALON1:
             return "etalon";
-         case ITechPozer.POS_OFFSET_03_ANCHOR_ETALON_POINT_VALUE4:
+         case IBOPozer.POS_OFFSET_03_ANCHOR_ETALON_POINT_VALUE4:
             return "point";
-         case ITechPozer.POS_OFFSET_04_ANCHOR_ETALON1:
+         case IBOPozer.POS_OFFSET_04_ANCHOR_ETALON1:
             return "anchorEtalon";
-         case ITechPozer.POS_OFFSET_07_ANCHOR_POZEE1:
+         case IBOPozer.POS_OFFSET_07_ANCHOR_POZEE1:
             return "anchorPozee";
-         case ITechPozer.POS_OFFSET_08_ANCHOR_POZEE_STRUCT1:
+         case IBOPozer.POS_OFFSET_08_ANCHOR_POZEE_STRUCT1:
             return "anchorPozeeStruct";
-         case ITechPozer.POS_OFFSET_09_ANCHOR_POZEE_STYLE1:
+         case IBOPozer.POS_OFFSET_09_ANCHOR_POZEE_STYLE1:
             return "anchorPozeeStyle";
-         case ITechPozer.POS_OFFSET_10_SIZER_FUN1:
+         case IBOPozer.POS_OFFSET_10_SIZER_FUN1:
             return "fun";
          default:
             return "Unknown offset " + offset;
@@ -358,9 +358,9 @@ public class ToStringStaticLayout extends ToStringStaticBase {
     */
    public static String toStringPozerFun(int fun) {
       switch (fun) {
-         case ITechPozer.POS_FUN_0_TOWARDS_CENTER:
+         case IBOPozer.POS_FUN_0_TOWARDS_CENTER:
             return "Towards center";
-         case ITechPozer.POS_FUN_1_AWAY_CENTER:
+         case IBOPozer.POS_FUN_1_AWAY_CENTER:
             return "Away from center";
          default:
             return "Unknown " + fun;

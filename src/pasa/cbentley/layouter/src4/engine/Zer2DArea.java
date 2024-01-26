@@ -9,14 +9,14 @@ import pasa.cbentley.core.src4.helpers.StringBBuilder;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.core.src4.logging.IStringable;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
-import pasa.cbentley.layouter.src4.ctx.ObjectLayouter;
+import pasa.cbentley.layouter.src4.ctx.ObjectLC;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
-import pasa.cbentley.layouter.src4.tech.ITechPozer;
-import pasa.cbentley.layouter.src4.tech.ITechSizer;
+import pasa.cbentley.layouter.src4.tech.IBOPozer;
+import pasa.cbentley.layouter.src4.tech.IBOSizer;
 
 /**
- * Define a 2d rectangle using 2 {@link ITechSizer} and 4 {@link ITechPozer}.
+ * Define a 2d rectangle using 2 {@link IBOSizer} and 4 {@link IBOPozer}.
  * <br>
  * <br>
  * 
@@ -27,7 +27,7 @@ import pasa.cbentley.layouter.src4.tech.ITechSizer;
  * @author Charles Bentley
  *
  */
-public class Zer2DArea extends ObjectLayouter implements IStringable, ITechLayout {
+public class Zer2DArea extends ObjectLC implements IStringable, ITechLayout {
 
    /**
     * Can be null
@@ -102,7 +102,7 @@ public class Zer2DArea extends ObjectLayouter implements IStringable, ITechLayou
     * @param decr
     */
    public void decrementSizerH(int decr) {
-      this.getSizerH().decrementMin(ITechSizer.SIZER_OFFSET_05_VALUE2, 2, decr, 1);
+      this.getSizerH().decrementMin(IBOSizer.SIZER_OFFSET_05_VALUE2, 2, decr, 1);
    }
 
    /**
@@ -110,7 +110,7 @@ public class Zer2DArea extends ObjectLayouter implements IStringable, ITechLayou
     * @param decr
     */
    public void decrementSizerW(int decr) {
-      this.getSizerW().decrementMin(ITechSizer.SIZER_OFFSET_05_VALUE2, 2, decr, 1);
+      this.getSizerW().decrementMin(IBOSizer.SIZER_OFFSET_05_VALUE2, 2, decr, 1);
    }
 
    /**
@@ -318,11 +318,11 @@ public class Zer2DArea extends ObjectLayouter implements IStringable, ITechLayou
    }
 
    public void incrementSizerH(int incr) {
-      this.getSizerH().increment(ITechSizer.SIZER_OFFSET_05_VALUE2, 2, incr);
+      this.getSizerH().increment(IBOSizer.SIZER_OFFSET_05_VALUE2, 2, incr);
    }
 
    public void incrementSizerW(int incr) {
-      this.getSizerW().increment(ITechSizer.SIZER_OFFSET_05_VALUE2, 2, incr);
+      this.getSizerW().increment(IBOSizer.SIZER_OFFSET_05_VALUE2, 2, incr);
    }
 
    /**

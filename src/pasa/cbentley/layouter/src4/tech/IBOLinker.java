@@ -11,7 +11,7 @@ import pasa.cbentley.byteobjects.src4.core.interfaces.IByteObject;
  *
  * @author Charles Bentley
  */
-public interface ITechLinker extends IByteObject {
+public interface IBOLinker extends IByteObject {
    
    /**
     * 

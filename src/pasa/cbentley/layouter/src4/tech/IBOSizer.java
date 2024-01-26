@@ -34,12 +34,7 @@ import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
  * @author Charles Bentley
  *
  */
-public interface IBoSizer extends IByteObject {
-
-   /**
-    * 
-    */
-   public static final int ET_PROP_4_SIZE_FONT_RATIO        = 4;
+public interface IBOSizer extends IByteObject {
 
    /**
     * Can be computed on a long value.
@@ -108,19 +103,19 @@ public interface IBoSizer extends IByteObject {
    public static final int SIZER_FLAG_8_IMPLICIT            = 1 << 7;
 
    /**
-    * <li> {@link IBoSizer#SIZER_FLAG_1_ALLOW_0}
-    * <li> {@link IBoSizer#SIZER_FLAG_2_ALLOW_SHRINK}
-    * <li> {@link IBoSizer#SIZER_FLAG_3_MINIMUM}
-    * <li> {@link IBoSizer#SIZER_FLAG_4_MAXIMUM}
-    * <li> {@link IBoSizer#SIZER_FLAG_5_IS_MIN}
-    * <li> {@link IBoSizer#SIZER_FLAG_6_IS_MAX}
-    * <li> {@link IBoSizer#SIZER_FLAG_7_DEFINED}
-    * <li> {@link IBoSizer#SIZER_FLAG_8_IMPLICIT}
+    * <li> {@link IBOSizer#SIZER_FLAG_1_ALLOW_0}
+    * <li> {@link IBOSizer#SIZER_FLAG_2_ALLOW_SHRINK}
+    * <li> {@link IBOSizer#SIZER_FLAG_3_MINIMUM}
+    * <li> {@link IBOSizer#SIZER_FLAG_4_MAXIMUM}
+    * <li> {@link IBOSizer#SIZER_FLAG_5_IS_MIN}
+    * <li> {@link IBOSizer#SIZER_FLAG_6_IS_MAX}
+    * <li> {@link IBOSizer#SIZER_FLAG_7_DEFINED}
+    * <li> {@link IBOSizer#SIZER_FLAG_8_IMPLICIT}
     */
    public static final int SIZER_OFFSET_01_FLAG             = A_OBJECT_BASIC_SIZE;
 
    /**
-    * The mode for converting the {@link IBoSizer#SIZER_OFFSET_05_VALUE2} into a pixel value
+    * The mode for converting the {@link IBOSizer#SIZER_OFFSET_05_VALUE2} into a pixel value
     * <li> {@link ITechLayout#MODE_0_RAW_UNITS} raw value
     * <li> {@link ITechLayout#MODE_1_DELEGATE} 
     * <li> {@link ITechLayout#MODE_2_RATIO} value relative to an etalon
@@ -171,10 +166,14 @@ public interface IBoSizer extends IByteObject {
    public static final int SIZER_OFFSET_04_FUNCTION1        = A_OBJECT_BASIC_SIZE + 3;
 
    /**
-    * Interpreation of the value depends on the {@link IBoSizer#SIZER_OFFSET_02_MODE1}
+    * Interpreation of the value depends on the {@link IBOSizer#SIZER_OFFSET_02_MODE1}
     * <li> {@link ITechLayout#MODE_0_RAW_UNITS} pixel
     * <li> {@link ITechLayout#MODE_1_DELEGATE} dip
-    * <li> {@link ITechLayout#MODE_2_RATIO} 2 bytes float with 4 bits above 0, 12 bits below
+    * <li> {@link ITechLayout#MODE_2_RATIO} Then use Fractions fields
+         <ol>
+         <li> {@link ITechLayout#SIZER_OFFSET_05A_FRACTION_TOP1}
+         <li> {@link ITechLayout#SIZER_OFFSET_05B_FRACTION_BOT1}
+         </ol>
     * <li> {@link ITechLayout#MODE_3_SCALE} The pixel are predefined from an etalon function
     *   <ol>
     *   <li> {@link ITechLayout#SIZE_0_NONE} ...
@@ -191,12 +190,18 @@ public interface IBoSizer extends IByteObject {
    public static final int SIZER_OFFSET_05_VALUE2           = A_OBJECT_BASIC_SIZE + 4;
 
    /**
-    * Instead of a value, a ratio gets a 8bits/8bits ratio
+    * Instead of a value, a ratio gets a 8bits/8bits ratio.
+    * <p>
+    * See {@link IBOSizer#SIZER_OFFSET_05_VALUE2} for more details
+    * </p>
     */
    public static final int SIZER_OFFSET_05A_FRACTION_TOP1   = A_OBJECT_BASIC_SIZE + 4;
 
    /**
-    * When zero, engine will assume its 1.. to avoid division by zero
+    * When zero, engine will assume its 1.. to avoid division by zero.
+    * <p>
+    * See {@link IBOSizer#SIZER_OFFSET_05_VALUE2} for more details
+    * </p>
     */
    public static final int SIZER_OFFSET_05B_FRACTION_BOT1   = A_OBJECT_BASIC_SIZE + 5;
 
@@ -211,11 +216,11 @@ public interface IBoSizer extends IByteObject {
     * <br>
     * <p>
     * When etalon is a <b>regular full {@link ILayoutable}</b>
-    * <li> {@link IBoSizer#SIZER_PROP_00_DRAWN}
-    * <li> {@link IBoSizer#SIZER_PROP_01_PREFERRED}
-    * <li> {@link IBoSizer#SIZER_PROP_02_UNIT_LOGIC}
-    * <li> {@link IBoSizer#SIZER_PROP_03_FONT}
-    * <li> {@link IBoSizer#SIZER_PROP_05_CONTENT}
+    * <li> {@link ITechSizer#SIZER_PROP_00_DRAWN}
+    * <li> {@link ITechSizer#SIZER_PROP_01_PREFERRED}
+    * <li> {@link ITechSizer#SIZER_PROP_02_UNIT_LOGIC}
+    * <li> {@link ITechSizer#SIZER_PROP_03_FONT}
+    * <li> {@link ITechSizer#SIZER_PROP_05_CONTENT}
     * <br>
     * </p>
     * 
@@ -235,7 +240,7 @@ public interface IBoSizer extends IByteObject {
    /**
     * Sub type for the etalon.
     * 
-    * When parent is used {@link IBoSizer#SIZER_OFFSET_03_ETALON1} this value can reference
+    * When parent is used {@link IBOSizer#SIZER_OFFSET_03_ETALON1} this value can reference
     * 
     * yet another value such as parent, parent of parent, scrollbar, viewport, viewcontext
     * 

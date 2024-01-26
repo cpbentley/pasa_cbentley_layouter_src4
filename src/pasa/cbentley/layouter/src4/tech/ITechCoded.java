@@ -4,6 +4,7 @@
  */
 package pasa.cbentley.layouter.src4.tech;
 
+import pasa.cbentley.core.src4.interfaces.ITech;
 import pasa.cbentley.core.src4.utils.BitUtils;
 
 /**
@@ -19,7 +20,7 @@ import pasa.cbentley.core.src4.utils.BitUtils;
  * @author Charles Bentley
  *
  */
-public interface ITechCoded {
+public interface ITechCoded extends ITech {
 
    /**
     * The etalon must be explicitely given.
@@ -71,7 +72,7 @@ public interface ITechCoded {
    /**
     * 11 bits. Max is {@link BitUtils#BIT_MASK_11}
     * <br>
-    * Codes for {@link ITechSizer#SIZER_OFFSET_05_VALUE2}
+    * Codes for {@link IBOSizer#SIZER_OFFSET_05_VALUE2}
     */
    public static final int CODED_BITS_0_VALUE              = 12;
 

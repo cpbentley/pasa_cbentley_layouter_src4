@@ -10,22 +10,23 @@ import pasa.cbentley.byteobjects.src4.ctx.IBOTypesBOC;
 import pasa.cbentley.core.src4.interfaces.C;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.core.src4.logging.ToStringStaticC;
+import pasa.cbentley.layouter.src4.ctx.IBOTypesLayout;
 import pasa.cbentley.layouter.src4.ctx.LayoutException;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
 import pasa.cbentley.layouter.src4.ctx.ToStringStaticLayout;
-import pasa.cbentley.layouter.src4.interfaces.IBOTypesLayout;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegate;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 import pasa.cbentley.layouter.src4.tech.ITechCoded;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
-import pasa.cbentley.layouter.src4.tech.ITechLinker;
-import pasa.cbentley.layouter.src4.tech.ITechPozer;
 import pasa.cbentley.layouter.src4.tech.ITechSizer;
+import pasa.cbentley.layouter.src4.tech.IBOLinker;
+import pasa.cbentley.layouter.src4.tech.IBOPozer;
+import pasa.cbentley.layouter.src4.tech.IBOSizer;
 
 /**
  * 
  */
-public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOTypesLayout, ITechCoded, ITechSizer, ITechPozer, ITechLayout {
+public class PozerFactory extends BOAbstractFactory implements IBOLinker, IBOTypesLayout, ITechCoded, IBOSizer, IBOPozer, ITechLayout {
 
    /**
     * 
@@ -145,7 +146,7 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
       bo.set1(POS_OFFSET_02_ETALON1, POS_ETALON_0_POINT);
       bo.set1(POS_OFFSET_07_ANCHOR_POZEE1, alignSrc);
       //special value for delegate call
-      bo.set4(POS_OFFSET_03_ANCHOR_ETALON_POINT_VALUE4, DELEGATE_POINT_VALUE);
+      bo.set4(POS_OFFSET_03_ANCHOR_ETALON_POINT_VALUE4, ITechSizer.DELEGATE_POINT_VALUE);
       
       ByteObjectLayoutDelegate delegateBO = new ByteObjectLayoutDelegate(lc.getBOC(), delegate);
       bo.addByteObject(delegateBO);
@@ -401,7 +402,7 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     */
    public ByteObject getPozerOnParentAt(int anchorSrc, int anchorDest, int atStyle) {
       ByteObject bo = getBOFactory().createByteObject(FTYPE_4_POSITION, POS_BASIC_SIZE);
-      bo.set1(POS_OFFSET_02_ETALON1, ITechPozer.POS_ETALON_1_PARENT);
+      bo.set1(POS_OFFSET_02_ETALON1, IBOPozer.POS_ETALON_1_PARENT);
       bo.set1(POS_OFFSET_04_ANCHOR_ETALON1, anchorDest);
       bo.set1(POS_OFFSET_05_ANCHOR_ETALON_STRUCT1, ITechLayout.VIEW_STRUCT_00_ALL_VISIBLE);
       bo.set1(POS_OFFSET_06_ANCHOR_ETALON_STYLE1, atStyle);
@@ -421,7 +422,7 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
     */
    public ByteObject getPozerOnDelegateAt(ILayoutDelegate delegate, int anchorSrc, int anchorDest, int atStyle) {
       ByteObject bo = getBOFactory().createByteObject(FTYPE_4_POSITION, POS_BASIC_SIZE);
-      bo.set1(POS_OFFSET_02_ETALON1, ITechPozer.POS_ETALON_7_DELEGATE);
+      bo.set1(POS_OFFSET_02_ETALON1, IBOPozer.POS_ETALON_7_DELEGATE);
       bo.set1(POS_OFFSET_04_ANCHOR_ETALON1, anchorDest);
       bo.set1(POS_OFFSET_05_ANCHOR_ETALON_STRUCT1, ITechLayout.VIEW_STRUCT_00_ALL_VISIBLE);
       bo.set1(POS_OFFSET_06_ANCHOR_ETALON_STYLE1, atStyle);
@@ -441,7 +442,7 @@ public class PozerFactory extends BOAbstractFactory implements ITechLinker, IBOT
 
    public ByteObject getPozerOnVCAt(int anchorSrc, int anchorDest, int atStyle) {
       ByteObject bo = getBOFactory().createByteObject(FTYPE_4_POSITION, POS_BASIC_SIZE);
-      bo.set1(POS_OFFSET_02_ETALON1, ITechPozer.POS_ETALON_2_VIEWCTX);
+      bo.set1(POS_OFFSET_02_ETALON1, IBOPozer.POS_ETALON_2_VIEWCTX);
       bo.set1(POS_OFFSET_04_ANCHOR_ETALON1, anchorDest);
       bo.set1(POS_OFFSET_05_ANCHOR_ETALON_STRUCT1, ITechLayout.VIEW_STRUCT_00_ALL_VISIBLE);
       bo.set1(POS_OFFSET_06_ANCHOR_ETALON_STYLE1, atStyle);

@@ -16,7 +16,6 @@ import pasa.cbentley.layouter.src4.engine.LayoutWillListenerAdapter;
 import pasa.cbentley.layouter.src4.engine.LayoutableRect;
 import pasa.cbentley.layouter.src4.engine.PozerFactory;
 import pasa.cbentley.layouter.src4.engine.SizerFactory;
-import pasa.cbentley.layouter.src4.interfaces.IBOTypesLayout;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegate;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutWillListener;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
@@ -115,7 +114,7 @@ public class LayouterCtx extends ACtx {
    }
 
    public int getBOSettingsCtxSize() {
-      return ITechCtxSettingsLayouter.CTX_LAY_BASIC_SIZE;
+      return IBOCtxSettingsLayouter.CTX_LAY_BASIC_SIZE;
    }
 
    public IConfigLayouter getConfigLayouter() {
