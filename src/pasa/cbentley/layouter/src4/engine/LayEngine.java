@@ -11,6 +11,7 @@ import pasa.cbentley.core.src4.logging.IDLog;
 import pasa.cbentley.core.src4.logging.IStringable;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
 import pasa.cbentley.layouter.src4.ctx.ObjectLC;
+import pasa.cbentley.layouter.src4.ctx.ToStringStaticLayout;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDependencies;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutWillListener;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
@@ -37,7 +38,7 @@ import pasa.cbentley.layouter.src4.tech.IBOSizer;
  * @author Charles Bentley
  *
  */
-public class LayEngine implements IStringable, ITechLayout, IBOSizer {
+public class LayEngine extends ObjectLC implements IStringable, ITechLayout, IBOSizer {
 
    private int                 cycleCounterH;
 
@@ -70,8 +71,6 @@ public class LayEngine implements IStringable, ITechLayout, IBOSizer {
 
    private boolean             isValidSizeW;
 
-   protected final LayouterCtx lac;
-
    /**
     * invariant:not null
     */
@@ -87,7 +86,7 @@ public class LayEngine implements IStringable, ITechLayout, IBOSizer {
     * @param layoutable
     */
    public LayEngine(LayouterCtx lac, ILayoutable layoutable) {
-      this.lac = lac;
+      super(lac);
 
       //#debug
       lac.toStringCheckNull(layoutable);
@@ -203,12 +202,9 @@ public class LayEngine implements IStringable, ITechLayout, IBOSizer {
     * Is Drawable Width to be computed based on content.
     * <br>
     * True when 
-    * <br>
-    * Etalon is {@link ISizer#ETALON_0_SIZEE_CTX}
-    * <br>
-    * And
-    * <br>
-    * Mode is {@link ISizer#MODE_3_UNIT} or {@link ISizer#MODE_2_RATIO}
+    * <li>Etalon is {@link ISizer#ETALON_0_SIZEE_CTX}
+    * <li>And
+    * <li>Mode is {@link ISizer#MODE_3_UNIT} or {@link ISizer#MODE_2_RATIO}
     * @return
     */
    public boolean isContextualW() {
@@ -635,12 +631,15 @@ public class LayEngine implements IStringable, ITechLayout, IBOSizer {
    }
 
    public void setOverrideH(int h) {
+      setManualOverrideH(true);
       rect.setH(h);
    }
 
    public void setOverrideW(int w) {
+      setManualOverrideW(true);
       rect.setW(w);
    }
+
 
    /**
     * Sets x directly without changing.
@@ -663,18 +662,10 @@ public class LayEngine implements IStringable, ITechLayout, IBOSizer {
       rect.setY(y);
    }
 
-   //#mdebug
-   public IDLog toDLog() {
-      return toStringGetUCtx().toDLog();
-   }
-
-   public String toString() {
-      return Dctx.toString(layoutable);
-   }
-
    public void toString(Dctx dc) {
       dc.root(this, LayEngine.class, 642);
       toStringPrivate(dc);
+      super.toString(dc.sup());
       //show from the start for which layoutable this engine is working for
       dc.nlLvl(layoutable, "layoutable for which engine is working for");
       dc.nl();
@@ -683,27 +674,20 @@ public class LayEngine implements IStringable, ITechLayout, IBOSizer {
       dc.appendVarWithSpace("isManualOverrideW", isManualOverrideW);
       dc.appendVarWithSpace("isManualOverrideH", isManualOverrideH);
       dc.nl();
-      dc.appendVarWithSpace("getSizeComputerFlagW", getSizeComputerFlagW());
-      dc.appendVarWithSpace("getSizeComputerFlagH", getSizeComputerFlagH());
+      dc.appendVarWithSpace("computeTypeWidth", ToStringStaticLayout.toStringCompute(getSizeComputerFlagW()));
+      dc.appendVarWithSpace("computeTypeHeight", ToStringStaticLayout.toStringCompute(getSizeComputerFlagH()));
 
       //we want nice message
       dc.nlLvl(rect, "Rect");
       dc.nlLvl(data, "Laydata");
       //objects that depend on this for layout
-      dc.nlLvl(dependencies, "Dependencies: Objects that depend on "+layoutable.toStringName()+" for layout"); 
-   }
-
-   public String toString1Line() {
-      return Dctx.toString1Line(this);
+      dc.nlLvl(dependencies, "Dependencies: Objects that depend on " + layoutable.toStringName() + " for layout");
    }
 
    public void toString1Line(Dctx dc) {
       dc.root1Line(this, LayEngine.class);
       toStringPrivate(dc);
-   }
-
-   public UCtx toStringGetUCtx() {
-      return lac.getUCtx();
+      super.toString1Line(dc.sup1Line());
    }
 
    private void toStringPrivate(Dctx dc) {

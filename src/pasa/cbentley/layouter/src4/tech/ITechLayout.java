@@ -44,22 +44,22 @@ public interface ITechLayout extends ITech {
    /**
     * 
     */
-   public static final int COMPUTE_SIZE_0_NORMAL                     = 0;
+   public static final int COMPUTE_SIZE_0_NORMAL                 = 0;
 
    /**
     * 
     */
-   public static final int COMPUTE_SIZE_1_ONLY_W                      = 1;
+   public static final int COMPUTE_SIZE_1_ONLY_W                 = 1;
 
    /**
     * 
     */
-   public static final int COMPUTE_SIZE_2_ONLY_H                     = 2;
+   public static final int COMPUTE_SIZE_2_ONLY_H                 = 2;
 
    /**
     * 
     */
-   public static final int COMPUTE_SIZE_3_NONE                        = 3;
+   public static final int COMPUTE_SIZE_3_NONE                   = 3;
 
    /**
     * implicit width or height.
@@ -81,7 +81,6 @@ public interface ITechLayout extends ITech {
     */
    public static final int DELEGATE_ETALON_0_PREFERRED           = 0;
 
-   
    /**
     * 
     * Looks for an {@link ILayoutDelegate} from a {@link ByteObjectLayoutDelegate} in the Sizer.
@@ -94,7 +93,7 @@ public interface ITechLayout extends ITech {
     * 
     * Used when value is a custom function
     */
-   public static final int DELEGATE_ETALON_0_REFERENCE              = 0;
+   public static final int DELEGATE_ETALON_0_REFERENCE           = 0;
 
    /**
     * 
@@ -253,11 +252,11 @@ public interface ITechLayout extends ITech {
     * Inverse of context.
     */
    public static final int ET_FUN_7_CTX_OP                       = 7;
-   
+
    /**
     * things are computed by the delegate
     */
-   public static final int ET_FUN_7_DELEGATE                       = 7;
+   public static final int ET_FUN_7_DELEGATE                     = 7;
 
    /**
     * Etalon link type {@link IBOSizer#SIZER_OFFSET_06_PROPERTY1}.
@@ -574,7 +573,6 @@ public interface ITechLayout extends ITech {
     * <br>
     */
    public static final int RAW_UNIT_1_DIP                        = 1;
-
 
    /**
     * {@link IFontImgCreator#getScalePixel(int, int)} requires a scale paremeter.

@@ -134,6 +134,14 @@ public class Zer2DRect extends ObjectLC implements IStringable {
       this.ph = ph;
    }
 
+   public void incrPh(int incr) {
+      this.ph += incr;
+   }
+
+   public void incrPw(int incr) {
+      this.pw += incr;
+   }
+
    /**
     * 
     *
@@ -205,6 +213,13 @@ public class Zer2DRect extends ObjectLC implements IStringable {
       dc.appendVarWithSpace("h", h);
       dc.appendVarWithSpace("pw", pw);
       dc.appendVarWithSpace("ph", ph);
+   }
+   public void setPhAsDh() {
+      ph = h;
+   }
+
+   public void setPwAsDw() {
+      pw = w;
    }
 
    //#enddebug

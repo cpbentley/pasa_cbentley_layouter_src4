@@ -12,10 +12,13 @@ import pasa.cbentley.core.src4.logging.IStringable;
  */
 public class ObjectLC implements IStringable {
 
-   protected final LayouterCtx lc;
+   protected final LayouterCtx lac;
+
+   //#debug
+   private String              toStringDebugName;
 
    public ObjectLC(LayouterCtx lc) {
-      this.lc = lc;
+      this.lac = lc;
    }
 
    //#mdebug
@@ -37,7 +40,9 @@ public class ObjectLC implements IStringable {
    }
 
    private void toStringPrivate(Dctx dc) {
-
+      if (toStringDebugName != null) {
+         dc.appendBracketedWithSpace(toStringDebugName);
+      }
    }
 
    public void toString1Line(Dctx dc) {
@@ -46,7 +51,15 @@ public class ObjectLC implements IStringable {
    }
 
    public UCtx toStringGetUCtx() {
-      return lc.getUCtx();
+      return lac.getUCtx();
+   }
+
+   public String toStringName() {
+      return toStringDebugName;
+   }
+
+   public void toStringSetDebugName(String name) {
+      toStringDebugName = name;
    }
 
    //#enddebug

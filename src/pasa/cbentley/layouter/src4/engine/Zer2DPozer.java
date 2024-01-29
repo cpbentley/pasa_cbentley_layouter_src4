@@ -39,7 +39,7 @@ public class Zer2DPozer extends Zer2DAbstract {
     * @return 
     */
    public Object clone() {
-      Zer2DPozer clone = new Zer2DPozer(lc);
+      Zer2DPozer clone = new Zer2DPozer(lac);
       super.cloneSuper(clone);
       return clone;
    }
@@ -90,7 +90,7 @@ public class Zer2DPozer extends Zer2DAbstract {
       dc.root(this, "Zer2DPozer");
       toStringPrivate(dc);
       super.toString(dc.sup());
-      PozerFactory pozerFactory = lc.getPozerFactory();
+      PozerFactory pozerFactory = lac.getPozerFactory();
       pozerFactory.toStringPozerX(er2dW, dc.newLevel());
       pozerFactory.toStringPozerY(er2dH, dc.newLevel());
    }

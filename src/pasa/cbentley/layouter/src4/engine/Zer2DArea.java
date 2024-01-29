@@ -69,7 +69,7 @@ public class Zer2DArea extends ObjectLC implements IStringable, ITechLayout {
     * @return 
     */
    public Object clone() {
-      Zer2DArea clone = new Zer2DArea(lc);
+      Zer2DArea clone = new Zer2DArea(lac);
       if (this.pozerXEnd != null) {
          clone.pozerXEnd = this.pozerXEnd.cloneMe();
       }
@@ -300,7 +300,7 @@ public class Zer2DArea extends ObjectLC implements IStringable, ITechLayout {
     */
    public Zer2DSizer getSizerLazy() {
       if (sizer == null) {
-         sizer = new Zer2DSizer(lc, null, null);
+         sizer = new Zer2DSizer(lac, null, null);
       }
       return sizer;
    }
@@ -605,7 +605,7 @@ public class Zer2DArea extends ObjectLC implements IStringable, ITechLayout {
     * @return 
     */
    public String toStringInvalidAreaMessage() {
-      StringBBuilder sb = new StringBBuilder(lc.getUCtx());
+      StringBBuilder sb = new StringBBuilder(lac.getUCtx());
       sb.append("Area Invalid");
       if (!isValidHeight()) {
          sb.append(";Height is not defined");
@@ -631,10 +631,10 @@ public class Zer2DArea extends ObjectLC implements IStringable, ITechLayout {
    private void toStringPozerLayout(Dctx dc, ILayoutable layoutable) {
       //TODO mode pozerX and 
       //in mode start-end, PozerStart and PozerEnd
-      lc.getPozerFactory().toStringPozerStart(pozerXStart, dc.newLevel(), layoutable);
-      lc.getPozerFactory().toStringPozerEnd(pozerXEnd, dc.newLevel(), layoutable);
-      lc.getPozerFactory().toStringPozerTop(pozerYTop, dc.newLevel(), layoutable);
-      lc.getPozerFactory().toStringPozerBot(pozerYBot, dc.newLevel(), layoutable);
+      lac.getPozerFactory().toStringPozerStart(pozerXStart, dc.newLevel(), layoutable);
+      lac.getPozerFactory().toStringPozerEnd(pozerXEnd, dc.newLevel(), layoutable);
+      lac.getPozerFactory().toStringPozerTop(pozerYTop, dc.newLevel(), layoutable);
+      lac.getPozerFactory().toStringPozerBot(pozerYBot, dc.newLevel(), layoutable);
    }
 
    /**

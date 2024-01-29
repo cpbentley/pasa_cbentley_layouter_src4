@@ -238,9 +238,14 @@ public interface ILayoutable extends IStringable {
     * <li> {@link ITechSizer#SIZER_PROP_07_CONTENT_PAD_BORDER}
     * <li> {@link ITechSizer#SIZER_PROP_10_PAD}
     * 
+    * <p>
     * When {@link ILayoutable} is free to send a similar value when it has no understanding of the concept.
+    * </p>
     * 
+    * <p>
     * The {@link LayEngine} will call this method on an Etalon {@link ILayoutable} to compute sizes for other {@link ILayoutable} .
+    * 
+    * </p>
     * @param property
     * @return
     */

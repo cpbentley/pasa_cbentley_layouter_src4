@@ -4,17 +4,46 @@
  */
 package pasa.cbentley.layouter.src4.ctx;
 
-import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.core.src4.logging.ToStringStaticBase;
-import pasa.cbentley.layouter.src4.tech.ITechLayout;
-import pasa.cbentley.layouter.src4.tech.ITechSizer;
 import pasa.cbentley.layouter.src4.tech.IBOPozer;
 import pasa.cbentley.layouter.src4.tech.IBOSizer;
+import pasa.cbentley.layouter.src4.tech.ITechLayout;
+import pasa.cbentley.layouter.src4.tech.ITechSizer;
 
 /**
  * 
  */
-public class ToStringStaticLayout extends ToStringStaticBase {
+public class ToStringStaticLayout extends ToStringStaticBase implements ITechLayout {
+
+   public static String toStringCompute(int c) {
+      switch (c) {
+         case COMPUTE_0_INVALID:
+            return "Invalid";
+         case COMPUTE_1_NORMAL:
+            return "Normal";
+         case COMPUTE_2_INVERSE:
+            return "Inverse";
+         case COMPUTE_3_BOTH:
+            return "Both";
+         default:
+            return "Unknown" + c;
+      }
+   }
+
+   public static String toStringComputeSize(int c) {
+      switch (c) {
+         case COMPUTE_SIZE_0_NORMAL:
+            return "Normal";
+         case COMPUTE_SIZE_1_ONLY_W:
+            return "OnlyW";
+         case COMPUTE_SIZE_2_ONLY_H:
+            return "OnlyH";
+         case COMPUTE_SIZE_3_NONE:
+            return "None";
+         default:
+            return "Unknown" + c;
+      }
+   }
 
    /**
     * 

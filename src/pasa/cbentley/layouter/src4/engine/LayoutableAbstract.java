@@ -8,25 +8,22 @@ import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.core.src4.logging.IDLog;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
+import pasa.cbentley.layouter.src4.ctx.ObjectLC;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegate;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 import pasa.cbentley.layouter.src4.tech.ITechSizer;
 
-public abstract class LayoutableAbstract implements ILayoutable {
+public abstract class LayoutableAbstract extends ObjectLC implements ILayoutable {
 
    private ILayoutDelegate     delegate;
 
    protected LayEngineRead     engine;
 
-   protected final LayouterCtx lac;
-
    private ILayoutable         parent;
 
-   //#debug
-   private String              toStringDebugName;
-
+  
    public LayoutableAbstract(LayouterCtx lac) {
-      this.lac = lac;
+      super(lac);
       engine = new LayEngineRead(lac, this);
    }
 
@@ -236,44 +233,20 @@ public abstract class LayoutableAbstract implements ILayoutable {
    }
 
    //#mdebug
-   public IDLog toDLog() {
-      return toStringGetUCtx().toDLog();
-   }
-
-   public String toString() {
-      return Dctx.toString(this);
-   }
-
    public void toString(Dctx dc) {
       dc.root(this, LayoutableAbstract.class);
       toStringPrivate(dc);
+      super.toString(dc);
       dc.nlLvl(engine);
       dc.nlLvl(delegate, "LayoutDelegate");
    }
 
-   public String toString1Line() {
-      return Dctx.toString1Line(this);
+   private void toStringPrivate(Dctx dc) {
    }
-
+   
    public void toString1Line(Dctx dc) {
       dc.root1Line(this, LayoutableAbstract.class);
       toStringPrivate(dc);
-   }
-
-   public UCtx toStringGetUCtx() {
-      return lac.getUCtx();
-   }
-
-   public String toStringName() {
-      return toStringDebugName;
-   }
-
-   private void toStringPrivate(Dctx dc) {
-      dc.appendVarWithSpace("toStringDebugName", toStringDebugName);
-   }
-
-   public void toStringSetDebugName(String name) {
-      toStringDebugName = name;
    }
 
    //#enddebug

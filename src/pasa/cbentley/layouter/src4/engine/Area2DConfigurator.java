@@ -46,10 +46,10 @@ public class Area2DConfigurator extends ObjectLC implements IStringable {
     * Takes the whole area defined by its ViewContext
     */
    public void layFullViewContext() {
-      ByteObject pozer0 = lc.getPozerFactory().getPozerAtPixel0();
+      ByteObject pozer0 = lac.getPozerFactory().getPozerAtPixel0();
       area.setPozerXStart(pozer0);
       area.setPozerYTop(pozer0);
-      ByteObject sizerRatio100ViewCtx = lc.getSizerFactory().getSizerRatio100ViewCtx(100);
+      ByteObject sizerRatio100ViewCtx = lac.getSizerFactory().getSizerRatio100ViewCtx(100);
       area.setSizerWH(sizerRatio100ViewCtx, sizerRatio100ViewCtx);
    }
 
@@ -61,12 +61,12 @@ public class Area2DConfigurator extends ObjectLC implements IStringable {
     */
    private void layPoz(ILayoutable lay, ByteObject pozer) {
       pozer.set1(IBOPozer.POS_OFFSET_02_ETALON1, IBOPozer.POS_ETALON_6_LAYOUTABLE);
-      ByteObjectLayoutable boLayoutable = new ByteObjectLayoutable(lc.getBOC(), lay);
+      ByteObjectLayoutable boLayoutable = new ByteObjectLayoutable(lac.getBOC(), lay);
       pozer.addByteObject(boLayoutable);
    }
 
    public void layPoz_BotToBot_Of(ILayoutable lay) {
-      ByteObject pozerY = lc.getPozerFactory().getPozerBotToBot();
+      ByteObject pozerY = lac.getPozerFactory().getPozerBotToBot();
       layPozYBot(lay, pozerY);
    }
 
@@ -79,9 +79,9 @@ public class Area2DConfigurator extends ObjectLC implements IStringable {
    }
 
    public void layPoz_BotToBot_Of_With(ILayoutable lay, int fun, ByteObject sizer) {
-      ByteObject pozerX = lc.getPozerFactory().getPozerBotToBot();
+      ByteObject pozerX = lac.getPozerFactory().getPozerBotToBot();
       if (sizer != null) {
-         lc.getPozerFactory().setPoserWithSizer(pozerX, fun, sizer);
+         lac.getPozerFactory().setPoserWithSizer(pozerX, fun, sizer);
       }
       layPozYBot(lay, pozerX);
    }
@@ -92,7 +92,7 @@ public class Area2DConfigurator extends ObjectLC implements IStringable {
 
    public void layPoz_BotToMid_Of(ILayoutable lay) {
       //the size is the distance between 2 pozers, one of which is implicit
-      ByteObject pozerY = lc.getPozerFactory().getPozerBotToMid();
+      ByteObject pozerY = lac.getPozerFactory().getPozerBotToMid();
       layPozYBot(lay, pozerY);
    }
 
@@ -101,7 +101,7 @@ public class Area2DConfigurator extends ObjectLC implements IStringable {
    }
 
    public void layPoz_BotToTop_Of(ILayoutable lay) {
-      ByteObject pozerY = lc.getPozerFactory().getPozerBotToTop();
+      ByteObject pozerY = lac.getPozerFactory().getPozerBotToTop();
       layPozYBot(lay, pozerY);
    }
 
@@ -353,12 +353,12 @@ public class Area2DConfigurator extends ObjectLC implements IStringable {
    }
 
    public void layPoz_EndToCenter_Of(ILayoutable lay) {
-      ByteObject pozerX = lc.getPozerFactory().getPozerEndToCenter();
+      ByteObject pozerX = lac.getPozerFactory().getPozerEndToCenter();
       layPozXEnd(lay, pozerX);
    }
 
    public void layPoz_EndToEnd_Of(ILayoutable lay) {
-      ByteObject pozerX = lc.getPozerFactory().getPozerEndToEnd();
+      ByteObject pozerX = lac.getPozerFactory().getPozerEndToEnd();
       layPozXEnd(lay, pozerX);
    }
 
@@ -378,9 +378,9 @@ public class Area2DConfigurator extends ObjectLC implements IStringable {
     * @param sizer
     */
    public void layPoz_EndToEnd_Of_With(ILayoutable lay, int fun, ByteObject sizer) {
-      ByteObject pozerX = lc.getPozerFactory().getPozerEndToEnd();
+      ByteObject pozerX = lac.getPozerFactory().getPozerEndToEnd();
       if (sizer != null) {
-         lc.getPozerFactory().setPoserWithSizer(pozerX, fun, sizer);
+         lac.getPozerFactory().setPoserWithSizer(pozerX, fun, sizer);
       }
       layPozXEnd(lay, pozerX);
    }
@@ -390,7 +390,7 @@ public class Area2DConfigurator extends ObjectLC implements IStringable {
    }
 
    public void layPoz_EndToStart_Of(ILayoutable lay) {
-      ByteObject pozerX = lc.getPozerFactory().getPozerEndToStart();
+      ByteObject pozerX = lac.getPozerFactory().getPozerEndToStart();
       layPozXEnd(lay, pozerX);
    }
 
@@ -416,7 +416,7 @@ public class Area2DConfigurator extends ObjectLC implements IStringable {
     * Height will be set to preferred Height.
     */
    public void layPoz_Inside_StartTopEnd_OfParent_PrefH() {
-      layPoz_Inside_StartTopEnd_OfParent_WithH(lc.getSizerFactory().getSizerPrefLazy());
+      layPoz_Inside_StartTopEnd_OfParent_WithH(lac.getSizerFactory().getSizerPrefLazy());
    }
 
    /**
@@ -431,12 +431,12 @@ public class Area2DConfigurator extends ObjectLC implements IStringable {
    }
 
    public void layPoz_MidXToEnd_Of(ILayoutable lay) {
-      ByteObject pozerX = lc.getPozerFactory().getPozerMidToEnd();
+      ByteObject pozerX = lac.getPozerFactory().getPozerMidToEnd();
       layPozX(lay, pozerX);
    }
 
    public void layPoz_MidXToMid_Of(ILayoutable lay) {
-      ByteObject pozerX = lc.getPozerFactory().getPozerCenterToCenter();
+      ByteObject pozerX = lac.getPozerFactory().getPozerCenterToCenter();
       layPozX(lay, pozerX);
    }
 
@@ -445,17 +445,17 @@ public class Area2DConfigurator extends ObjectLC implements IStringable {
    }
 
    public void layPoz_MidXToStart_Of(ILayoutable lay) {
-      ByteObject pozerX = lc.getPozerFactory().getPozerMidToStart();
+      ByteObject pozerX = lac.getPozerFactory().getPozerMidToStart();
       layPozX(lay, pozerX);
    }
 
    public void layPoz_MidYToBot_Of(ILayoutable lay) {
-      ByteObject pozerY = lc.getPozerFactory().getPozerMidToEnd();
+      ByteObject pozerY = lac.getPozerFactory().getPozerMidToEnd();
       layPozY(lay, pozerY);
    }
 
    public void layPoz_MidYToMid_Of(ILayoutable lay) {
-      ByteObject pozerY = lc.getPozerFactory().getPozerCenterToCenter();
+      ByteObject pozerY = lac.getPozerFactory().getPozerCenterToCenter();
       layPozY(lay, pozerY);
    }
 
@@ -464,17 +464,17 @@ public class Area2DConfigurator extends ObjectLC implements IStringable {
    }
 
    public void layPoz_MidYToTop_Of(ILayoutable lay) {
-      ByteObject pozerY = lc.getPozerFactory().getPozerMidToTop();
+      ByteObject pozerY = lac.getPozerFactory().getPozerMidToTop();
       layPozY(lay, pozerY);
    }
 
    public void layPoz_StartToCenter_Of(ILayoutable lay) {
-      ByteObject pozerX = lc.getPozerFactory().getPozerStartToCenter();
+      ByteObject pozerX = lac.getPozerFactory().getPozerStartToCenter();
       layPozXEnd(lay, pozerX);
    }
 
    public void layPoz_StartToEnd_Of(ILayoutable lay) {
-      ByteObject pozerX = lc.getPozerFactory().getPozerStartToEnd();
+      ByteObject pozerX = lac.getPozerFactory().getPozerStartToEnd();
       layPozXStart(lay, pozerX);
    }
 
@@ -483,7 +483,7 @@ public class Area2DConfigurator extends ObjectLC implements IStringable {
    }
 
    public void layPoz_StartToStart_Of(ILayoutable lay) {
-      ByteObject pozerX = lc.getPozerFactory().getPozerStartToStart();
+      ByteObject pozerX = lac.getPozerFactory().getPozerStartToStart();
       layPozXStart(lay, pozerX);
    }
 
@@ -509,9 +509,9 @@ public class Area2DConfigurator extends ObjectLC implements IStringable {
     * @param sizer
     */
    public void layPoz_StartToStart_Of_With(ILayoutable lay, int fun, ByteObject sizer) {
-      ByteObject pozerX = lc.getPozerFactory().getPozerStartToStart();
+      ByteObject pozerX = lac.getPozerFactory().getPozerStartToStart();
       if (sizer != null) {
-         lc.getPozerFactory().setPoserWithSizer(pozerX, fun, sizer);
+         lac.getPozerFactory().setPoserWithSizer(pozerX, fun, sizer);
       }
       layPozXStart(lay, pozerX);
    }
@@ -521,7 +521,7 @@ public class Area2DConfigurator extends ObjectLC implements IStringable {
    }
 
    public void layPoz_TopToBot_Of(ILayoutable lay) {
-      ByteObject pozerY = lc.getPozerFactory().getPozerTopToBottom();
+      ByteObject pozerY = lac.getPozerFactory().getPozerTopToBottom();
       layPozYTop(lay, pozerY);
    }
 
@@ -531,7 +531,7 @@ public class Area2DConfigurator extends ObjectLC implements IStringable {
 
    public void layPoz_TopToMid_Of(ILayoutable lay) {
       //define the y pos
-      ByteObject pozerY = lc.getPozerFactory().getPozerTopToMid();
+      ByteObject pozerY = lac.getPozerFactory().getPozerTopToMid();
       layPozYTop(lay, pozerY);
    }
 
@@ -540,7 +540,7 @@ public class Area2DConfigurator extends ObjectLC implements IStringable {
    }
 
    public void layPoz_TopToTop_Of(ILayoutable lay) {
-      ByteObject pozerY = lc.getPozerFactory().getPozerTopToTop();
+      ByteObject pozerY = lac.getPozerFactory().getPozerTopToTop();
       layPozYTop(lay, pozerY);
    }
 
@@ -553,9 +553,9 @@ public class Area2DConfigurator extends ObjectLC implements IStringable {
    }
 
    public void layPoz_TopToTop_Of_With(ILayoutable lay, int fun, ByteObject sizer) {
-      ByteObject pozerX = lc.getPozerFactory().getPozerTopToTop();
+      ByteObject pozerX = lac.getPozerFactory().getPozerTopToTop();
       if (sizer != null) {
-         lc.getPozerFactory().setPoserWithSizer(pozerX, fun, sizer);
+         lac.getPozerFactory().setPoserWithSizer(pozerX, fun, sizer);
       }
       layPozYTop(lay, pozerX);
    }
@@ -629,19 +629,19 @@ public class Area2DConfigurator extends ObjectLC implements IStringable {
          //use parent
          laySiz_W_Ratio100OfParent(value);
       } else {
-         ByteObject sizerH = lc.getSizerFactory().getSizerRatio100(lay, value);
+         ByteObject sizerH = lac.getSizerFactory().getSizerRatio100(lay, value);
          area.setSizerH(sizerH);
       }
    }
 
    public void laySiz_H_Ratio100OfParent(int value) {
-      ByteObject sizerH = lc.getSizerFactory().getSizerRatio100Parent(value);
+      ByteObject sizerH = lac.getSizerFactory().getSizerRatio100Parent(value);
       area.setSizerH(sizerH);
    }
 
    public void laySiz_Preferred() {
-      area.setSizerH(lc.getFactorySizer().getSizerPrefLazy());
-      area.setSizerW(lc.getFactorySizer().getSizerPrefLazy());
+      area.setSizerH(lac.getFactorySizer().getSizerPrefLazy());
+      area.setSizerW(lac.getFactorySizer().getSizerPrefLazy());
    }
 
    /**
@@ -654,14 +654,14 @@ public class Area2DConfigurator extends ObjectLC implements IStringable {
          //use parent
          laySiz_W_Ratio100OfParent(value);
       } else {
-         ByteObject sizerW = lc.getSizerFactory().getSizerRatio100(lay, value);
+         ByteObject sizerW = lac.getSizerFactory().getSizerRatio100(lay, value);
          area.setSizerW(sizerW);
       }
 
    }
 
    public void laySiz_W_Ratio100OfParent(int value) {
-      ByteObject sizerW = lc.getSizerFactory().getSizerRatio100Parent(value);
+      ByteObject sizerW = lac.getSizerFactory().getSizerRatio100Parent(value);
       area.setSizerW(sizerW);
    }
 
@@ -671,8 +671,8 @@ public class Area2DConfigurator extends ObjectLC implements IStringable {
    }
 
    public void setSizePixel(int w, int h) {
-      setSizerW(lc.getSizerFactory().getSizerPix(w));
-      setSizerH(lc.getSizerFactory().getSizerPix(h));
+      setSizerW(lac.getSizerFactory().getSizerPix(w));
+      setSizerH(lac.getSizerFactory().getSizerPix(h));
    }
 
    public void setArea(Zer2DArea area) {

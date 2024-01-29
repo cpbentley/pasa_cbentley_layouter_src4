@@ -64,7 +64,7 @@ public class Zer2DSizer extends Zer2DAbstract implements IBOSizer {
     * @return 
     */
    public Object clone() {
-      Zer2DSizer clone = new Zer2DSizer(lc);
+      Zer2DSizer clone = new Zer2DSizer(lac);
       super.cloneSuper(clone);
       return clone;
    }
@@ -97,7 +97,7 @@ public class Zer2DSizer extends Zer2DAbstract implements IBOSizer {
       dc.root(this, "Zer2DSizer");
       toStringPrivate(dc);
       super.toString(dc.sup());
-      SizerFactory sizerFactory = lc.getSizerFactory();
+      SizerFactory sizerFactory = lac.getSizerFactory();
       sizerFactory.toStringSizer(er2dW, dc.newLevel(), "W");
       sizerFactory.toStringSizer(er2dH, dc.newLevel(), "H");
    }
@@ -120,7 +120,7 @@ public class Zer2DSizer extends Zer2DAbstract implements IBOSizer {
       dc.root1Line(this, "Zer2DSizer");
       toStringPrivate(dc);
       super.toString1Line(dc.sup1Line());
-      SizerFactory sizerFactory = lc.getSizerFactory();
+      SizerFactory sizerFactory = lac.getSizerFactory();
       sizerFactory.toString1LineContentShort(er2dW);
       sizerFactory.toString1LineContentShort(er2dH);
    }

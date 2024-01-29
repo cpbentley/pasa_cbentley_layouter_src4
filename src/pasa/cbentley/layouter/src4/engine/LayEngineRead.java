@@ -145,7 +145,7 @@ public class LayEngineRead extends LayEngine {
 
    //#mdebug
    public void toString(Dctx dc) {
-      dc.root(this, LayEngineRead.class);
+      dc.root(this, LayEngineRead.class,150);
       toStringPrivate(dc);
       super.toString(dc.sup());
    }
