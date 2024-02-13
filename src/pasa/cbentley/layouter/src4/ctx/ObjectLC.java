@@ -17,8 +17,8 @@ public class ObjectLC implements IStringable {
    //#debug
    private String              toStringDebugName;
 
-   public ObjectLC(LayouterCtx lc) {
-      this.lac = lc;
+   public ObjectLC(LayouterCtx lac) {
+      this.lac = lac;
    }
 
    //#mdebug

@@ -8,7 +8,6 @@ import pasa.cbentley.core.src4.logging.ToStringStaticBase;
 import pasa.cbentley.layouter.src4.tech.IBOPozer;
 import pasa.cbentley.layouter.src4.tech.IBOSizer;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
-import pasa.cbentley.layouter.src4.tech.ITechSizer;
 
 /**
  * 
@@ -90,6 +89,8 @@ public class ToStringStaticLayout extends ToStringStaticBase implements ITechLay
             return "Pozer";
          case IBOTypesLayout.FTYPE_6_LINK:
             return "Link";
+         case IBOTypesLayout.FTYPE_2_TBLR:
+            return "TBLR";
          default:
             return null;
       }
@@ -222,9 +223,9 @@ public class ToStringStaticLayout extends ToStringStaticBase implements ITechLay
             return "mode";
          case IBOSizer.SIZER_OFFSET_03_ETALON1:
             return "etalon";
-         case IBOSizer.SIZER_OFFSET_04_FUNCTION1:
+         case IBOSizer.SIZER_OFFSET_06_ET_FUN1:
             return "func";
-         case IBOSizer.SIZER_OFFSET_05_VALUE2:
+         case IBOSizer.SIZER_OFFSET_08_VALUE2:
             return "value";
          default:
             return "Unknown offset " + offset;
@@ -253,8 +254,10 @@ public class ToStringStaticLayout extends ToStringStaticBase implements ITechLay
             return "Add";
          case ITechLayout.ET_FUN_6_DIFF:
             return "Diff";
-         case ITechLayout.ET_FUN_7_CTX_OP:
+         case ITechLayout.ET_FUN_7_CTX_INVERSE:
             return "CtxInverse";
+         case ITechLayout.ET_FUN_8_DELEGATE:
+            return "Delegate";
          default:
             return "Unknown " + fun;
       }
@@ -289,12 +292,15 @@ public class ToStringStaticLayout extends ToStringStaticBase implements ITechLay
             return "RawUnits";
          case ITechLayout.MODE_1_DELEGATE:
             return "DIP";
-         case ITechLayout.MODE_2_RATIO:
-            return "Ratio";
+         case ITechLayout.MODE_2_FUNCTION:
+            return "Function";
          case ITechLayout.MODE_3_SCALE:
             return "Scale";
-         case ITechLayout.MODE_5_FUNCTION:
-            return "Function";
+         case ITechLayout.MODE_5_SIZERS:
+            return "Sizers";
+         case ITechLayout.MODE_6_POZERS:
+            return "Pozers";
+
          default:
             return "Unknown " + mode;
       }
@@ -335,16 +341,36 @@ public class ToStringStaticLayout extends ToStringStaticBase implements ITechLay
     */
    public static String toStringSizerProp(int fun) {
       switch (fun) {
-         case ITechSizer.SIZER_PROP_00_DRAWN:
-            return "drawn";
-         case ITechSizer.SIZER_PROP_01_PREFERRED:
-            return "preferred";
-         case ITechSizer.SIZER_PROP_02_UNIT_LOGIC:
-            return "unit";
-         case ITechSizer.SIZER_PROP_03_FONT:
-            return "font";
-         case ITechSizer.SIZER_PROP_05_CONTENT:
-            return "content";
+         case ITechLayout.SIZER_PROP_00_DRAWN:
+            return "Drawn";
+         case ITechLayout.SIZER_PROP_01_PREFERRED:
+            return "Preferred";
+         case ITechLayout.SIZER_PROP_02_UNIT_LOGIC:
+            return "UnitLogic";
+         case ITechLayout.SIZER_PROP_03_FONT:
+            return "Font";
+         case ITechLayout.SIZER_PROP_04_:
+            return "4";
+         case ITechLayout.SIZER_PROP_05_CONTENT:
+            return "Content";
+         case ITechLayout.SIZER_PROP_06_CONTENT_PAD:
+            return "ContentPad";
+         case ITechLayout.SIZER_PROP_08:
+            return "8";
+         case ITechLayout.SIZER_PROP_09:
+            return "9";
+         case ITechLayout.SIZER_PROP_10_PAD:
+            return "Pad";
+         case ITechLayout.SIZER_PROP_11_PAD_BORDER:
+            return "PadBorder";
+         case ITechLayout.SIZER_PROP_12_PAD_BORDER_MARGIN:
+            return "PadBorderMargin";
+         case ITechLayout.SIZER_PROP_13_BORDER:
+            return "Border";
+         case ITechLayout.SIZER_PROP_14_BORDER_MARGIN:
+            return "BorderMargin";
+         case ITechLayout.SIZER_PROP_15_MARGIN:
+            return "Maring";
          default:
             return "Unknown " + fun;
       }
@@ -379,6 +405,39 @@ public class ToStringStaticLayout extends ToStringStaticBase implements ITechLay
       }
    }
 
+   public static String toStringOpFun(int op) {
+      switch (op) {
+         case ITechLayout.FUNCTION_OP_00_NONE:
+            return "None";
+         case ITechLayout.FUNCTION_OP_01_ADD:
+            return "Add";
+         case ITechLayout.FUNCTION_OP_02_MINUS:
+            return "Minus";
+         case ITechLayout.FUNCTION_OP_03_MULTIPLY:
+            return "Multiply";
+         case ITechLayout.FUNCTION_OP_04_DIVIDE:
+            return "Divide";
+         case ITechLayout.FUNCTION_OP_05_RATIO:
+            return "Ratio";
+         case ITechLayout.FUNCTION_OP_06_X_FOR_Y:
+            return "XforY";
+         case ITechLayout.FUNCTION_OP_07_:
+            return "7";
+         case ITechLayout.FUNCTION_OP_08_:
+            return "7";
+         case ITechLayout.FUNCTION_OP_09_:
+            return "7";
+         case ITechLayout.FUNCTION_OP_10_:
+            return "10";
+         case ITechLayout.FUNCTION_OP_11_:
+            return "11";
+         case ITechLayout.FUNCTION_OP_12_:
+            return "12";
+         default:
+            return "Unknown " + op;
+      }
+   }
+
    /**
     * 
     *
@@ -404,11 +463,11 @@ public class ToStringStaticLayout extends ToStringStaticBase implements ITechLay
     */
    public static String toStringFontProp(int prop) {
       switch (prop) {
-         case ITechLayout.E_FONT_0_DEFAULT:
+         case ITechLayout.ET_FONT_0_DEFAULT:
             return "default";
-         case ITechLayout.E_FONT_1_DEFINED:
+         case ITechLayout.ET_FONT_1_DEFINED:
             return "defined";
-         case ITechLayout.E_FONT_2_SMALL:
+         case ITechLayout.ET_FONT_2_SMALL:
             return "small";
          default:
             return "Unknown " + prop;

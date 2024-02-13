@@ -18,7 +18,6 @@ import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegate;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 import pasa.cbentley.layouter.src4.tech.ITechCoded;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
-import pasa.cbentley.layouter.src4.tech.ITechSizer;
 import pasa.cbentley.layouter.src4.tech.IBOLinker;
 import pasa.cbentley.layouter.src4.tech.IBOPozer;
 import pasa.cbentley.layouter.src4.tech.IBOSizer;
@@ -146,7 +145,7 @@ public class PozerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       bo.set1(POS_OFFSET_02_ETALON1, POS_ETALON_0_POINT);
       bo.set1(POS_OFFSET_07_ANCHOR_POZEE1, alignSrc);
       //special value for delegate call
-      bo.set4(POS_OFFSET_03_ANCHOR_ETALON_POINT_VALUE4, ITechSizer.DELEGATE_POINT_VALUE);
+      bo.set4(POS_OFFSET_03_ANCHOR_ETALON_POINT_VALUE4, ITechLayout.DELEGATE_POINT_VALUE);
       
       ByteObjectLayoutDelegate delegateBO = new ByteObjectLayoutDelegate(lc.getBOC(), delegate);
       bo.addByteObject(delegateBO);
@@ -369,8 +368,8 @@ public class PozerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
     * @return 
     */
    public ByteObject getPozerNav(int alignSrc, int alignDest, int dir) {
-      ByteObject bo = getPozer(alignSrc, alignDest, ETALON_5_LINK, LINK_1_NAV);
-      ByteObject linker = lc.getLayoutFactory().createLink(LINK_1_NAV, dir);
+      ByteObject bo = getPozer(alignSrc, alignDest, ETALON_5_LINK, ET_LINK_1_NAV);
+      ByteObject linker = lc.getLayoutFactory().createLink(ET_LINK_1_NAV, dir);
       bo.addByteObject(linker);
       return bo;
    }
@@ -461,8 +460,8 @@ public class PozerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
     * @return 
     */
    public ByteObject getPozerParent(int alignSrc, int alignDest, int nav) {
-      ByteObject bo = getPozer(alignSrc, alignDest, ETALON_5_LINK, LINK_0_PARENT);
-      ByteObject linker = lc.getLayoutFactory().createLink(LINK_0_PARENT, 0);
+      ByteObject bo = getPozer(alignSrc, alignDest, ETALON_5_LINK, ET_LINK_0_PARENT);
+      ByteObject linker = lc.getLayoutFactory().createLink(ET_LINK_0_PARENT, 0);
       bo.addByteObject(linker);
       return bo;
    }
@@ -577,7 +576,7 @@ public class PozerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       sizer.checkType(FTYPE_3_SIZER);
       ByteObject bo = getBOFactory().createByteObject(FTYPE_4_POSITION, SIZER_BASIC_SIZE);
       bo.set1(SIZER_OFFSET_02_MODE1, MODE_0_RAW_UNITS);
-      bo.set2(SIZER_OFFSET_05_VALUE2, value);
+      bo.set2(SIZER_OFFSET_08_VALUE2, value);
       bo.addByteObject(sizer);
       return bo;
    }

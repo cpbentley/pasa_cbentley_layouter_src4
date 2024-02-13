@@ -28,7 +28,7 @@ public interface ISizeCtx {
     * Get the etalon H of the given type.
     * Provides the Height of the given etalon.
     * <br>
-    * Read {@link IBOSizer#SIZER_OFFSET_06_PROPERTY1} and deal with the case
+    * Read {@link IBOSizer#SIZER_OFFSET_05_ET_PROPERTY1} and deal with the case
     * 
     * <li> {@link IBOSizer#E_CTX_0_PREFERRED_SIZE}
     * <li> {@link IBOSizer#E_CTX_1_LOGIC_SIZE}

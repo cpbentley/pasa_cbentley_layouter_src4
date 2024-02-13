@@ -8,8 +8,9 @@ import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.core.src4.interfaces.ITech;
 import pasa.cbentley.core.src4.interfaces.ITechNav;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
+import pasa.cbentley.layouter.src4.ctx.ToStringStaticLayout;
 import pasa.cbentley.layouter.src4.engine.ByteObjectLayoutDelegate;
-import pasa.cbentley.layouter.src4.engine.LayEngine;
+import pasa.cbentley.layouter.src4.engine.LayouterEngine;
 import pasa.cbentley.layouter.src4.engine.Zer2DArea;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegate;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegateMax;
@@ -110,6 +111,8 @@ public interface ITechLayout extends ITech {
     */
    public static final int DELEGATE_ETALON_1_PARENT_MAX          = 1;
 
+   public static final int DELEGATE_POINT_VALUE                  = -1;
+
    /**
     * Keep in memory. Contrast with {@link ITechLayout#DEPENDENCY_X_DELETE}
     */
@@ -143,66 +146,27 @@ public interface ITechLayout extends ITech {
    /**
     * 
     */
-   public static final int E_FONT_0_DEFAULT                      = 0;
+   public static final int ET_FONT_0_DEFAULT                     = 0;
 
    /**
     * Font defined in the sub.
     */
-   public static final int E_FONT_1_DEFINED                      = 1;
+   public static final int ET_FONT_1_DEFINED                     = 1;
 
    /**
     * 
     */
-   public static final int E_FONT_2_SMALL                        = 2;
+   public static final int ET_FONT_2_SMALL                       = 2;
 
    /**
     * 
     */
-   public static final int E_FONT_3_MEDIUM                       = 3;
+   public static final int ET_FONT_3_MEDIUM                      = 3;
 
    /**
     * 
     */
-   public static final int E_FONT_4_BIG                          = 4;
-
-   /**
-    * The root view context of the application.
-    * If the application has a menu and other artifacts around,
-    * they are included. Its really the root.
-    * We want the sizee to position/size relative to this reference.
-    */
-   public static final int E_VIEWCONTEXT_0_ROOT                  = 0;
-
-   /**
-    * THe view context of the application.
-    */
-   public static final int E_VIEWCONTEXT_1_APPLI                 = 1;
-
-   /**
-    * Sizee position/size relative to its parent
-    * To avoid creating a link. we allow etalon ViewContext with this type
-    */
-   public static final int E_VIEWCONTEXT_2_PARENT                = 2;
-
-   /**
-    * Custom View context must be defined using a Link.
-    */
-   public static final int E_VIEWCONTEXT_3_LINK                  = 3;
-
-   /**
-    * 
-    */
-   public static final int E_VIEWCONTEXT_4_CLIP                  = 4;
-
-   /**
-    * The full multi screens view context.
-    */
-   public static final int E_VIEWCONTEXT_4_SCREEN_ALL            = 4;
-
-   /**
-    * 
-    */
-   public static final int E_VIEWCONTEXT_4_SCREEN_MAIN           = 4;
+   public static final int ET_FONT_4_BIG                         = 4;
 
    /**
     * Function that returns the input context value.
@@ -251,17 +215,29 @@ public interface ITechLayout extends ITech {
    /**
     * Inverse of context.
     */
-   public static final int ET_FUN_7_CTX_OP                       = 7;
+   public static final int ET_FUN_7_CTX_INVERSE                  = 7;
 
    /**
     * things are computed by the delegate
     */
-   public static final int ET_FUN_7_DELEGATE                     = 7;
+   public static final int ET_FUN_8_DELEGATE                     = 8;
 
    /**
-    * Etalon link type {@link IBOSizer#SIZER_OFFSET_06_PROPERTY1}.
+    * Etalon link type {@link IBOSizer#SIZER_OFFSET_05_ET_PROPERTY1}.
     */
    public static final int ET_LINK_0_ID                          = 0;
+
+   /**
+    * Contextual value relative to the Parent of the caller....
+    * {@link ISizer#POS_OFFSET_08_ANCHOR_POZEE_STRUCT1} defines which Drawable to get.
+    * 
+    * A sizer is loaded in sub.
+    * <br>
+    *  size of parent
+    * 
+    * Example:
+    */
+   public static final int ET_LINK_0_PARENT                      = 0;
 
    /**
     * Drawn size minus styles.
@@ -270,10 +246,11 @@ public interface ITechLayout extends ITech {
     */
    public static final int ET_LINK_1_NAV                         = 1;
 
+
    /**
-    * 
+    * Provides by a 4 byte UIID.
     */
-   public static final int ET_LINK_2_PARENT                      = 2;
+   public static final int ET_LINK_2_UIID                        = 2;
 
    /**
     * 
@@ -281,52 +258,99 @@ public interface ITechLayout extends ITech {
    public static final int ET_LINK_3_LAYOUTABLE                  = 3;
 
    /**
-    * Etalon is dynamically decided from the sizee provided context . 
-    * <br>
-    * A size is computed in the context of a clip rectangle. This is the etalon.
-    * <br>
-    * <li>For sizing height of text, it will be the height of the font used to display the text.
-    * <li> For sizing styled text, it will be the height of the font used to display the text, plus
-    * the margin, padding and other artifacts.
+    * 
+    */
+   public static final int ATODO_ET_PROP_4_SIZE_FONT_RATIO             = 4;
+
+   /**
+    * The root view context of the application.
+    * If the application has a menu and other artifacts around,
+    * they are included. Its really the root.
+    * We want the sizee to position/size relative to this reference.
+    */
+   public static final int ET_VIEWCONTEXT_0_ROOT                 = 0;
+
+   /**
+    * THe view context of the application.
+    */
+   public static final int ET_VIEWCONTEXT_1_APPLI                = 1;
+
+   /**
+    * Sizee position/size relative to its parent
+    * To avoid creating a link. we allow etalon ViewContext with this type
+    */
+   public static final int ET_VIEWCONTEXT_2_PARENT               = 2;
+
+   /**
+    * Custom View context must be defined using a Link.
+    */
+   public static final int ET_VIEWCONTEXT_3_LINK                 = 3;
+
+   /**
+    * 
+    */
+   public static final int ET_VIEWCONTEXT_4_CLIP                 = 4;
+
+   /**
+    * 
+    */
+   public static final int ET_VIEWCONTEXT_5_SCREEN_MAIN          = 5;
+
+   /**
+    * The full multi screens view context.
+    */
+   public static final int ET_VIEWCONTEXT_6_SCREEN_ALL           = 6;
+
+   /**
+    * Etalon is implicit and decided from the sizee context. 
+    * 
+    * 
+    * <li> A size is computed in the context of a clip rectangle. This is the etalon.
+    * <li> For sizing height of text, it will be the height of the font used to display the text.
+    * <li> For sizing styled text, it will be the height of the font used to display the text, plus the margin, padding and other artifacts.
     * <li> For sizing the width of figure in a RDA, it will be the width of the RDA
     * <li> For sizing the height of figure in a RDA, it will be the height of the RDA
-    * <br>
+    * <li> In a table, contextual width is the width of one column.
     * 
-    * In a table, contextual width is the width of one column.
-    * <br>
-    * For this etalon, the {@link IBOSizer#SIZER_OFFSET_06_PROPERTY1} is
+    * <p>
+    * 
+    * For this etalon, the {@link IBOSizer#SIZER_OFFSET_05_ET_PROPERTY1} is
     * 
     * Included in the {@link ITechCoded#CODED_BITS_2_ETALON}
+    * </p>
     */
    public static final int ETALON_0_SIZEE_CTX                    = 0;
 
    /**
-    * The view context is the rectangle area that represents a special object.
+    * The etalon is a ViewContext layoutable, i.e. a rectangular area in the layoutable hierarchy tagged as ViewContext.
+    * 
+    * It is not necessarily the parent if the parent is not tagged as a ViewContext.
+    * Its the screen area given to the context of the object.
     * 
     * It is used for sizing and positions top level windows/frames.
     * 
     * The ViewContext is the rectangle in which the object resides.
     * <li> A frame resides in a screen. ViewContext is the screen
     * <li> A View/Drawable/Component 
+    * <li> {@link ITechLayout#ET_VIEWCONTEXT_0_ROOT}
+    * <li> {@link ITechLayout#ET_VIEWCONTEXT_1_APPLI}
+    * <li> {@link ITechLayout#ET_VIEWCONTEXT_2_PARENT}
     * 
-    * <li> {@link ITechLayout#E_VIEWCONTEXT_0_ROOT}
-    * <li> {@link ITechLayout#E_VIEWCONTEXT_1_APPLI}
-    * <li> {@link ITechLayout#E_VIEWCONTEXT_1_APPLI}
     * 
-    * It is not necessarily the parent. Its the screen area given to the context of the object.
+    * <p>
     * 
-    * <br>
+    * Examples of ViewContext that may be defined in the context of graphical application
     * 
     * ViewContext rectangle in which the value is computed.
-    * <br>
     * <li> Screen Size provided by {@link IGraphics}
     * <li> Size of the Canvas.
     * <li> Clip?
-    * <br>
-    * <br>
+    * </p>
+    * 
+    * <p>
     * Based on a view context, compute the number of times a Font Fits?
     * Every Draw is done in the context of Screen width and height.
-    * <br>
+    * </p>
     * 
     */
    public static final int ETALON_1_VIEWCONTEXT                  = 1;
@@ -337,12 +361,12 @@ public interface ITechLayout extends ITech {
     * The etalon value 
     * Which font is used in the Application context.
     * <br>
-    * {@link ITechLayout#SIZER_OFFSET_04_FUNCTION1} defines which font
-    * <li> {@link ITechLayout#E_FONT_0_DEFAULT} means default font
-    * <li> {@link ITechLayout#E_FONT_1_DEFINED}
-    * <li> {@link ITechLayout#E_FONT_2_SMALL} 
-    * <li> {@link ITechLayout#E_FONT_3_MEDIUM}
-    * <li> {@link ITechLayout#E_FONT_4_BIG} 
+    * {@link ITechLayout#SIZER_OFFSET_06_ET_FUN1} defines which font
+    * <li> {@link ITechLayout#ET_FONT_0_DEFAULT} means default font
+    * <li> {@link ITechLayout#ET_FONT_1_DEFINED}
+    * <li> {@link ITechLayout#ET_FONT_2_SMALL} 
+    * <li> {@link ITechLayout#ET_FONT_3_MEDIUM}
+    * <li> {@link ITechLayout#ET_FONT_4_BIG} 
     * <br>
     * <br>
     * <li> you want a size of the word "Welcome"
@@ -357,15 +381,22 @@ public interface ITechLayout extends ITech {
    public static final int ETALON_2_FONT                         = 2;
 
    /**
-    * Etalon is a ratio
+    * Etalon is a function value computed by the engine.
+    * 
+    * <p>
+    * 
+    * {@link IBOSizer#SIZER_OFFSET_04_ET_SUBTYPE1} contains 
     * 
     * <li> {@link ITechLayout#RATIO_01_SCREEN_FONT}
     * <li> {@link ITechLayout#RATIO_02_VIEWCTX_FONT}
     * <li> {@link ITechLayout#RATIO_03_PARENT_FONT}
+    * </p>
+    * 
+    * <p>
+    * Discussion about
     * 
     * Number of times Default Font Height fits the W and H of the View/Etalon.
-    * <br>
-    * <br>
+    * 
     * Used as an etalon for the Unit mode. We want the size to be a multiple
     * of this
     * 
@@ -374,26 +405,31 @@ public interface ITechLayout extends ITech {
     * A big font might fit 4 times on a phone screen.
     * 
     * How do you use it as an etalon? In base unit like Font size
-    * <br>
+    * </p>
     */
    public static final int ETALON_3_RATIO                        = 3;
 
    /**
-    * 
+    * The etalon on which to fetch the property is {@link ILayoutable#getLayoutableParent()}
+    * on the input {@link ILayoutable} 
     */
    public static final int ETALON_4_PARENT                       = 4;
 
    /**
     * Etalon is defined as {@link IBOLinker} in this {@link ByteObject}.
     * 
+    * <p>
+    * 
     * Usually used when linking to a totally unrelated object.
+    * <li> {@link ITechLayout#ET_LINK_0_PARENT}
+    * <li> {@link ITechLayout#ET_LINK_1_NAV}
+    * <li> {@link ITechLayout#ET_LINK_2_UIID}, kinda like Android viewIDs.
+    * </p>
     * 
-    * <li> {@link ITechLayout#LINK_0_PARENT}
-    * <li> {@link ITechLayout#LINK_1_NAV}
-    * <li> {@link ITechLayout#LINK_2_UIID}, kinda like Android viewIDs.
-    * 
+    * <p>
     * Links can be chained
     * Written to {@link ISizer#SIZER_OFFSET_03_ETALON1}
+    * </p>
     */
    public static final int ETALON_5_LINK                         = 5;
 
@@ -401,10 +437,12 @@ public interface ITechLayout extends ITech {
     * This etalon is valid for {@link IBOSizer} where sizee has a corresponding 
     * pozer defined. We use the etalon defined there.
     * 
+    * <p>
     * Pozer defines a box to position that we use 
     * {@link IBOPozer#POS_OFFSET_02_ETALON1}.
     * Etalon is defined by 4 pozers -> 2 points creating a rectangle
     * a valid {@link Zer2DArea}
+    * </p>
     */
    public static final int ETALON_6_POZER_BOX                    = 6;
 
@@ -422,29 +460,58 @@ public interface ITechLayout extends ITech {
    public static final int ETALON_CK_MAX                         = 3;
 
    /**
-    * Contextual value relative to the Parent of the caller....
-    * {@link ISizer#POS_OFFSET_08_ANCHOR_POZEE_STRUCT1} defines which Drawable to get.
+    * Takes the distance between the 2 pozers.
     * 
-    * A sizer is loaded in sub.
-    * <br>
-    *  size of parent
+    * When {@link IBOSizer#SIZER_FLAG_8_IMPLICIT}
+    */
+   public static final int FUN_POZER_0_DISTANCE                  = 0;
+
+   /**
+    * {@link ToStringStaticLayout#toStringOpFun(int)}
+    */
+   public static final int FUNCTION_OP_00_NONE                   = 0;
+
+   public static final int FUNCTION_OP_01_ADD                    = 1;
+
+   public static final int FUNCTION_OP_02_MINUS                  = 2;
+
+   public static final int FUNCTION_OP_03_MULTIPLY               = 3;
+
+   public static final int FUNCTION_OP_04_DIVIDE                 = 4;
+
+   /**
+    * Interprets {@link IBOSizer#SIZER_OFFSET_08_VALUE2} as a Ratio of the etalon defined in {@link IBOSizer#SIZER_OFFSET_03_ETALON1}
     * 
-    * Example:
+    * <p>
+    * Stored in {@link IBOSizer#SIZER_OFFSET_02_MODE1}
+    * </p>
+    * <p>
+    * Q:How do you define a 16/9 ratio ? 
+    * A:
+    * <li>if width has a sizer. ratio is 9/16 and etalon for computing height is the sizer defining the Width
+    * <li>if height has a sizer. ratio is 16/9 and etalon for computing width is the sizer defining the height
+    * </p>
     */
-   public static final int LINK_0_PARENT                         = 1;
+   public static final int FUNCTION_OP_05_RATIO                  = 5;
+
+   public static final int FUNCTION_OP_06_X_FOR_Y                = 6;
+
+   public static final int FUNCTION_OP_07_                       = 7;
+
+   public static final int FUNCTION_OP_08_                       = 8;
+
+   public static final int FUNCTION_OP_09_                       = 9;
+
+   public static final int FUNCTION_OP_10_                       = 10;
+
+   public static final int FUNCTION_OP_11_                       = 11;
+
+   public static final int FUNCTION_OP_12_                       = 12;
+
+   public static final int FUNCTION_OP_CK_MAX                    = 6;
 
    /**
-    * Etalon is Nav.
-    */
-   public static final int LINK_1_NAV                            = 5;
-
-   /**
-    * Provides by a 4 byte UIID.
-    */
-   public static final int LINK_2_UIID                           = 6;
-
-   /**
-    * Interprets {@link IBOSizer#SIZER_OFFSET_05_VALUE2} as absolute raw value pixel. 
+    * Interprets {@link IBOSizer#SIZER_OFFSET_08_VALUE2} as absolute raw value pixel. 
     * 
     * The unit is decided by  {@link IBOSizer#SIZER_OFFSET_03_ETALON1}
     * <br>
@@ -469,20 +536,7 @@ public interface ITechLayout extends ITech {
    public static final int MODE_1_DELEGATE                       = 1;
 
    /**
-    * Interprets {@link IBOSizer#SIZER_OFFSET_05_VALUE2} as a Ratio of an Etalon.
-    * <br>
-    * Etalon is defined by {@link IBOSizer#SIZER_OFFSET_03_ETALON1}.
-    * <br>
-    * <br>
-    * Q:How do you define a 16/9 ratio ? 
-    * A:
-    * <li>if width has a sizer. ratio is 9/16 and etalon for computing height is the sizer defining the Width
-    * <li>if height has a sizer. ratio is 16/9 and etalon for computing width is the sizer defining the height
-    */
-   public static final int MODE_2_RATIO                          = 2;
-
-   /**
-    *  Interprets {@link IBOSizer#SIZER_OFFSET_05_VALUE2} as belonging to the set
+    *  Interprets {@link IBOSizer#SIZER_OFFSET_08_VALUE2} as belonging to the set
     * <li> {@link ITechLayout#SIZE_0_NONE}
     * <li> {@link ITechLayout#SIZE_1_SMALLEST}
     * <li> {@link ITechLayout#SIZE_2_SMALL}
@@ -496,8 +550,8 @@ public interface ITechLayout extends ITech {
     * <li> {@link ITechLayout#SCALE_1_EXPO}
     * <li> {@link ITechLayout#SCALE_2_FONT}
     * <br>
-    * {@link IBOSizer#SIZER_OFFSET_06_PROPERTY1} provides ?
-    * {@link IBOSizer#SIZER_OFFSET_04_FUNCTION1} provides ?
+    * {@link IBOSizer#SIZER_OFFSET_05_ET_PROPERTY1} provides ?
+    * {@link IBOSizer#SIZER_OFFSET_06_ET_FUN1} provides ?
     * <br>
     * Usually it will be related to the font size
     * <br>
@@ -508,29 +562,47 @@ public interface ITechLayout extends ITech {
     * The idea of this mode is to define margins as small/medium/big.
     * Those values are centralized
     */
-   public static final int MODE_3_SCALE                          = 4;
+   public static final int MODE_3_SCALE                          = 3;
+
+   /**
+    * A function on the value of etalon computed from 
+    * <li>{@link IBOSizer#SIZER_OFFSET_03_ETALON1} , 
+    * <li>{@link IBOSizer#SIZER_OFFSET_06_ET_FUN1} 
+    * <li>{@link IBOSizer#SIZER_OFFSET_05_ET_PROPERTY1} 
+    * 
+    * <li> {@link ITechLayout#FUNCTION_OP_0_NONE}
+    * <li> {@link ITechLayout#FUNCTION_OP_1_ADD}
+    * <li> {@link ITechLayout#FUNCTION_OP_2_MINUS}
+    * <li> {@link ITechLayout#FUNCTION_OP_3_MULTIPLY}
+    * <li> {@link ITechLayout#FUNCTION_OP_4_DIVIDE}
+    * <li> {@link ITechLayout#FUNCTION_OP_05_RATIO}
+    * 
+    * This etalon value is modified by value {@link IBOSizer#SIZER_OFFSET_08_VALUE2} 
+    * using operator 
+    */
+   public static final int MODE_2_FUNCTION                       = 4;
 
    /**
     * The sizer is a function of 2 sizers.
     * <br>
     * The 2 sizers used are the 2 first found.
     * 
-    * The only relevant field is {@link IBOSizer#SIZER_OFFSET_04_FUNCTION1} that defines the operator
-    * to use between the 2 sizes.
+    * The only relevant field is {@link IBOSizer#SIZER_OFFSET_06_ET_FUN1} that defines the operator
+    * to use between the 2 sizers.
     */
-   public static final int MODE_5_FUNCTION                       = 5;
+   public static final int MODE_5_SIZERS                         = 5;
 
    /**
     * The size is the distance between 2 pozers.
     * 
-    * Often times, {@link LayEngine} will be used in this mode 
+    * Often times, {@link LayouterEngine} will be used in this mode 
     */
-   public static final int MODE_6_POZER_DISTANCE                 = 6;
+   public static final int MODE_6_POZERS                         = 6;
 
    /**
     * Mode is coded in 1 byte, potentially a total of 255 modes.
     */
-   public static final int MODE_CK_MAX                           = 3;
+   public static final int MODE_CK_MAX                           = 6;
 
    /**
     * 
@@ -558,7 +630,7 @@ public interface ITechLayout extends ITech {
    public static final int RAW_UNIT_0_PIXEL                      = 0;
 
    /**
-    * Interprets {@link IBOSizer#SIZER_OFFSET_05_VALUE2} as DPI (Density Independent Pixel)
+    * Interprets {@link IBOSizer#SIZER_OFFSET_08_VALUE2} as DPI (Density Independent Pixel)
     * <br>
     * When a value is express in DIPs, the engine computes the number of pixels using
     * 
@@ -628,6 +700,85 @@ public interface ITechLayout extends ITech {
     * 
     */
    public static final int SIZE_5_BIGGEST                        = 5;
+
+   /**
+    * The 4 main are coded on 2 bits.
+    * Size actually drawn
+    */
+   public static final int SIZER_PROP_00_DRAWN                   = 0;
+
+   /**
+    * Preferred size includes content, padding, border and margin.
+    */
+   public static final int SIZER_PROP_01_PREFERRED               = 1;
+
+   /**
+    * Size of a unit, contextual to {@link ILayoutable}.
+    * The pixel size of the height of one unit. 
+    * {@link ILayoutable} is responsible to understand one unit in its context
+    * 
+    * a for Table, it will be a default row 
+    * 
+    * Tries its best
+    *  Every component has a logic unit for W and H. A String is the height of a line, W might be the size of the biggest word 
+    */
+   public static final int SIZER_PROP_02_UNIT_LOGIC              = 2;
+
+   /**
+    * 
+    */
+   public static final int SIZER_PROP_03_FONT                    = 3;
+
+   public static final int SIZER_PROP_04_                        = 4;
+
+   /**
+    * Size of content. ie drawn size minus margin,border and padding
+    */
+   public static final int SIZER_PROP_05_CONTENT                 = 5;
+
+   /**
+    * Size of content and padding. ie drawn size minus margin,border
+    */
+   public static final int SIZER_PROP_06_CONTENT_PAD             = 6;
+
+   /**
+    * Size of content, padding and border. ie drawn size minus margin
+    */
+   public static final int SIZER_PROP_07_CONTENT_PAD_BORDER      = 4;
+
+   public static final int SIZER_PROP_08                         = 8;
+
+   public static final int SIZER_PROP_09                         = 9;
+
+   /**
+    * 
+    */
+   public static final int SIZER_PROP_10_PAD                     = 10;
+
+   /**
+    * 
+    */
+   public static final int SIZER_PROP_11_PAD_BORDER              = 11;
+
+   /**
+    * 
+    */
+   public static final int SIZER_PROP_12_PAD_BORDER_MARGIN       = 12;
+
+   /**
+    * 
+    */
+   public static final int SIZER_PROP_13_BORDER                  = 13;
+
+   /**
+    * 
+    */
+   public static final int SIZER_PROP_14_BORDER_MARGIN           = 14;
+
+   /**
+    * 
+    */
+   public static final int SIZER_PROP_15_MARGIN                  = 15;
 
    /**
     * Uses the whole visible object.

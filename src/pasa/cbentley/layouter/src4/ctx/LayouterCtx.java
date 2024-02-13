@@ -16,6 +16,7 @@ import pasa.cbentley.layouter.src4.engine.LayoutWillListenerAdapter;
 import pasa.cbentley.layouter.src4.engine.LayoutableRect;
 import pasa.cbentley.layouter.src4.engine.PozerFactory;
 import pasa.cbentley.layouter.src4.engine.SizerFactory;
+import pasa.cbentley.layouter.src4.engine.TblrFactory;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegate;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutWillListener;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
@@ -27,7 +28,7 @@ import pasa.cbentley.layouter.src4.tech.ITechLayout;
  *
  * @author Charles Bentley
  */
-public class LayouterCtx extends ACtx {
+public class LayouterCtx extends ACtx implements IBOTypesLayout, ITechLayout, ITechRelation {
 
    public static final int          CTX_ID = 60;
 
@@ -42,26 +43,24 @@ public class LayouterCtx extends ACtx {
 
    private ILayoutDelegate          layoutDelegate;
 
-   /**
-    * 
-    */
    private LayoutFactory            layoutFactory;
 
    private int                      layoutIDGenerator;
 
-   /**
-    * 
-    */
    private LayoutOperator           layoutOperator;
 
+   private TblrFactory         tblrFactory;
+   public TblrFactory getTblrFactory() {
+      if (tblrFactory == null) {
+         tblrFactory = new TblrFactory(this);
+      }
+      return tblrFactory;
+   }
    /**
     * 
     */
    protected final BOModuleLayouter module;
 
-   /**
-    * 
-    */
    private PozerFactory             pozerFactory;
 
    /**
@@ -69,14 +68,8 @@ public class LayouterCtx extends ACtx {
     */
    protected final LayoutableRect   rect;
 
-   /**
-    * 
-    */
    private SizerFactory             sizerFactory;
 
-   /**
-    * 
-    */
    //#debug
    private ILayoutWillListener      toStringDebugBreaks;
 
@@ -254,8 +247,8 @@ public class LayouterCtx extends ACtx {
     * @return 
     */
    public ByteObject getRelationMaxNew() {
-      ByteObject bo = new ByteObject(boc, IBOTypesBOC.TYPE_019_RELATIONSHIP, ITechRelation.RELATION_BASIC_SIZE);
-      bo.set1(ITechRelation.RELATION_OFFSET_02_TYPE1, IBOTypesLayout.RELATION_2_MAX);
+      ByteObject bo = new ByteObject(boc, IBOTypesBOC.TYPE_019_RELATIONSHIP, RELATION_BASIC_SIZE);
+      bo.set1(RELATION_OFFSET_02_TYPE1, RELATION_2_MAX);
       return bo;
    }
 
@@ -265,8 +258,8 @@ public class LayouterCtx extends ACtx {
     * @return 
     */
    public ByteObject getRelationMinNew() {
-      ByteObject bo = new ByteObject(boc, IBOTypesBOC.TYPE_019_RELATIONSHIP, ITechRelation.RELATION_BASIC_SIZE);
-      bo.set1(ITechRelation.RELATION_OFFSET_02_TYPE1, IBOTypesLayout.RELATION_2_MAX);
+      ByteObject bo = new ByteObject(boc, IBOTypesBOC.TYPE_019_RELATIONSHIP, RELATION_BASIC_SIZE);
+      bo.set1(RELATION_OFFSET_02_TYPE1, RELATION_2_MAX);
       return bo;
    }
 
@@ -285,11 +278,6 @@ public class LayouterCtx extends ACtx {
       return 0;
    }
 
-   /**
-    * 
-    *
-    * @return 
-    */
    public SizerFactory getSizerFactory() {
       if (sizerFactory == null) {
          sizerFactory = new SizerFactory(this);

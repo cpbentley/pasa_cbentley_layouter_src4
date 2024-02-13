@@ -120,11 +120,10 @@ public interface IBOPozer extends IByteObject {
     * <li> {@link ITechLayout#ETALON_1_VIEWCONTEXT}
     * <li> {@link ITechLayout#ETALON_2_FONT}
     * <li> {@link ITechLayout#ETALON_3_RATIO}
-    * <li> {@link ITechLayout#ETALON_4_DRAWABLE}
+    * <li> {@link ITechLayout#ETALON_4_PARENT}.
     * <li> {@link ITechLayout#ETALON_5_LINK}
     * <li> {@link ITechLayout#ETALON_6_POZER_BOX}
     * <li> {@link ITechLayout#ETALON_7_DELEGATE}
-    * <li> {@link ITechLayout#ETALON_4_PARENT}.
     */
    public static final int POS_OFFSET_02_ETALON1                    = A_OBJECT_BASIC_SIZE + 1;
 

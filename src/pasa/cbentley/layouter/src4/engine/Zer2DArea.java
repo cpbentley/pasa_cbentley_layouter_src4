@@ -102,7 +102,7 @@ public class Zer2DArea extends ObjectLC implements IStringable, ITechLayout {
     * @param decr
     */
    public void decrementSizerH(int decr) {
-      this.getSizerH().decrementMin(IBOSizer.SIZER_OFFSET_05_VALUE2, 2, decr, 1);
+      this.getSizerH().decrementMin(IBOSizer.SIZER_OFFSET_08_VALUE2, 2, decr, 1);
    }
 
    /**
@@ -110,7 +110,7 @@ public class Zer2DArea extends ObjectLC implements IStringable, ITechLayout {
     * @param decr
     */
    public void decrementSizerW(int decr) {
-      this.getSizerW().decrementMin(IBOSizer.SIZER_OFFSET_05_VALUE2, 2, decr, 1);
+      this.getSizerW().decrementMin(IBOSizer.SIZER_OFFSET_08_VALUE2, 2, decr, 1);
    }
 
    /**
@@ -318,11 +318,11 @@ public class Zer2DArea extends ObjectLC implements IStringable, ITechLayout {
    }
 
    public void incrementSizerH(int incr) {
-      this.getSizerH().increment(IBOSizer.SIZER_OFFSET_05_VALUE2, 2, incr);
+      this.getSizerH().increment(IBOSizer.SIZER_OFFSET_08_VALUE2, 2, incr);
    }
 
    public void incrementSizerW(int incr) {
-      this.getSizerW().increment(IBOSizer.SIZER_OFFSET_05_VALUE2, 2, incr);
+      this.getSizerW().increment(IBOSizer.SIZER_OFFSET_08_VALUE2, 2, incr);
    }
 
    /**

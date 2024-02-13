@@ -4,50 +4,31 @@
  */
 package pasa.cbentley.layouter.src4.engine;
 
-import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.logging.Dctx;
-import pasa.cbentley.core.src4.logging.IDLog;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
+import pasa.cbentley.layouter.src4.ctx.ObjectLC;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegate;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 
 /**
  * 
  */
-public class LayoutableRect implements ILayoutable {
+public class LayoutableRect extends ObjectLC implements ILayoutable {
 
-   /**
-    * 
-    */
    private int                 h;
 
-   /**
-    * 
-    */
-   protected final LayouterCtx lac;
-
-   /**
-    * 
-    */
    private int                 w;
 
-   /**
-    * 
-    */
    private int                 x;
 
-   /**
-    * 
-    */
    private int                 y;
 
    /**
-    * 
     *
     * @param lc 
     */
-   public LayoutableRect(LayouterCtx lc) {
-      this.lac = lc;
+   public LayoutableRect(LayouterCtx lac) {
+      this(lac, 0, 0);
    }
 
    /**
@@ -57,8 +38,8 @@ public class LayoutableRect implements ILayoutable {
     * @param w 
     * @param h 
     */
-   public LayoutableRect(LayouterCtx lc, int w, int h) {
-      this.lac = lc;
+   public LayoutableRect(LayouterCtx lac, int w, int h) {
+      super(lac);
       set(w, h);
    }
 
@@ -437,66 +418,24 @@ public class LayoutableRect implements ILayoutable {
    public void setArea(Zer2DArea area) {
    }
 
-   /**
-    * 
-    *
-    * @return 
-    */
+
    //#mdebug
-   public IDLog toDLog() {
-      return toStringGetUCtx().toDLog();
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public String toString() {
-      return Dctx.toString(this);
-   }
-
-   /**
-    * 
-    *
-    * @param dc 
-    */
    public void toString(Dctx dc) {
-      dc.root(this, LayoutableRect.class, 469);
+      dc.root(this, LayoutableRect.class, 420);
       toStringPrivate(dc);
+      super.toString(dc.sup());
    }
 
-   /**
-    * 
-    *
-    * @return 
-    */
-   public String toString1Line() {
-      return Dctx.toString1Line(this);
-   }
 
-   /**
-    * 
-    *
-    * @param dc 
-    */
    public void toString1Line(Dctx dc) {
-      dc.root1Line(this,  LayoutableRect.class);
+      dc.root1Line(this, LayoutableRect.class);
       toStringPrivate(dc);
+      super.toString1Line(dc.sup1Line());
    }
 
-   /**
-    * 
-    *
-    * @return 
-    */
-   public UCtx toStringGetUCtx() {
-      return lac.getUCtx();
-   }
+   
 
    /**
-    * 
-    *
     * @return 
     */
    public String toStringName() {
@@ -504,8 +443,6 @@ public class LayoutableRect implements ILayoutable {
    }
 
    /**
-    * 
-    *
     * @param dc 
     */
    private void toStringPrivate(Dctx dc) {

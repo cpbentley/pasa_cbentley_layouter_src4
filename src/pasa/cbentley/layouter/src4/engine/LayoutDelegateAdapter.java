@@ -5,6 +5,7 @@ import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.core.src4.logging.IDLog;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
+import pasa.cbentley.layouter.src4.ctx.ObjectLC;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegate;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 
@@ -13,13 +14,11 @@ import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
  * @author Charles Bentley
  *
  */
-public class LayoutDelegateAdapter implements ILayoutDelegate {
+public class LayoutDelegateAdapter extends ObjectLC implements ILayoutDelegate {
 
-   protected final LayouterCtx lac;
 
    public LayoutDelegateAdapter(LayouterCtx lac) {
-      this.lac = lac;
-
+      super(lac);
    }
 
 
@@ -48,56 +47,25 @@ public class LayoutDelegateAdapter implements ILayoutDelegate {
       return 0;
    }
 
+
    //#mdebug
-   public IDLog toDLog() {
-      return toStringGetUCtx().toDLog();
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public String toString() {
-      return Dctx.toString(this);
-   }
-
-   /**
-    * 
-    *
-    * @param dc 
-    */
    public void toString(Dctx dc) {
-      dc.root(this, LayoutDelegateAdapter.class, 69);
+      dc.root(this, LayoutDelegateAdapter.class, 55);
+      toStringPrivate(dc);
+      super.toString(dc.sup());
    }
 
-   /**
-    * 
-    *
-    * @return 
-    */
-   public String toString1Line() {
-      return Dctx.toString1Line(this);
+   private void toStringPrivate(Dctx dc) {
+      
    }
 
-   /**
-    * 
-    *
-    * @param dc 
-    */
    public void toString1Line(Dctx dc) {
       dc.root1Line(this, LayoutDelegateAdapter.class);
-   }
-
-   /**
-    * 
-    *
-    * @return 
-    */
-   public UCtx toStringGetUCtx() {
-      return lac.getUCtx();
+      toStringPrivate(dc);
+      super.toString1Line(dc.sup1Line());
    }
 
    //#enddebug
+   
 
 }

@@ -72,14 +72,13 @@ public interface ITechCoded extends ITech {
    /**
     * 11 bits. Max is {@link BitUtils#BIT_MASK_11}
     * <br>
-    * Codes for {@link IBOSizer#SIZER_OFFSET_05_VALUE2}
+    * Codes for {@link IBOSizer#SIZER_OFFSET_08_VALUE2}
     */
    public static final int CODED_BITS_0_VALUE              = 12;
 
    /**
     * 3 bits for 8 modes 
     * <li> {@link ITechLayout#MODE_1_DELEGATE}
-    * <li> {@link ITechLayout#MODE_2_RATIO}
     * <li> {@link ITechLayout#MODE_3_SCALE}.
     */
    public static final int CODED_BITS_1_MODE               = 2;
@@ -98,16 +97,16 @@ public interface ITechCoded extends ITech {
     * 4 Bits for 16 p
     * 
     * For Views 
-    * <li> {@link ITechLayout#E_VIEWCONTEXT_0_ROOT}
-    * <li> {@link ITechLayout#E_FONT_1_DEFINED}
-    * <li> {@link ITechLayout#E_FONT_4_BIG}
+    * <li> {@link ITechLayout#ET_VIEWCONTEXT_0_ROOT}
+    * <li> {@link ITechLayout#ET_FONT_1_DEFINED}
+    * <li> {@link ITechLayout#ET_FONT_4_BIG}
     * 
     * For fonts
-    * <li> {@link ITechLayout#E_FONT_0_DEFAULT}
-    * <li> {@link ITechLayout#E_FONT_1_DEFINED}
-    * <li> {@link ITechLayout#E_FONT_2_SMALL}
-    * <li> {@link ITechLayout#E_FONT_3_MEDIUM}
-    * <li> {@link ITechLayout#E_FONT_4_BIG}.
+    * <li> {@link ITechLayout#ET_FONT_0_DEFAULT}
+    * <li> {@link ITechLayout#ET_FONT_1_DEFINED}
+    * <li> {@link ITechLayout#ET_FONT_2_SMALL}
+    * <li> {@link ITechLayout#ET_FONT_3_MEDIUM}
+    * <li> {@link ITechLayout#ET_FONT_4_BIG}.
     */
    public static final int CODED_BITS_3_ETALON_TYPE        = 4;
 
@@ -137,24 +136,38 @@ public interface ITechCoded extends ITech {
    public static final int CODED_MASK_0_VALUE              = 0xFFF;
 
    /**
-    * 
+    * 111 3 bits coding
     */
    public static final int CODED_MASK_1_MODE               = 0x7;
 
    /**
-    * 
+    * 1111 4 bits coding
+    * {@link IBOSizer#SIZER_OFFSET_03_ETALON1}
     */
    public static final int CODED_MASK_2_ETALON             = 0xF;
 
    /**
+    * 1111 bits coding
     * 
+    *  {@link IBOSizer#SIZER_OFFSET_04_ET_SUBTYPE1}
     */
    public static final int CODED_MASK_3_ETALON_TYPE        = 0xF;
 
    /**
-    * 
+    * {@link IBOSizer#SIZER_OFFSET_05_ET_PROPERTY1}
+    */
+   public static final int CODED_MASK_4_ETALON_PROP        = 0xF;
+
+   /**
+    * {@link IBOSizer#SIZER_OFFSET_06_ET_FUN1}
     */
    public static final int CODED_MASK_4_ETALON_FUN         = 0xF;
+
+
+   /**
+    * {@link IBOSizer#SIZER_OFFSET_10_OP_FUN1}
+    */
+   public static final int CODED_MASK_6_OP_FUN             = 0xF;
 
    /**
     * When this bit is set, we have a coded value. Otherwise,
@@ -164,7 +177,6 @@ public interface ITechCoded extends ITech {
     * <br>
     * Set whenpublic static final int value is coded for a mode such as
     * <li> {@link ITechLayout#MODE_1_DELEGATE}
-    * <li> {@link ITechLayout#MODE_2_RATIO}
     * <li> {@link ITechLayout#MODE_3_SCALE}
     * <br>
     * <br>
@@ -203,7 +215,6 @@ public interface ITechCoded extends ITech {
    /**
     * Four modes
     * <li> {@link ITechLayout#MODE_1_DELEGATE}
-    * <li> {@link ITechLayout#MODE_2_RATIO}
     * <li> {@link ITechLayout#MODE_3_SCALE}.
     */
    public static final int CODED_SIZE_SHIFT_1_MODE         = CODED_SIZE_SHIFT_0_VALUE + CODED_BITS_0_VALUE;

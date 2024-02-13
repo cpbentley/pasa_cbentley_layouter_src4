@@ -8,16 +8,16 @@ import pasa.cbentley.core.src4.interfaces.ITechNav;
 import pasa.cbentley.core.src4.logging.IStringable;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
 import pasa.cbentley.layouter.src4.engine.ByteObjectLayoutDelegate;
-import pasa.cbentley.layouter.src4.engine.LayEngine;
+import pasa.cbentley.layouter.src4.engine.LayouterEngine;
 import pasa.cbentley.layouter.src4.engine.Zer2DArea;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
-import pasa.cbentley.layouter.src4.tech.ITechSizer;
 import pasa.cbentley.layouter.src4.tech.IBOPozer;
 import pasa.cbentley.layouter.src4.tech.IBOSizer;
 
 /**
- * 2D UI object able to be used in the Layouter engine.
+ * 2D UI object injectable in the Layouter engine.
  * 
+ * <p>
  * 
  * It has a preferred size
  * 
@@ -25,11 +25,15 @@ import pasa.cbentley.layouter.src4.tech.IBOSizer;
  * <li>The preferred size, the pixel object wished to use to display all of its content.
  * <li>The pixel size of 1 unit of its content.
  * <li>The font pixel size used by this object
+ * </p>
+ * 
+ * <p>
  * 
  * All sizes are expressed in pixels.
  * 
  * Sugar methods are to be pruned and optimized away.
  * 
+ * </p>
  * @author Charles Bentley
  *
  */
@@ -71,7 +75,7 @@ public interface ILayoutable extends IStringable {
    /**
     * Enables custom etalon types for
     * 
-    * {@link IBOSizer#SIZER_OFFSET_07_ETALON_SUBTYPE1}
+    * {@link IBOSizer#SIZER_OFFSET_04_ET_SUBTYPE1}
     * {@link IBOPozer#POS_OFFSET_02_ETALON1}
     * 
     * TODO add the layout context to help choose the etalon, provides others parameteres
@@ -229,21 +233,21 @@ public interface ILayoutable extends IStringable {
    /**
     * Returns the current non computed width property.
     * Some often use properties have their own methods
-    * <li> {@link ITechSizer#SIZER_PROP_00_DRAWN} -> {@link ILayoutable#getSizeDrawnWidth()}
-    * <li> {@link ITechSizer#SIZER_PROP_01_PREFERRED} -> {@link ILayoutable#getSizePreferredWidth()}
-    * <li> {@link ITechSizer#SIZER_PROP_02_UNIT_LOGIC}
-    * <li> {@link ITechSizer#SIZER_PROP_03_FONT} -> {@link ILayoutable#getSizeFontWidth()}
-    * <li> {@link ITechSizer#SIZER_PROP_05_CONTENT}
-    * <li> {@link ITechSizer#SIZER_PROP_06_CONTENT_PAD}
-    * <li> {@link ITechSizer#SIZER_PROP_07_CONTENT_PAD_BORDER}
-    * <li> {@link ITechSizer#SIZER_PROP_10_PAD}
+    * <li> {@link ITechLayout#SIZER_PROP_00_DRAWN} -> {@link ILayoutable#getSizeDrawnWidth()}
+    * <li> {@link ITechLayout#SIZER_PROP_01_PREFERRED} -> {@link ILayoutable#getSizePreferredWidth()}
+    * <li> {@link ITechLayout#SIZER_PROP_02_UNIT_LOGIC}
+    * <li> {@link ITechLayout#SIZER_PROP_03_FONT} -> {@link ILayoutable#getSizeFontWidth()}
+    * <li> {@link ITechLayout#SIZER_PROP_05_CONTENT}
+    * <li> {@link ITechLayout#SIZER_PROP_06_CONTENT_PAD}
+    * <li> {@link ITechLayout#SIZER_PROP_07_CONTENT_PAD_BORDER}
+    * <li> {@link ITechLayout#SIZER_PROP_10_PAD}
     * 
     * <p>
     * When {@link ILayoutable} is free to send a similar value when it has no understanding of the concept.
     * </p>
     * 
     * <p>
-    * The {@link LayEngine} will call this method on an Etalon {@link ILayoutable} to compute sizes for other {@link ILayoutable} .
+    * The {@link LayouterEngine} will call this method on an Etalon {@link ILayoutable} to compute sizes for other {@link ILayoutable} .
     * 
     * </p>
     * @param property
@@ -340,12 +344,19 @@ public interface ILayoutable extends IStringable {
    public void layoutUpdateSizeCheck();
 
    /**
-    * 
+    * Computes the Height size.
+    * <p>
+    * If no sizerH is set, the sizer the preferred Height size is assumed.
+    * </p>
     */
    public void layoutUpdateSizeHCheck();
 
    /**
-    * 
+    * Computes the Width size, if check says the width is invalid.
+    * <p>
+    * If no sizerW is set, the sizer the preferred Width size is assumed.
+    * </p>
+    * Check means, the method checks the cached value. It does not force the computation.
     */
    public void layoutUpdateSizeWCheck();
 

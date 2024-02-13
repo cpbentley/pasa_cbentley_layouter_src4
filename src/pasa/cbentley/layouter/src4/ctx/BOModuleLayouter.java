@@ -6,6 +6,7 @@ package pasa.cbentley.layouter.src4.ctx;
 
 import pasa.cbentley.byteobjects.src4.core.BOModuleAbstract;
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
+import pasa.cbentley.byteobjects.src4.ctx.IBOTypesDrw;
 import pasa.cbentley.core.src4.logging.Dctx;
 
 /**
@@ -16,7 +17,7 @@ public class BOModuleLayouter extends BOModuleAbstract implements IBOTypesLayout
    /**
     * 
     */
-   protected final LayouterCtx lc;
+   protected final LayouterCtx lac;
 
    /**
     * 
@@ -25,7 +26,7 @@ public class BOModuleLayouter extends BOModuleAbstract implements IBOTypesLayout
     */
    public BOModuleLayouter(LayouterCtx lc) {
       super(lc.getBOC());
-      this.lc = lc;
+      this.lac = lc;
    }
 
    public ByteObject getFlagOrderedBO(ByteObject bo, int offset, int flag) {
@@ -41,6 +42,8 @@ public class BOModuleLayouter extends BOModuleAbstract implements IBOTypesLayout
    public ByteObject merge(ByteObject root, ByteObject merge) {
       int type = merge.getType();
       switch (type) {
+         case FTYPE_2_TBLR:
+            return lac.getTblrFactory().mergeTBLR(root, merge);
          default:
             //not found here
             return null;
@@ -77,13 +80,16 @@ public class BOModuleLayouter extends BOModuleAbstract implements IBOTypesLayout
       final int type = bo.getType();
       switch (type) {
          case FTYPE_3_SIZER:
-            lc.getSizerFactory().toStringSizer(bo, dc, "");
+            lac.getSizerFactory().toStringSizer(bo, dc, "");
             break;
          case FTYPE_4_POSITION:
-            lc.getPozerFactory().toStringPozer(bo, dc);
+            lac.getPozerFactory().toStringPozer(bo, dc);
             break;
          case FTYPE_6_LINK:
             dc.append("Link");
+            break;
+         case FTYPE_2_TBLR:
+            lac.getTblrFactory().toStringTBLR(bo, dc);
             break;
          default:
             return false;
@@ -101,13 +107,16 @@ public class BOModuleLayouter extends BOModuleAbstract implements IBOTypesLayout
       final int type = bo.getType();
       switch (type) {
          case FTYPE_3_SIZER:
-            lc.getSizerFactory().toString1Line(bo, dc);
+            lac.getSizerFactory().toString1Line(bo, dc);
             break;
          case FTYPE_4_POSITION:
-            lc.getPozerFactory().toStringPozer1Line(bo, dc);
+            lac.getPozerFactory().toStringPozer1Line(bo, dc);
             break;
          case FTYPE_6_LINK:
             dc.append("Link");
+            break;
+         case FTYPE_2_TBLR:
+            lac.getTblrFactory().toStringTBLR(bo, dc);
             break;
          default:
             return false;

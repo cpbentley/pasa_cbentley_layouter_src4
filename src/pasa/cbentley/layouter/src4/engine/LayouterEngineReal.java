@@ -10,14 +10,14 @@ import pasa.cbentley.layouter.src4.interfaces.I2DReal;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 
 /**
- * When the Gui component does not use the {@link LayEngine} {@link Zer2DRect} as model,
+ * When the Gui component does not use the {@link LayouterEngine} {@link Zer2DRect} as model,
  * 
  * we need to update the model when those values are computed.
  * 
  * @author Charles Bentley
  *
  */
-public class LayEngineReal extends LayEngineRead {
+public class LayouterEngineReal extends LayouterEngineRead {
 
    private boolean isAppliedPositionX;
 
@@ -29,7 +29,7 @@ public class LayEngineReal extends LayEngineRead {
 
    private I2DReal real;
 
-   public LayEngineReal(LayouterCtx lc, ILayoutable layoutable, I2DReal real) {
+   public LayouterEngineReal(LayouterCtx lc, ILayoutable layoutable, I2DReal real) {
       super(lc, layoutable);
       this.real = real;
    }
@@ -132,13 +132,13 @@ public class LayEngineReal extends LayEngineRead {
 
    //#mdebug
    public void toString(Dctx dc) {
-      dc.root(this, LayEngineReal.class);
+      dc.root(this, LayouterEngineReal.class);
       toStringPrivate(dc);
       super.toString(dc.sup());
    }
 
    public void toString1Line(Dctx dc) {
-      dc.root1Line(this, LayEngineReal.class);
+      dc.root1Line(this, LayouterEngineReal.class);
       toStringPrivate(dc);
       super.toString1Line(dc.sup1Line());
    }

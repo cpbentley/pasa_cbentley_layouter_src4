@@ -20,6 +20,16 @@ public interface IBOTypesLayout {
    public static final int AZ_BOTYPE_FW_Z   = 49;
 
    /**
+    * Type which stores X bytes of Top/Bottom,Left, Right data
+    * 
+    * X is defined by byte #2 
+    * <br>
+    * 
+    * In Swing, java.awt.Insets
+    */
+   public static final int FTYPE_2_TBLR     = AZ_BOTYPE_FW_A + 2;
+
+   /**
     * Defines how to convert an input value based on reference values.
     * <br>
     * Used to compute actual pixel sizes of shapes, figures, gradients.

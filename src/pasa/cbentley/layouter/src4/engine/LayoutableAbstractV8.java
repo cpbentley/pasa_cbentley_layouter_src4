@@ -4,6 +4,7 @@
  */
 package pasa.cbentley.layouter.src4.engine;
 
+import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.core.src4.logging.IDLog;
@@ -13,18 +14,17 @@ import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegate;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
 
-public abstract class LayoutableAbstract extends ObjectLC implements ILayoutable {
+public abstract class LayoutableAbstractV8 extends ObjectLC implements ILayoutable {
 
-   private ILayoutDelegate     delegate;
+   private ILayoutDelegate    delegate;
 
-   protected LayouterEngineRead     engine;
+   protected LayouterEngineV8 engine;
 
-   private ILayoutable         parent;
+   private ILayoutable        parent;
 
-  
-   public LayoutableAbstract(LayouterCtx lac) {
+   public LayoutableAbstractV8(LayouterCtx lac) {
       super(lac);
-      engine = new LayouterEngineRead(lac, this);
+      engine = new LayouterEngineV8(lac, this);
    }
 
    public void setDependency(ILayoutable lay, int flags) {
@@ -37,6 +37,54 @@ public abstract class LayoutableAbstract extends ObjectLC implements ILayoutable
 
    public ILayoutable[] getDependencies() {
       return engine.getDependencies();
+   }
+
+   public void setSizerW(ByteObject sizer) {
+      engine.getLay().setSizerW(sizer);
+   }
+
+   public void setSizerH(ByteObject sizer) {
+      engine.getLay().setSizerH(sizer);
+   }
+
+   /**
+    * Understanding that pozer goes on XStart
+    * @param pozer
+    */
+   public void setPozerX(ByteObject pozer) {
+      engine.getLay().setPozerXStart(pozer);
+   }
+
+   /**
+    * Understanding that pozer goes on YTop
+    * @param pozer
+    */
+   public void setPozerY(ByteObject pozer) {
+      engine.getLay().setPozerYTop(pozer);
+   }
+
+   public int getSizeFontHeight() {
+      return engine.getSizeFontHeight();
+   }
+
+   public int getSizeFontWidth() {
+      return engine.getSizeFontWidth();
+   }
+
+   public void setSizeFontH(int sizeFontH) {
+      engine.setSizeFontH(sizeFontH);
+   }
+
+   public void setSizeFontW(int sizeFontW) {
+      engine.setSizeFontW(sizeFontW);
+   }
+
+   public void setSizeContentW(int contentW) {
+      engine.getProperties().setContentW(contentW);
+   }
+
+   public void setSizeContentH(int contentH) {
+      engine.getProperties().setContentH(contentH);
    }
 
    public Area2DConfigurator layout() {
@@ -118,22 +166,20 @@ public abstract class LayoutableAbstract extends ObjectLC implements ILayoutable
       return engine.getSizeW();
    }
 
-   public int getSizeFontHeight() {
-      // TODO Auto-generated method stub
-      return 0;
-   }
-
-   public int getSizeFontWidth() {
-      // TODO Auto-generated method stub
-      return 0;
-   }
-
    public int getSizePreferredHeight() {
       return engine.getSizePH();
    }
 
    public int getSizePreferredWidth() {
       return engine.getSizePW();
+   }
+
+   public int getSizeContentHeight() {
+      return engine.getProperties().getContentH();
+   }
+
+   public int getSizeContentWidth() {
+      return engine.getProperties().getContentW();
    }
 
    public int getSizePropertyValueH(int property) {
@@ -144,10 +190,11 @@ public abstract class LayoutableAbstract extends ObjectLC implements ILayoutable
             return getSizePreferredHeight();
          case ITechLayout.SIZER_PROP_03_FONT:
             return getSizeFontHeight();
+         case ITechLayout.SIZER_PROP_05_CONTENT:
+            return getSizeContentHeight();
          default:
-            break;
+            throw new IllegalArgumentException();
       }
-      return 0;
    }
 
    public int getSizePropertyValueW(int property) {
@@ -158,10 +205,39 @@ public abstract class LayoutableAbstract extends ObjectLC implements ILayoutable
             return getSizePreferredWidth();
          case ITechLayout.SIZER_PROP_03_FONT:
             return getSizeFontWidth();
+         case ITechLayout.SIZER_PROP_05_CONTENT:
+            return getSizeContentWidth();
          default:
-            break;
+            throw new IllegalArgumentException();
       }
-      return 0;
+   }
+
+   public void setX(int x) {
+      engine.setX(x);
+      engine.setManualOverrideXTrue();
+   }
+
+   public void setY(int y) {
+      engine.setY(y);
+      engine.setManualOverrideYTrue();
+   }
+
+   public void setH(int h) {
+      engine.setH(h);
+      engine.setManualOverrideHTrue();
+   }
+
+   public void setPw(int pw) {
+      engine.setPw(pw);
+   }
+
+   public void setPh(int ph) {
+      engine.setPh(ph);
+   }
+
+   public void setW(int w) {
+      engine.setW(w);
+      engine.setManualOverrideWTrue();
    }
 
    public void layoutInvalidate() {
@@ -234,7 +310,7 @@ public abstract class LayoutableAbstract extends ObjectLC implements ILayoutable
 
    //#mdebug
    public void toString(Dctx dc) {
-      dc.root(this, LayoutableAbstract.class);
+      dc.root(this, LayoutableAbstractV8.class);
       toStringPrivate(dc);
       super.toString(dc);
       dc.nlLvl(engine);
@@ -243,9 +319,9 @@ public abstract class LayoutableAbstract extends ObjectLC implements ILayoutable
 
    private void toStringPrivate(Dctx dc) {
    }
-   
+
    public void toString1Line(Dctx dc) {
-      dc.root1Line(this, LayoutableAbstract.class);
+      dc.root1Line(this, LayoutableAbstractV8.class);
       toStringPrivate(dc);
    }
 

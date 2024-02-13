@@ -640,8 +640,9 @@ public class Area2DConfigurator extends ObjectLC implements IStringable {
    }
 
    public void laySiz_Preferred() {
-      area.setSizerH(lac.getFactorySizer().getSizerPrefLazy());
-      area.setSizerW(lac.getFactorySizer().getSizerPrefLazy());
+      ByteObject sizerPrefLazy = lac.getFactorySizer().getSizerPrefLazy();
+      area.setSizerH(sizerPrefLazy);
+      area.setSizerW(sizerPrefLazy);
    }
 
    /**
@@ -671,8 +672,8 @@ public class Area2DConfigurator extends ObjectLC implements IStringable {
    }
 
    public void setSizePixel(int w, int h) {
-      setSizerW(lac.getSizerFactory().getSizerPix(w));
-      setSizerH(lac.getSizerFactory().getSizerPix(h));
+      setSizerW(lac.getSizerFactory().getSizerPixel(w));
+      setSizerH(lac.getSizerFactory().getSizerPixel(h));
    }
 
    public void setArea(Zer2DArea area) {

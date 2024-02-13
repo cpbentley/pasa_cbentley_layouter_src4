@@ -8,117 +8,122 @@ import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.core.src4.logging.IStringable;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
 import pasa.cbentley.layouter.src4.ctx.ObjectLC;
+import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 
 /**
- * Encapsulates x,y,w,h of a rectangle.
+ * Encapsulates x,y,w,h,pw,ph of a rectangle in a {@link ILayoutable} context.
  * 
- * <br>
- * <br>
- * Additionally, we have the concept of preferred width and height.
  * 
- * Preferred size is wehn have a w sizer with 2 pozers.. that's pref size
+ * Preferred width/height situations arise when
+ * <li>Preferred size is wehn have a w sizer with 2 pozers.. that's pref size
  * The 2 pozers override the w inner size.
+ * <li> Externally decided by the {@link ILayoutable} using this {@link Zer2DRect}
  * 
- * It can also simply record a domain specific size to be used later.
+ * @author Charles Bentley
  */
 public class Zer2DRect extends ObjectLC implements IStringable {
 
-   /**
-    * 
-    */
    private int h;
 
-   /**
-    * 
-    */
    private int ph;
 
-   /**
-    * 
-    */
    private int pw;
 
-   /**
-    * 
-    */
    private int w;
 
-   /**
-    * 
-    */
    private int x;
 
-   /**
-    * 
-    */
    private int y;
 
    /**
-    * 
-    *
     * @param lc 
     */
-   public Zer2DRect(LayouterCtx lc) {
-      super(lc);
+   public Zer2DRect(LayouterCtx lac) {
+      super(lac);
    }
 
    /**
-    * 
-    *
-    * @return 
+    * Returns the height of the rect.
+    * @return int
     */
    public int getH() {
       return h;
    }
 
    /**
-    * 
-    *
-    * @return 
+    * Returns the preferred height of the rect.
+    * @return int
     */
    public int getPh() {
       return ph;
    }
 
    /**
-    * 
-    *
-    * @return 
+    * Returns the preferred width of the rect.
+    * @return int
     */
    public int getPw() {
       return pw;
    }
 
    /**
-    * 
-    *
-    * @return 
+    * Returns the width of the rect.
+    * @return int
     */
    public int getW() {
       return w;
    }
 
    /**
-    * 
-    *
-    * @return 
+    * Returns the x coordinate of the rect.
+    * @return int
     */
    public int getX() {
       return x;
    }
 
    /**
-    * 
-    *
-    * @return 
+    * Returns the y coordinate of the rect.
+    * @return int
     */
    public int getY() {
       return y;
    }
 
    /**
-    * 
-    *
+    * Increment the height of the rect by <code>incr</code>.
+    * @param incr 
+    */
+   public void incrH(int incr) {
+      h += incr;
+   }
+
+   /**
+    * Increment the preferred height of the rect by <code>incr</code>.
+    * @param incr 
+    */
+   public void incrPh(int incr) {
+      this.ph += incr;
+   }
+
+   /**
+    * Increment the preferred width of the rect by <code>incr</code>.
+    * @param incr 
+    */
+   public void incrPw(int incr) {
+      this.pw += incr;
+   }
+
+   /**
+    * Increment the width of the rect by <code>incr</code>.
+    * @param incr 
+    */
+   public void incrW(int incr) {
+      w += incr;
+   }
+
+   /**
+    * Set the height of the rect.
     * @param h 
     */
    public void setH(int h) {
@@ -126,25 +131,22 @@ public class Zer2DRect extends ObjectLC implements IStringable {
    }
 
    /**
-    * 
-    *
+    * Set the preferred height of the rect.
     * @param ph 
     */
    public void setPh(int ph) {
       this.ph = ph;
    }
 
-   public void incrPh(int incr) {
-      this.ph += incr;
-   }
-
-   public void incrPw(int incr) {
-      this.pw += incr;
+   /**
+    * Set the preferred height of the rect as the current height.
+    */
+   public void setPhAsDh() {
+      ph = h;
    }
 
    /**
-    * 
-    *
+    * Set the preferred width of the rect.
     * @param pw 
     */
    public void setPw(int pw) {
@@ -152,8 +154,14 @@ public class Zer2DRect extends ObjectLC implements IStringable {
    }
 
    /**
-    * 
-    *
+    * Set the preferred width of the rect as the current width.
+    */
+   public void setPwAsDw() {
+      pw = w;
+   }
+
+   /**
+    * Set the width of the rect.
     * @param w 
     */
    public void setW(int w) {
@@ -161,8 +169,7 @@ public class Zer2DRect extends ObjectLC implements IStringable {
    }
 
    /**
-    * 
-    *
+   * Set the x coordinate.
     * @param x 
     */
    public void setX(int x) {
@@ -170,8 +177,7 @@ public class Zer2DRect extends ObjectLC implements IStringable {
    }
 
    /**
-    * 
-    *
+    * Set the y coordinate.
     * @param y 
     */
    public void setY(int y) {
@@ -180,18 +186,25 @@ public class Zer2DRect extends ObjectLC implements IStringable {
 
    //#mdebug
    public void toString(Dctx dc) {
-      dc.root(this, Zer2DRect.class, "@line175");
+      dc.root(this, Zer2DRect.class, 185);
       toStringPrivate(dc);
       super.toString(dc.sup());
       dc.nl();
       dc.append("[");
       dc.append(x);
       dc.append(',');
-      dc.append('y');
+      dc.append(y);
       dc.append(' ');
       dc.append(w);
       dc.append(',');
       dc.append(h);
+      dc.append(']');
+      dc.append(' ');
+      dc.append('p');
+      dc.append('[');
+      dc.append(pw);
+      dc.append(',');
+      dc.append(ph);
       dc.append(']');
    }
 
@@ -213,13 +226,6 @@ public class Zer2DRect extends ObjectLC implements IStringable {
       dc.appendVarWithSpace("h", h);
       dc.appendVarWithSpace("pw", pw);
       dc.appendVarWithSpace("ph", ph);
-   }
-   public void setPhAsDh() {
-      ph = h;
-   }
-
-   public void setPwAsDw() {
-      pw = w;
    }
 
    //#enddebug

@@ -10,6 +10,7 @@ import pasa.cbentley.byteobjects.src4.ctx.IBOTypesBOC;
 import pasa.cbentley.byteobjects.src4.objects.function.ITechRelation;
 import pasa.cbentley.core.src4.interfaces.C;
 import pasa.cbentley.core.src4.logging.Dctx;
+import pasa.cbentley.core.src4.utils.BitUtils;
 import pasa.cbentley.layouter.src4.ctx.IBOTypesLayout;
 import pasa.cbentley.layouter.src4.ctx.LayoutException;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
@@ -17,11 +18,11 @@ import pasa.cbentley.layouter.src4.ctx.ToStringStaticLayout;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegate;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegateMax;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
-import pasa.cbentley.layouter.src4.tech.ITechCoded;
-import pasa.cbentley.layouter.src4.tech.ITechLayout;
-import pasa.cbentley.layouter.src4.tech.ITechSizer;
 import pasa.cbentley.layouter.src4.tech.IBOPozer;
 import pasa.cbentley.layouter.src4.tech.IBOSizer;
+import pasa.cbentley.layouter.src4.tech.IBOTblr;
+import pasa.cbentley.layouter.src4.tech.ITechCoded;
+import pasa.cbentley.layouter.src4.tech.ITechLayout;
 
 /**
  * How to use molecular sizes?
@@ -50,7 +51,7 @@ import pasa.cbentley.layouter.src4.tech.IBOSizer;
  * @author Charles-Philip
  *
  */
-public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout, IBOPozer, IBOSizer, ITechLayout, ITechCoded {
+public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout, IBOPozer, IBOSizer, IBOTblr, ITechLayout, ITechCoded {
 
    public static boolean hasSubFlag(int value) {
       return ((value >> 30) & 0x3) == 2;
@@ -75,7 +76,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
    /**
     * 
     */
-   private LayouterCtx lc;
+   private LayouterCtx lac;
 
    /**
     * 
@@ -84,7 +85,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     */
    public LayoutOperator(LayouterCtx lac) {
       super(lac.getBOC());
-      this.lc = lac;
+      this.lac = lac;
    }
 
    /**
@@ -150,7 +151,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     * @return
     */
    public int codedAnchorDecode(int value) {
-      return codedSizeDecode(value, lc.getDefaultSizeContext(), CTX_1_WIDTH);
+      return codedSizeDecode(value, lac.getDefaultSizeContext(), CTX_1_WIDTH);
    }
 
    /**
@@ -184,7 +185,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       //we are always on 4 bytes for those calls
       int value = bo.get4(index);
       if (CodedUtils.isCoded(value)) {
-         LayoutableRect sc = new LayoutableRect(lc, w, h);
+         LayoutableRect sc = new LayoutableRect(lac, w, h);
          //
          if (CodedUtils.isLinked(value)) {
             ByteObject si = bo.getSubFirst(FTYPE_3_SIZER);
@@ -210,7 +211,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     * @return 
     */
    public int codedSizeDecode(int value) {
-      return codedSizeDecode(value, lc.getDefaultSizeContext(), CTX_1_WIDTH);
+      return codedSizeDecode(value, lac.getDefaultSizeContext(), CTX_1_WIDTH);
    }
 
    /**
@@ -226,6 +227,18 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
          if (CodedUtils.isLinked(value)) {
             throw new IllegalArgumentException("Link needs a ByteObject");
          }
+         int mode = (value >> CODED_SIZE_SHIFT_1_MODE) & CODED_MASK_1_MODE;
+         int etalon = (value >> CODED_SIZE_SHIFT_2_ETALON) & CODED_MASK_2_ETALON;
+         int esub = (value >> CODED_SIZE_SHIFT_3_ETALON_TYPE) & CODED_MASK_3_ETALON_TYPE;
+         int eprop = (value >> CODED_SIZE_SHIFT_3_ETALON_TYPE) & CODED_MASK_3_ETALON_TYPE;
+         int efun = (value >> CODED_SIZE_SHIFT_4_ETALON_FUN) & CODED_MASK_4_ETALON_FUN;
+         int opfun = (value >> CODED_SIZE_SHIFT_4_ETALON_FUN) & CODED_MASK_6_OP_FUN;
+         int v1 = 0;
+         int v2 = 0;
+         if (opfun == 0) {
+            v1 = (value >> CODED_SIZE_SHIFT_0_VALUE) & CODED_MASK_0_VALUE;
+         }
+
          int valueV = (value >> CODED_SIZE_SHIFT_0_VALUE) & CODED_MASK_0_VALUE;
          int modV = (value >> CODED_SIZE_SHIFT_1_MODE) & CODED_MASK_1_MODE;
          int etalonV = (value >> CODED_SIZE_SHIFT_2_ETALON) & CODED_MASK_2_ETALON;
@@ -234,8 +247,9 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
          //set invalid etalon
          //TODO create a thread local OR one sizable for each thread!
          //OR OPTIMIZE down to the bits. use this method for generic testing
-         ByteObject sizer = lc.getSizerFactory().getSizer(modV, valueV, etalonV, etalonTypeV, etalonFunV);
+         ByteObject sizer = lac.getSizerFactory().getSizer(modV, valueV, etalonV, etalonTypeV, etalonFunV);
 
+         sizer = lac.getSizerFactory().getSizer(mode, etalon, esub, eprop, efun, opfun, v1, v2);
          int p = getPixelSize(sizer, sc, ctxType);
          return p;
       } else {
@@ -253,7 +267,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     * @return 
     */
    public int codedSizeDecode(int value, int w, int h, int ctx) {
-      LayoutableRect sc = new LayoutableRect(lc, w, h);
+      LayoutableRect sc = new LayoutableRect(lac, w, h);
       return codedSizeDecode(value, sc, ctx);
    }
 
@@ -280,23 +294,58 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
    }
 
    /**
-    * When value is above {@link ISizer#CODED_BITS_0_VALUE},
-    * returns.
-    *
-    * @param value 
-    * @param etalon 
-    * @return 
-    */
-   public int codedSizeEncode(int value, int etalon) {
-      int code = CODED_SIZE_FLAG_30_CODED;
-      int etalonV = (etalon & CODED_BITS_2_ETALON) << CODED_SIZE_SHIFT_2_ETALON;
-      int valueV = (value & CODED_BITS_0_VALUE) << CODED_SIZE_SHIFT_0_VALUE;
-      return code + etalonV + valueV;
-   }
-
-   /**
     * 
-    *
+    * Coded value is mostly used for quick and light sizing definition for artifacts inside a drawing rectangle.
+    * 
+    * We have 32 bits to code most used 
+    * <li> Value is coded on 16 bits. Each function can read those bits as required
+    * <li> mode is coded in 2 bits for the first 4 values
+    *  <ol>
+    *  <li> {@link ITechLayout#MODE_0_RAW_UNITS}
+    *  <li> {@link ITechLayout#MODE_1_DELEGATE}
+    *  <li> {@link ITechLayout#MODE_2_FUNCTION}
+    *  <li> {@link ITechLayout#MODE_3_SCALE}
+    *  </ol>
+    *  
+    *  <li> Etalon is coded on 3 bits for 6 values
+    *  <ol>
+    *  <li>{@link ITechLayout#ETALON_0_SIZEE_CTX}
+    *  <li>{@link ITechLayout#ETALON_1_VIEWCONTEXT}
+    *  <li>{@link ITechLayout#ETALON_2_FONT}
+    *  <li>{@link ITechLayout#ETALON_3_RATIO}
+    *  <li>{@link ITechLayout#ETALON_4_PARENT}
+    *  <li>{@link ITechLayout#ETALON_5_LINK}
+    *  </ol>
+    *  <li> Etalon Prop 2 bits
+    *  <ol>
+    *  <li>{@link ITechLayout#SIZER_PROP_00_DRAWN}
+    *  <li>{@link ITechLayout#SIZER_PROP_01_PREFERRED}
+    *  <li>{@link ITechLayout#SIZER_PROP_02_UNIT_LOGIC}
+    *  <li>{@link ITechLayout#SIZER_PROP_03_FONT}
+    *  <li> 
+    *  </ol>
+    *  <li> Etalon Fun 3 bits
+    *  <ol>
+    *  <li>{@link ITechLayout#ET_FUN_0_CTX}
+    *  <li>{@link ITechLayout#ET_FUN_1_WIDTH}
+    *  <li>{@link ITechLayout#ET_FUN_2_HEIGHT}
+    *  <li>{@link ITechLayout#ET_FUN_3_MIN}
+    *  <li>{@link ITechLayout#ET_FUN_4_MAX}
+    *  <li>{@link ITechLayout#ET_FUN_5_ADD}
+    *  <li>{@link ITechLayout#ET_FUN_6_DIFF}
+    *  <li> 
+    *  </ol>
+    *  <li> 4 Bits for Function Function
+    *  <ol>
+    *  <li> {@link ITechLayout#FUNCTION_OP_00_NONE}
+    *  <li> {@link ITechLayout#FUNCTION_OP_01_ADD}
+    *  <li> {@link ITechLayout#FUNCTION_OP_02_MINUS}
+    *  <li> {@link ITechLayout#FUNCTION_OP_03_MULTIPLY}
+    *  <li> {@link ITechLayout#FUNCTION_OP_04_DIVIDE}
+    *  <li> {@link ITechLayout#FUNCTION_OP_05_RATIO}
+    *  <li> {@link ITechLayout#FUNCTION_OP_06_X_FOR_Y}
+    *  <li> {@link ITechLayout#FUNCTION_OP_06_X_FOR_Y}
+    *  </ol>
     * @param mode 
     * @param value 
     * @param etalon 
@@ -316,6 +365,11 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       int etalonTypeV = (etype & CODED_MASK_3_ETALON_TYPE) << CODED_SIZE_SHIFT_3_ETALON_TYPE;
       int etalonFunV = (efun & CODED_MASK_4_ETALON_FUN) << CODED_SIZE_SHIFT_4_ETALON_FUN;
       return code + modV + etalonV + valueV + etalonFunV + etalonTypeV;
+   }
+
+   public int codedSizeEncodeRatioDefEtalon(int ratio) {
+      // TODO Auto-generated method stub
+      return 0;
    }
 
    public String codedSizeToString1Line(int codedsize) {
@@ -348,7 +402,8 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     * @param ctxType 
     * @return 
     */
-   private int computeEtalonInPixels(int fun, ILayoutable ctx, ByteObject sizer, int ctxType) {
+   private int computeEtalonInPixels(ILayoutable ctx, ByteObject sizer, int ctxType) {
+      int fun = sizer.get1(SIZER_OFFSET_06_ET_FUN1);
       if (fun == ET_FUN_0_CTX) {
          //context... caller knows what it is supposed to be
          if (ctxType == CTX_1_WIDTH) {
@@ -372,7 +427,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
          return getSizeEtalonW(sizer, ctx) + getSizeEtalonH(sizer, ctx);
       } else if (fun == ET_FUN_6_DIFF) {
          return Math.abs(getSizeEtalonW(sizer, ctx) - getSizeEtalonH(sizer, ctx));
-      } else if (fun == ET_FUN_7_CTX_OP) {
+      } else if (fun == ET_FUN_7_CTX_INVERSE) {
          if (ctxType == CTX_1_WIDTH) {
             return getSizeEtalonH(sizer, ctx);
          } else if (ctxType == CTX_2_HEIGHT) {
@@ -480,7 +535,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
    public ILayoutDelegate getDelegateFromSizer(ByteObject sizer) {
       ILayoutDelegate del = getDelegateFromSizerNull(sizer);
       if (del == null) {
-         throw new LayoutException(lc, "malformed sizer. should have a delegate");
+         throw new LayoutException(lac, "malformed sizer. should have a delegate");
       }
       return del;
    }
@@ -548,7 +603,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     */
    private ILayoutable getEtalonLink(ByteObject pozerSizer, int index, int id, ILayoutable layoutable) {
       ILayoutable layoutableEtalon = layoutable;
-      if (index == ET_LINK_2_PARENT) {
+      if (index == ET_LINK_0_PARENT) {
          layoutableEtalon = layoutable.getLayoutableParent();
       } else if (index == ET_LINK_1_NAV) {
          layoutableEtalon = layoutable.getLayoutableNav(id);
@@ -561,7 +616,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
             ByteObjectLayoutable bol = (ByteObjectLayoutable) bo;
             layoutableEtalon = bol.getLayoutable();
          } else {
-            throw new LayoutException(lc, "");
+            throw new LayoutException(lac, "");
          }
       } else {
          //error fall back on parent emit a warning
@@ -597,7 +652,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
          layoutableEtalon.setDependency(layoutable, ITechLayout.DEPENDENCY_2_POZE);
       } else if (etalon == IBOPozer.POS_ETALON_5_NAV_TOPOLOGY) {
          ByteObject litteral = pozer.getSubFirst(IBOTypesBOC.TYPE_002_LIT_INT);
-         int idValue = lc.getBOC().getLitteralIntOperator().getIntValueFromBO(litteral);
+         int idValue = lac.getBOC().getLitteralIntOperator().getIntValueFromBO(litteral);
          layoutableEtalon = layoutable.getLayoutableNav(idValue);
          //relation de dependance est actée
          layoutableEtalon.setDependency(layoutable, ITechLayout.DEPENDENCY_2_POZE);
@@ -607,28 +662,28 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
             ByteObjectLayoutable bol = (ByteObjectLayoutable) bo;
             layoutableEtalon = bol.getLayoutable();
          } else {
-            throw new LayoutException(lc, "");
+            throw new LayoutException(lac, "");
          }
          layoutableEtalon.setDependency(layoutable, ITechLayout.DEPENDENCY_2_POZE);
       } else if (etalon == IBOPozer.POS_ETALON_3_LINK) {
          ByteObject litteral = pozer.getSubFirst(IBOTypesBOC.TYPE_002_LIT_INT);
-         int idValue = lc.getBOC().getLitteralIntOperator().getIntValueFromBO(litteral);
+         int idValue = lac.getBOC().getLitteralIntOperator().getIntValueFromBO(litteral);
          layoutableEtalon = layoutable.getLayoutableID(idValue);
          layoutableEtalon.setDependency(layoutable, ITechLayout.DEPENDENCY_2_POZE);
       } else {
          String message = "Etalon value is not valid for pozer ->" + etalon;
          //#debug
-         toDLog().pNull(message + " \n" + lc.getFactoryPozer().toStringPozer(pozer, ctx), layoutable, LayoutOperator.class, "getEtalonPozer", LVL_05_FINE, false);
+         toDLog().pNull(message + " \n" + lac.getFactoryPozer().toStringPozer(pozer, ctx), layoutable, LayoutOperator.class, "getEtalonPozer", LVL_05_FINE, false);
 
          //bad poser etalon.. throw exception dev warn
          throw new IllegalArgumentException(message);
       }
       if (layoutableEtalon == null) {
-         String message = "null etalon (" + etalon + ") for pozer ->" + lc.getFactoryPozer().toStringPozer1Line(pozer, ctx);
+         String message = "null etalon (" + etalon + ") for pozer ->" + lac.getFactoryPozer().toStringPozer1Line(pozer, ctx);
          //#debug
-         toDLog().pNull(message + " \n" + lc.getFactoryPozer().toStringPozer(pozer, ctx), layoutable, LayoutOperator.class, "getEtalonPozer", LVL_05_FINE, false);
+         toDLog().pNull(message + " \n" + lac.getFactoryPozer().toStringPozer(pozer, ctx), layoutable, LayoutOperator.class, "getEtalonPozer", LVL_05_FINE, false);
 
-         throw new LayoutException(lc, message);
+         throw new LayoutException(lac, message);
       }
       return layoutableEtalon;
    }
@@ -646,9 +701,9 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       int unit = pozer.get1(POS_OFFSET_10_SIZER_FUN1);
       int val = pozer.get4(POS_OFFSET_03_ANCHOR_ETALON_POINT_VALUE4);
       if (unit == RAW_UNIT_1_DIP) {
-         val = lc.getDPI() * val / 160;
+         val = lac.getDPI() * val / 160;
       }
-      LayoutableRect lr = lc.getDefaultSizeContext();
+      LayoutableRect lr = lac.getDefaultSizeContext();
       if (ctx == CTX_1_WIDTH) {
          lr.set(val, 0, 0, 0);
       } else {
@@ -670,7 +725,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       ByteObject sizer = pozer.getSubFirst(IBOTypesLayout.FTYPE_3_SIZER);
       if (sizer != null) {
          int val = getPixelSize(sizer, layoutableEtalon, ctx);
-         LayoutableRect lr = lc.getDefaultSizeContext();
+         LayoutableRect lr = lac.getDefaultSizeContext();
          if (ctx == CTX_1_WIDTH) {
             lr.set(val, 0, 0, 0);
          } else {
@@ -712,14 +767,14 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
             ByteObjectLayoutable bol = (ByteObjectLayoutable) bo;
             layoutableEtalon = bol.getLayoutable();
          } else {
-            throw new LayoutException(lc, "");
+            throw new LayoutException(lac, "");
          }
       } else if (etalon == ETALON_4_PARENT) {
          layoutableEtalon = layoutable.getLayoutableParent();
          //no need to add a dependency for parent
       } else if (etalon == ETALON_5_LINK) {
-         int index = sizer.get1(SIZER_OFFSET_07_ETALON_SUBTYPE1); //type of linked defined in payload
-         int param = sizer.get1(SIZER_OFFSET_09_ETALON_DATA2); //65k ids
+         int index = sizer.get1(SIZER_OFFSET_04_ET_SUBTYPE1); //type of linked defined in payload
+         int param = sizer.get1(SIZER_OFFSET_07_ET_DATA2); //65k ids
          layoutableEtalon = getEtalonLink(sizer, index, param, layoutable);
          layoutableEtalon.setDependency(layoutable, ITechLayout.DEPENDENCY_1_SIZE);
       }
@@ -727,7 +782,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
    }
 
    public LayouterCtx getLC() {
-      return lc;
+      return lac;
    }
 
    /**
@@ -956,13 +1011,16 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
          result = getPixelSizeRawUnit(sizer);
       } else if (mode == MODE_1_DELEGATE) {
          result = getPixelSizeDelegate(sizer, layoutable, ctx);
-      } else if (mode == MODE_2_RATIO) {
-         result = getPixelSizeRatioEtalon(sizer, layoutable, ctx);
+      } else if (mode == MODE_2_FUNCTION) {
+         result = getPixelSizeFunction(sizer, layoutable, ctx);
+         if (result <= 0) {
+            result = 1; //avoid problems
+         }
       } else if (mode == MODE_3_SCALE) {
-         int value = sizer.get2(SIZER_OFFSET_05_VALUE2);
-         int fun = sizer.get1(SIZER_OFFSET_04_FUNCTION1);
-         result = lc.getScalePixel(value, fun);
-      } else if (mode == MODE_5_FUNCTION) {
+         int value = sizer.get2(SIZER_OFFSET_08_VALUE2);
+         int fun = sizer.get1(SIZER_OFFSET_06_ET_FUN1);
+         result = lac.getScalePixel(value, fun);
+      } else if (mode == MODE_5_SIZERS) {
          //check no loop
          if (sizer.hasReferenceLoop()) {
             throw new IllegalArgumentException();
@@ -972,9 +1030,9 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
          ByteObject sizer2 = sizer.getSubAtIndexNull(1);
          int val1 = getPixelSize(sizer1, layoutable, ctx);
          int val2 = getPixelSize(sizer2, layoutable, ctx);
-         int fun = sizer.get1(SIZER_OFFSET_04_FUNCTION1);
+         int fun = sizer.get1(SIZER_OFFSET_06_ET_FUN1);
          result = getEtalonFun(fun, val1, val2);
-      } else if (mode == MODE_6_POZER_DISTANCE) {
+      } else if (mode == MODE_6_POZERS) {
          return getPixelSizePozerDistance(sizer, layoutable, ctx);
       }
       result = applyMinMax(sizer, layoutable, ctx, result);
@@ -1003,7 +1061,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     * @return 
     */
    public int getPixelSize(ByteObject s, int w, int h, int ctx) {
-      LayoutableRect lr = lc.getDefaultSizeContext();
+      LayoutableRect lr = lac.getDefaultSizeContext();
       lr.set(w, h);
       return getPixelSize(s, lr, ctx);
    }
@@ -1045,10 +1103,35 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
                return delegate.getDelegateSizeHeight(sizer, layoutable);
             }
          } else {
-            throw new LayoutException(lc, "");
+            throw new LayoutException(lac, "");
          }
       } else {
          throw new IllegalArgumentException();
+      }
+   }
+
+   private int getPixelSizeFunction(ByteObject sizer, ILayoutable layoutable, int ctx) {
+      int etalonValue = computeEtalonInPixels(layoutable, sizer, ctx);
+      int funOp = sizer.get1(SIZER_OFFSET_10_OP_FUN1);
+
+      switch (funOp) {
+         case FUNCTION_OP_00_NONE:
+            return etalonValue;
+         case FUNCTION_OP_01_ADD:
+            return etalonValue + sizer.get2(SIZER_OFFSET_08_VALUE2);
+         case FUNCTION_OP_02_MINUS:
+            return etalonValue - sizer.get2(SIZER_OFFSET_08_VALUE2);
+         case FUNCTION_OP_03_MULTIPLY:
+            return etalonValue * sizer.get2(SIZER_OFFSET_08_VALUE2);
+         case FUNCTION_OP_04_DIVIDE:
+            return etalonValue / sizer.get2(SIZER_OFFSET_08_VALUE2);
+         case FUNCTION_OP_05_RATIO:
+            return getPixelSizeRatio(sizer, etalonValue);
+         case FUNCTION_OP_06_X_FOR_Y:
+            return getPixelSizeXForY(sizer, etalonValue);
+
+         default:
+            throw new IllegalArgumentException("funOperator " + funOp);
       }
    }
 
@@ -1072,7 +1155,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     * @return 
     */
    public int getPixelSizeH(ByteObject s, int w, int h) {
-      LayoutableRect sc = new LayoutableRect(lc, w, h);
+      LayoutableRect sc = new LayoutableRect(lac, w, h);
       return getPixelSize(s, sc, CTX_2_HEIGHT);
    }
 
@@ -1091,7 +1174,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       ByteObject pozer1 = sizer.getSubAtIndexNull(0);
       if (pozer1 == null) {
          //malformed sizer
-         throw new LayoutException(lc, "Mode Pozer Distance requires a pozer to be added");
+         throw new LayoutException(lac, "Mode Pozer Distance requires a pozer to be added");
       }
       if (sizer.hasFlag(SIZER_OFFSET_01_FLAG, SIZER_FLAG_8_IMPLICIT)) {
          //get the poser value
@@ -1101,7 +1184,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       } else {
          ByteObject pozer2 = sizer.getSubAtIndexNull(1);
          if (pozer2 == null) {
-            throw new LayoutException(lc, "Mode Pozer Distance requires 2 pozers to be added");
+            throw new LayoutException(lac, "Mode Pozer Distance requires 2 pozers to be added");
          }
          //compute sizer of pozers
          val1 = getPosition(layoutable, ctx, pozer1);
@@ -1110,30 +1193,18 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return Math.abs(val1 - val2);
    }
 
-   /**
-    * 
-    *
-    * @param sizer The {@link ByteObject} size
-    * @param layoutable {@link ILayoutable} 
-    * @param ctx Context type of computation. Are we computing a width or an height
-    * <li> {@link ITechLayout#CTX_1_WIDTH}
-    * <li> {@link ITechLayout#CTX_2_HEIGHT}
-    * @return 
-    */
-   private int getPixelSizeRatioEtalon(ByteObject sizer, ILayoutable layoutable, int ctx) {
+   private int getPixelSizeRatio(ByteObject sizer, int etalonValue) {
       int result = 0;
-      result++;
-      int fun = sizer.get1(SIZER_OFFSET_04_FUNCTION1);
-      int vl = computeEtalonInPixels(fun, layoutable, sizer, ctx);
-      int fractionTop = sizer.get1(SIZER_OFFSET_05A_FRACTION_TOP1);
-      int fractionBottom = sizer.get1(SIZER_OFFSET_05B_FRACTION_BOT1);
+      int fractionTop = sizer.get2(SIZER_OFFSET_08_FRACTION_TOP2);
+      int fractionBottom = sizer.get2(SIZER_OFFSET_09_FRACTION_BOT2);
       //because results precision is wrong when
       if (fractionTop == fractionBottom) {
-         result = vl;
+         result = etalonValue;
       } else if (fractionBottom == 0 || fractionBottom == 1) {
-         result = vl * fractionTop;
+         result = etalonValue * fractionTop;
       } else {
-         result = (int) (((float) ((vl) * fractionTop)) / (float) fractionBottom);
+         int mul = etalonValue * fractionTop;
+         result = mul / fractionBottom;
       }
       return result;
    }
@@ -1146,11 +1217,11 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     */
    private int getPixelSizeRawUnit(ByteObject sizer) {
       int rawUnit = sizer.get1(SIZER_OFFSET_03_ETALON1);
-      int value = sizer.get2(SIZER_OFFSET_05_VALUE2);
+      int value = sizer.get2(SIZER_OFFSET_08_VALUE2);
       if (rawUnit == RAW_UNIT_0_PIXEL) {
          return value;
       } else if (rawUnit == RAW_UNIT_1_DIP) {
-         return lc.getDPI() * value / 160;
+         return lac.getDPI() * value / 160;
       } else {
          throw new IllegalArgumentException();
       }
@@ -1167,20 +1238,21 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     * @return
     */
    public int getPixelSizeUIThead(ByteObject s, int w, int h, int ctx) {
-      LayoutableRect lr = lc.getDefaultSizeContext();
+      LayoutableRect lr = lac.getDefaultSizeContext();
       lr.set(w, h);
       return getPixelSize(s, lr, ctx);
    }
 
    /**
     * 
-    *
-    * @param s 
-    * @param sc 
+    * @see LayoutOperator#getPixelSize(ByteObject, ILayoutable, int) 
+    * 
+    * @param sizer {@link IBOSizer}
+    * @param layoutable the sizing context on which to compute etalon size of The Layoutable
     * @return 
     */
-   public int getPixelSizeW(ByteObject s, ILayoutable sc) {
-      return getPixelSize(s, sc, CTX_1_WIDTH);
+   public int getPixelSizeW(ByteObject sizer, ILayoutable sc) {
+      return getPixelSize(sizer, sc, CTX_1_WIDTH);
    }
 
    /**
@@ -1192,8 +1264,19 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     * @return 
     */
    public int getPixelSizeW(ByteObject s, int w, int h) {
-      LayoutableRect sc = new LayoutableRect(lc, w, h);
+      LayoutableRect sc = new LayoutableRect(lac, w, h);
       return getPixelSize(s, sc, CTX_1_WIDTH);
+   }
+
+   private int getPixelSizeXForY(ByteObject sizer, int etalonValue) {
+      int x = sizer.get2(SIZER_OFFSET_08_FUN_X2);
+      int y = sizer.get2(SIZER_OFFSET_09_FUN_Y2);
+      int result = 0;
+      do {
+         etalonValue -= y;
+         result += x;
+      } while (etalonValue > 0);
+      return result;
    }
 
    /**
@@ -1220,7 +1303,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       if (s.hasFlag(POS_OFFSET_01_FLAG, POS_FLAG_1_SIZER)) {
          ByteObject sizer = s.getSubAtIndexNull(0);
          if (sizer == null) {
-            throw new LayoutException(lc, "null sizer");
+            throw new LayoutException(lac, "null sizer");
          } else {
             int size = getPixelSize(sizer, sc, ctx);
             int fun = s.get1(POS_OFFSET_10_SIZER_FUN1);
@@ -1434,18 +1517,8 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     * @return 
     */
    private int getSizeEtalonCtxH(ByteObject sizer, ILayoutable layoutable) {
-      int type = sizer.get1(SIZER_OFFSET_06_PROPERTY1);
-      switch (type) {
-         case ITechSizer.SIZER_PROP_00_DRAWN:
-            return layoutable.getSizeDrawnHeight();
-         case ITechSizer.SIZER_PROP_01_PREFERRED:
-            return layoutable.getSizePreferredHeight();
-         case ITechSizer.SIZER_PROP_02_UNIT_LOGIC:
-            //TODO with style, including artifacts etc, number, current number
-            return layoutable.getSizePropertyValueH(ITechSizer.SIZER_PROP_02_UNIT_LOGIC);
-         default:
-            return layoutable.getSizeDrawnHeight();
-      }
+      int type = sizer.get1(SIZER_OFFSET_05_ET_PROPERTY1);
+      return layoutable.getSizePropertyValueH(type);
    }
 
    /**
@@ -1456,17 +1529,8 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     * @return 
     */
    private int getSizeEtalonCtxW(ByteObject sizer, ILayoutable layoutable) {
-      int type = sizer.get1(SIZER_OFFSET_06_PROPERTY1);
-      switch (type) {
-         case ITechSizer.SIZER_PROP_00_DRAWN:
-            return layoutable.getSizeDrawnWidth();
-         case ITechSizer.SIZER_PROP_01_PREFERRED:
-            return layoutable.getSizePreferredWidth();
-         case ITechSizer.SIZER_PROP_02_UNIT_LOGIC:
-            return layoutable.getSizePropertyValueW(ITechSizer.SIZER_PROP_02_UNIT_LOGIC);
-         default:
-            return layoutable.getSizeDrawnWidth();
-      }
+      int type = sizer.get1(SIZER_OFFSET_05_ET_PROPERTY1);
+      return layoutable.getSizePropertyValueW(type);
    }
 
    /**
@@ -1508,6 +1572,131 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
    }
 
    /**
+    * Get method for TBLR values given a position.
+    * <br>
+    * The ViewContext is the w and h
+    * <br>
+    * @param tblr
+    * @param pos {@link C#POS_0_TOP} ...
+    * @return
+    */
+   public int getTBLRValue(ByteObject tblr, int pos) {
+      int flags = tblr.get1(TBLR_OFFSET_01_FLAG);
+      if (BitUtils.hasFlag(flags, TBLR_FLAG_4_SAME_VALUE)) {
+         return tblr.get4(IBOTblr.TBLR_OFFSET_03_DATA4);
+      } else {
+         //how to read the value
+         if (BitUtils.hasFlag(flags, TBLR_FLAG_1_USING_ARRAY)) {
+            ByteObject intarray = tblr.getSubFirst(IBOTypesBOC.TYPE_007_LIT_ARRAY_INT);
+            return boc.getLitteralIntOperator().getLitteralArrayValueAt(intarray, pos);
+         }
+         if (pos == C.POS_0_TOP) {
+            if (BitUtils.hasFlag(flags, TBLR_FLAG_5_TRANS_TOP)) {
+               return 0;
+            } else {
+               return tblr.get1(TBLR_OFFSET_03_DATA4);
+            }
+         } else if (pos == C.POS_1_BOT) {
+            if (BitUtils.hasFlag(flags, TBLR_FLAG_6_TRANS_BOT)) {
+               return 0;
+            } else {
+               return tblr.get1(TBLR_OFFSET_03_DATA4 + 1);
+            }
+         } else if (pos == C.POS_2_LEFT) {
+            if (BitUtils.hasFlag(flags, TBLR_FLAG_7_TRANS_LEFT)) {
+               return 0;
+            } else {
+               return tblr.get1(TBLR_OFFSET_03_DATA4 + 2);
+            }
+         } else if (pos == C.POS_3_RIGHT) {
+            if (BitUtils.hasFlag(flags, TBLR_FLAG_8_TRANS_RIGHT)) {
+               return 0;
+            } else {
+               return tblr.get1(TBLR_OFFSET_03_DATA4 + 3);
+            }
+         } else {
+            throw new IllegalArgumentException();
+         }
+      }
+   }
+
+   /**
+    * Returns 0 if failure to compute
+    * <br>
+    * Logs a Dev BIP.
+    * <br>
+    * @param tblr
+    * @param pos
+    * @param sizer
+    * @param sc
+    * @return
+    */
+   public int getTBLRValue(ByteObject tblr, int pos, ILayoutable layoutable) {
+      int type = tblr.get1(TBLR_OFFSET_02_TYPE1);
+      int value = 0;
+      if (type == TYPE_0_PIXEL_VALUE) {
+         value = tblr.get4(TBLR_OFFSET_03_DATA4);
+      } else if (type == TYPE_1_CODED_VALUE) {
+         int codedsize = tblr.get4(TBLR_OFFSET_03_DATA4);
+         if (pos == C.POS_0_TOP || pos == C.POS_1_BOT) {
+            value = codedSizeDecodeH(codedsize, layoutable);
+         } else {
+            value = codedSizeDecodeW(codedsize, layoutable);
+         }
+      } else if (type == TYPE_2_SIZER) {
+         boolean isOne = tblr.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_4_SAME_VALUE);
+         int ctx = ITechLayout.CTX_1_WIDTH;
+         if (pos == C.POS_0_TOP || pos == C.POS_1_BOT) {
+            ctx = ITechLayout.CTX_2_HEIGHT;
+         }
+         int mod = 0;
+         if (!isOne) {
+            if (pos == C.POS_1_BOT) {
+               mod = 1;
+            } else if (pos == C.POS_2_LEFT) {
+               mod = 2;
+            } else if (pos == C.POS_3_RIGHT) {
+               mod = 3;
+            }
+         }
+         ByteObject sizer = tblr.getSubAtIndexNull(mod);
+         if (sizer != null) {
+            value = getPixelSize(sizer, layoutable, ctx);
+         } else {
+            //transparent sizer
+            value = 0;
+         }
+      } else {
+         throw new RuntimeException();
+      }
+      return value;
+   }
+
+   public int getTBLRValue(ByteObject tblr, int pos, int x, int y, int w, int h) {
+      LayoutableRect layoutable = new LayoutableRect(lac, w, h);
+      return getTBLRValue(tblr, pos, layoutable);
+   }
+
+   /**
+    * 
+    * @param tblr
+    * @param x
+    * @param y
+    * @param w
+    * @param h
+    * @return
+    */
+   public int[] getTBLRValues(ByteObject tblr, int x, int y, int w, int h) {
+      LayoutableRect layoutable = new LayoutableRect(lac, w, h);
+      int[] vs = new int[4];
+      vs[0] = getTBLRValue(tblr, C.POS_0_TOP, layoutable);
+      vs[1] = getTBLRValue(tblr, C.POS_1_BOT, layoutable);
+      vs[2] = getTBLRValue(tblr, C.POS_2_LEFT, layoutable);
+      vs[3] = getTBLRValue(tblr, C.POS_3_RIGHT, layoutable);
+      return vs;
+   }
+
+   /**
     * Check if both sizers use the same etalon reference.
     *
     * @param sizerW 
@@ -1516,7 +1705,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     */
    public boolean isSameEtalon(ByteObject sizerW, ByteObject sizerH) {
       if (sizerW.get1(SIZER_OFFSET_03_ETALON1) == sizerH.get1(SIZER_OFFSET_03_ETALON1)) {
-         if (sizerW.get1(SIZER_OFFSET_06_PROPERTY1) == sizerH.get1(SIZER_OFFSET_06_PROPERTY1)) {
+         if (sizerW.get1(SIZER_OFFSET_05_ET_PROPERTY1) == sizerH.get1(SIZER_OFFSET_05_ET_PROPERTY1)) {
             return true;
          }
       }
