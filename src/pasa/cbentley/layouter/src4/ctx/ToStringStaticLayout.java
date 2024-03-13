@@ -87,7 +87,7 @@ public class ToStringStaticLayout extends ToStringStaticBase implements ITechLay
             return "Sizer";
          case IBOTypesLayout.FTYPE_4_POSITION:
             return "Pozer";
-         case IBOTypesLayout.FTYPE_6_LINK:
+         case IBOTypesLayout.FTYPE_5_LINK:
             return "Link";
          case IBOTypesLayout.FTYPE_2_TBLR:
             return "TBLR";

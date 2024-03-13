@@ -46,7 +46,7 @@ public class LayoutFactory extends BOAbstractFactory implements IBOLinker, IBOTy
     * @return 
     */
    public ByteObject createLink(int type, int v) {
-      ByteObject bo = getBOFactory().createByteObject(FTYPE_6_LINK, LINKER_BASIC_SIZE);
+      ByteObject bo = getBOFactory().createByteObject(FTYPE_5_LINK, LINKER_BASIC_SIZE);
       bo.set1(LINKER_OFFSET_01_TYPE1, type);
       bo.set4(LINKER_OFFSET_02_DATA4, v);
       return bo;

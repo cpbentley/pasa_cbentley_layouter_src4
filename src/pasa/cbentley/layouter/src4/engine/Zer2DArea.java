@@ -605,7 +605,7 @@ public class Zer2DArea extends ObjectLC implements IStringable, ITechLayout {
     * @return 
     */
    public String toStringInvalidAreaMessage() {
-      StringBBuilder sb = new StringBBuilder(lac.getUCtx());
+      StringBBuilder sb = new StringBBuilder(lac.getUC());
       sb.append("Area Invalid");
       if (!isValidHeight()) {
          sb.append(";Height is not defined");

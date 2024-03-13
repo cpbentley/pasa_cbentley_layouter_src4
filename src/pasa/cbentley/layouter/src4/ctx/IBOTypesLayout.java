@@ -4,10 +4,12 @@
  */
 package pasa.cbentley.layouter.src4.ctx;
 
+import pasa.cbentley.byteobjects.src4.ctx.IBOTypesBOC;
+
 /**
  * 
  */
-public interface IBOTypesLayout {
+public interface IBOTypesLayout extends IBOTypesBOC {
 
    /**
     * 
@@ -18,6 +20,10 @@ public interface IBOTypesLayout {
     * 
     */
    public static final int AZ_BOTYPE_FW_Z   = 49;
+
+   public static final int FTYPE_0_         = AZ_BOTYPE_FW_A + 0;
+
+   public static final int FTYPE_1_         = AZ_BOTYPE_FW_A + 1;
 
    /**
     * Type which stores X bytes of Top/Bottom,Left, Right data
@@ -50,7 +56,7 @@ public interface IBOTypesLayout {
    /**
     * 
     */
-   public static final int FTYPE_6_LINK     = AZ_BOTYPE_FW_A + 6;
+   public static final int FTYPE_5_LINK     = AZ_BOTYPE_FW_A + 5;
 
    /**
     * 

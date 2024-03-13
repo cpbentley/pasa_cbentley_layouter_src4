@@ -51,7 +51,7 @@ public class ObjectLC implements IStringable {
    }
 
    public UCtx toStringGetUCtx() {
-      return lac.getUCtx();
+      return lac.getUC();
    }
 
    public String toStringName() {

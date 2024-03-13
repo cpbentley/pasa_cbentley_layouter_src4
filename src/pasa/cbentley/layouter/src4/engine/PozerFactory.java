@@ -749,7 +749,7 @@ public class PozerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
     * @return 
     */
    public String toStringPozer(ByteObject pozer, int ctx) {
-      Dctx dc = new Dctx(lc.getUCtx());
+      Dctx dc = new Dctx(lc.getUC());
       toStringPozer(pozer, dc, ctx);
       return dc.toString();
    }
@@ -776,7 +776,7 @@ public class PozerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
     * @return 
     */
    public String toStringPozer1Line(ByteObject pozer, int ctx) {
-      Dctx dc = new Dctx(lc.getUCtx());
+      Dctx dc = new Dctx(lc.getUC());
       toStringPozer1Line(pozer, ctx, dc);
       return dc.toString();
    }

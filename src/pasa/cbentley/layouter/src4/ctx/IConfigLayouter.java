@@ -4,7 +4,9 @@
  */
 package pasa.cbentley.layouter.src4.ctx;
 
-public interface IConfigLayouter {
+import pasa.cbentley.core.src4.ctx.IConfig;
+
+public interface IConfigLayouter extends IConfig {
 
    
    /**

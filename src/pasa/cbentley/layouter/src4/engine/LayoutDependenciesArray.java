@@ -33,7 +33,7 @@ public class LayoutDependenciesArray extends ObjectLC implements ILayoutDependen
     */
    public LayoutDependenciesArray(LayouterCtx lc) {
       super(lc);
-      array = new IntToObjects(lc.getUCtx());
+      array = new IntToObjects(lc.getUC());
    }
 
    /**

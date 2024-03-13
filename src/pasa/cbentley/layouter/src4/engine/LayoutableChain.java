@@ -46,7 +46,7 @@ public class LayoutableChain extends LayoutableGhost implements ILayoutable {
 
    public LayoutableChain(LayouterCtx lac) {
       super(lac);
-      chainData = new BufferObject(lac.getUCtx());
+      chainData = new BufferObject(lac.getUC());
       alignLogic = C.LOGIC_2_CENTER;
       type = C.LINE_0_HORIZONTAL;
       configurator = new Area2DConfigurator(lac);

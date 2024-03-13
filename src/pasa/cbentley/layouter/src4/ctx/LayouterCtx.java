@@ -7,8 +7,10 @@ package pasa.cbentley.layouter.src4.ctx;
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.byteobjects.src4.ctx.BOCtx;
 import pasa.cbentley.byteobjects.src4.ctx.IBOTypesBOC;
+import pasa.cbentley.byteobjects.src4.ctx.IStaticIDsBO;
 import pasa.cbentley.byteobjects.src4.objects.function.ITechRelation;
 import pasa.cbentley.core.src4.ctx.ACtx;
+import pasa.cbentley.core.src4.ctx.CtxManager;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.layouter.src4.engine.LayoutFactory;
 import pasa.cbentley.layouter.src4.engine.LayoutOperator;
@@ -30,32 +32,24 @@ import pasa.cbentley.layouter.src4.tech.ITechLayout;
  */
 public class LayouterCtx extends ACtx implements IBOTypesLayout, ITechLayout, ITechRelation {
 
-   public static final int          CTX_ID = 60;
+   public static final int         CTX_ID = 60;
 
-   protected final BOCtx            boc;
+   protected final BOCtx           boc;
 
-   protected final IConfigLayouter  config;
 
    /**
     * Value is given by the outisde and changed by an event.
     */
-   private int                      dpi;
+   private int                     dpi;
 
-   private ILayoutDelegate          layoutDelegate;
+   private ILayoutDelegate         layoutDelegate;
 
-   private LayoutFactory            layoutFactory;
+   private LayoutFactory           layoutFactory;
 
-   private int                      layoutIDGenerator;
+   private int                     layoutIDGenerator;
 
-   private LayoutOperator           layoutOperator;
+   private LayoutOperator          layoutOperator;
 
-   private TblrFactory         tblrFactory;
-   public TblrFactory getTblrFactory() {
-      if (tblrFactory == null) {
-         tblrFactory = new TblrFactory(this);
-      }
-      return tblrFactory;
-   }
    /**
     * 
     */
@@ -70,6 +64,8 @@ public class LayouterCtx extends ACtx implements IBOTypesLayout, ITechLayout, IT
 
    private SizerFactory             sizerFactory;
 
+   private TblrFactory             tblrFactory;
+
    //#debug
    private ILayoutWillListener      toStringDebugBreaks;
 
@@ -79,15 +75,17 @@ public class LayouterCtx extends ACtx implements IBOTypesLayout, ITechLayout, IT
     * @param boc 
     */
    public LayouterCtx(BOCtx boc) {
-      this(new ConfigLayouterDef(boc.getUCtx()), boc);
+      this(new ConfigLayouterDef(boc.getUC()), boc);
    }
 
    public LayouterCtx(IConfigLayouter config, BOCtx boc) {
-      super(boc.getUCtx());
-      this.config = config;
+      super(config, boc.getUC());
       this.boc = boc;
       rect = new LayoutableRect(this);
       module = new BOModuleLayouter(this);
+      
+      CtxManager cm = boc.getUC().getCtxManager();
+      cm.registerStaticRange(this, IStaticIDsBO.SID_BYTEOBJECT_TYPES, IBOTypesLayout.AZ_BOTYPE_FW_A, IBOTypesLayout.AZ_BOTYPE_FW_Z);
    }
 
    /**
@@ -111,7 +109,7 @@ public class LayouterCtx extends ACtx implements IBOTypesLayout, ITechLayout, IT
    }
 
    public IConfigLayouter getConfigLayouter() {
-      return config;
+      return (IConfigLayouter) config;
    }
 
    public int getCtxID() {
@@ -283,6 +281,13 @@ public class LayouterCtx extends ACtx implements IBOTypesLayout, ITechLayout, IT
          sizerFactory = new SizerFactory(this);
       }
       return sizerFactory;
+   }
+
+   public TblrFactory getTblrFactory() {
+      if (tblrFactory == null) {
+         tblrFactory = new TblrFactory(this);
+      }
+      return tblrFactory;
    }
 
    //#mdebug

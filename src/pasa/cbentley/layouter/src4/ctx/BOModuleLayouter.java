@@ -6,7 +6,6 @@ package pasa.cbentley.layouter.src4.ctx;
 
 import pasa.cbentley.byteobjects.src4.core.BOModuleAbstract;
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
-import pasa.cbentley.byteobjects.src4.ctx.IBOTypesDrw;
 import pasa.cbentley.core.src4.logging.Dctx;
 
 /**
@@ -31,11 +30,6 @@ public class BOModuleLayouter extends BOModuleAbstract implements IBOTypesLayout
 
    public ByteObject getFlagOrderedBO(ByteObject bo, int offset, int flag) {
       //no orderd flags in this module
-      return null;
-   }
-
-   public String toStringGetDIDString(int did, int value) {
-      //DID in this module
       return null;
    }
 
@@ -72,7 +66,7 @@ public class BOModuleLayouter extends BOModuleAbstract implements IBOTypesLayout
 
       dc.appendVarWithNewLine(toStringType(FTYPE_3_SIZER), FTYPE_3_SIZER);
       dc.appendVarWithNewLine(toStringType(FTYPE_4_POSITION), FTYPE_4_POSITION);
-      dc.appendVarWithNewLine(toStringType(FTYPE_6_LINK), FTYPE_6_LINK);
+      dc.appendVarWithNewLine(toStringType(FTYPE_5_LINK), FTYPE_5_LINK);
 
    }
 
@@ -85,7 +79,7 @@ public class BOModuleLayouter extends BOModuleAbstract implements IBOTypesLayout
          case FTYPE_4_POSITION:
             lac.getPozerFactory().toStringPozer(bo, dc);
             break;
-         case FTYPE_6_LINK:
+         case FTYPE_5_LINK:
             dc.append("Link");
             break;
          case FTYPE_2_TBLR:
@@ -112,7 +106,7 @@ public class BOModuleLayouter extends BOModuleAbstract implements IBOTypesLayout
          case FTYPE_4_POSITION:
             lac.getPozerFactory().toStringPozer1Line(bo, dc);
             break;
-         case FTYPE_6_LINK:
+         case FTYPE_5_LINK:
             dc.append("Link");
             break;
          case FTYPE_2_TBLR:
@@ -122,6 +116,11 @@ public class BOModuleLayouter extends BOModuleAbstract implements IBOTypesLayout
             return false;
       }
       return true;
+   }
+
+   public String toStringGetDIDString(int did, int value) {
+      //DID in this module
+      return null;
    }
 
    public String toStringOffset(ByteObject o, int offset) {
