@@ -161,16 +161,16 @@ public interface IBOSizer extends IByteObject {
     * <li> {@link ITechLayout#ET_VIEWCONTEXT_0_ROOT}
     * <li> {@link ITechLayout#ET_VIEWCONTEXT_1_APPLI}
     * <li> {@link ITechLayout#ET_VIEWCONTEXT_2_PARENT}
-    * <li> {@link ITechLayout#ET_VIEWCONTEXT_3_LINK}
-    * <li> {@link ITechLayout#ET_VIEWCONTEXT_4_CLIP}
-    * <li> {@link ITechLayout#ET_VIEWCONTEXT_5_SCREEN_MAIN}
-    * <li> {@link ITechLayout#ET_VIEWCONTEXT_6_SCREEN_ALL}
+    * <li> {@link ITechLayout#ET_VIEWCONTEXT_6_LINK}
+    * <li> {@link ITechLayout#ET_VIEWCONTEXT_5_CLIP}
+    * <li> {@link ITechLayout#ET_VIEWCONTEXT_3_SCREEN_MAIN}
+    * <li> {@link ITechLayout#ET_VIEWCONTEXT_4_SCREEN_ALL}
     * 
     * For Font
     * <li> {@link ITechLayout#ET_FONT_0_DEFAULT}
     * <li> {@link ITechLayout#ET_FONT_1_DEFINED}
-    * <li> {@link ITechLayout#ET_FONT_2_SMALL}
-    * <li> {@link ITechLayout#ET_FONT_3_MEDIUM}
+    * <li> {@link ITechLayout#ET_FONT_5_SMALL}
+    * <li> {@link ITechLayout#ET_FONT_6_MEDIUM}
     * 
     */
    public static final int SIZER_OFFSET_04_ET_SUBTYPE1   = A_OBJECT_BASIC_SIZE + 3;
@@ -198,7 +198,7 @@ public interface IBOSizer extends IByteObject {
     * <p>
     * Those values are provided by the 2 following method
     * <li>{@link ILayoutable#getSizePropertyValueW(int)}
-    * <li>{@link ILayoutable#getSizePropertyValueW(int)}
+    * <li>{@link ILayoutable#getSizePropertyValueH(int)}
     * </p>
     * 
     * <p>
@@ -206,9 +206,9 @@ public interface IBOSizer extends IByteObject {
     * 
     * <li> {@link ITechLayout#ET_FONT_0_DEFAULT}
     * <li> {@link ITechLayout#ET_FONT_1_DEFINED}
-    * <li> {@link ITechLayout#ET_FONT_2_SMALL}
-    * <li> {@link ITechLayout#ET_FONT_3_MEDIUM}
-    * <li> {@link ITechLayout#ET_FONT_4_BIG}
+    * <li> {@link ITechLayout#ET_FONT_5_SMALL}
+    * <li> {@link ITechLayout#ET_FONT_6_MEDIUM}
+    * <li> {@link ITechLayout#ET_FONT_7_LARGE}
     * </p>
     */
    public static final int SIZER_OFFSET_05_ET_PROPERTY1  = A_OBJECT_BASIC_SIZE + 4;
@@ -260,6 +260,9 @@ public interface IBOSizer extends IByteObject {
     */
    public static final int SIZER_OFFSET_08_FRACTION_TOP2 = A_OBJECT_BASIC_SIZE + 8;
 
+   /**
+    * 
+    */
    public static final int SIZER_OFFSET_08_FUN_X2        = A_OBJECT_BASIC_SIZE + 8;
 
    /**

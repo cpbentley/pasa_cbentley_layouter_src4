@@ -16,7 +16,7 @@ import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
 import pasa.cbentley.layouter.src4.ctx.ToStringStaticLayout;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegate;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
-import pasa.cbentley.layouter.src4.tech.ITechCoded;
+import pasa.cbentley.layouter.src4.tech.ITechCodedSizer;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
 import pasa.cbentley.layouter.src4.tech.IBOLinker;
 import pasa.cbentley.layouter.src4.tech.IBOPozer;
@@ -25,7 +25,7 @@ import pasa.cbentley.layouter.src4.tech.IBOSizer;
 /**
  * 
  */
-public class PozerFactory extends BOAbstractFactory implements IBOLinker, IBOTypesLayout, ITechCoded, IBOSizer, IBOPozer, ITechLayout {
+public class PozerFactory extends BOAbstractFactory implements IBOLinker, IBOTypesLayout, ITechCodedSizer, IBOSizer, IBOPozer, ITechLayout {
 
    /**
     * 

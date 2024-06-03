@@ -21,7 +21,7 @@ import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 import pasa.cbentley.layouter.src4.tech.IBOPozer;
 import pasa.cbentley.layouter.src4.tech.IBOSizer;
 import pasa.cbentley.layouter.src4.tech.IBOTblr;
-import pasa.cbentley.layouter.src4.tech.ITechCoded;
+import pasa.cbentley.layouter.src4.tech.ITechCodedSizer;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
 
 /**
@@ -51,27 +51,7 @@ import pasa.cbentley.layouter.src4.tech.ITechLayout;
  * @author Charles-Philip
  *
  */
-public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout, IBOPozer, IBOSizer, IBOTblr, ITechLayout, ITechCoded {
-
-   public static boolean hasSubFlag(int value) {
-      return ((value >> 30) & 0x3) == 2;
-   }
-
-   /**
-    * True when 
-    * <li>{@link ISizer#CODED_SIZE_FLAG_32_SIGN}
-    * <li>{@link ISizer#CODED_SIZE_FLAG_31_SIGN_CODE}
-    * 
-    * @param value
-    * @return
-    */
-   public static boolean isCoded(int value) {
-      return ((value >> 30) & 0x3) == 2;
-   }
-
-   public static boolean isLinked(int value) {
-      return (value & CODED_SIZE_FLAG_30_CODED) == CODED_SIZE_FLAG_30_CODED;
-   }
+public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout, IBOPozer, IBOSizer, IBOTblr, ITechLayout, ITechCodedSizer {
 
    /**
     * 
@@ -181,8 +161,6 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     * @return 
     */
    public int codedSizeDecode(ByteObject bo, int index, int w, int h, int ctx) {
-      //use a thread local
-      //we are always on 4 bytes for those calls
       int value = bo.get4(index);
       if (CodedUtils.isCoded(value)) {
          LayoutableRect sc = new LayoutableRect(lac, w, h);
@@ -223,38 +201,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     * @return 
     */
    public int codedSizeDecode(int value, ILayoutable sc, int ctxType) {
-      if (CodedUtils.isCoded(value)) {
-         if (CodedUtils.isLinked(value)) {
-            throw new IllegalArgumentException("Link needs a ByteObject");
-         }
-         int mode = (value >> CODED_SIZE_SHIFT_1_MODE) & CODED_MASK_1_MODE;
-         int etalon = (value >> CODED_SIZE_SHIFT_2_ETALON) & CODED_MASK_2_ETALON;
-         int esub = (value >> CODED_SIZE_SHIFT_3_ETALON_TYPE) & CODED_MASK_3_ETALON_TYPE;
-         int eprop = (value >> CODED_SIZE_SHIFT_3_ETALON_TYPE) & CODED_MASK_3_ETALON_TYPE;
-         int efun = (value >> CODED_SIZE_SHIFT_4_ETALON_FUN) & CODED_MASK_4_ETALON_FUN;
-         int opfun = (value >> CODED_SIZE_SHIFT_4_ETALON_FUN) & CODED_MASK_6_OP_FUN;
-         int v1 = 0;
-         int v2 = 0;
-         if (opfun == 0) {
-            v1 = (value >> CODED_SIZE_SHIFT_0_VALUE) & CODED_MASK_0_VALUE;
-         }
-
-         int valueV = (value >> CODED_SIZE_SHIFT_0_VALUE) & CODED_MASK_0_VALUE;
-         int modV = (value >> CODED_SIZE_SHIFT_1_MODE) & CODED_MASK_1_MODE;
-         int etalonV = (value >> CODED_SIZE_SHIFT_2_ETALON) & CODED_MASK_2_ETALON;
-         int etalonTypeV = (value >> CODED_SIZE_SHIFT_3_ETALON_TYPE) & CODED_MASK_3_ETALON_TYPE;
-         int etalonFunV = (value >> CODED_SIZE_SHIFT_4_ETALON_FUN) & CODED_MASK_4_ETALON_FUN;
-         //set invalid etalon
-         //TODO create a thread local OR one sizable for each thread!
-         //OR OPTIMIZE down to the bits. use this method for generic testing
-         ByteObject sizer = lac.getSizerFactory().getSizer(modV, valueV, etalonV, etalonTypeV, etalonFunV);
-
-         sizer = lac.getSizerFactory().getSizer(mode, etalon, esub, eprop, efun, opfun, v1, v2);
-         int p = getPixelSize(sizer, sc, ctxType);
-         return p;
-      } else {
-         return value;
-      }
+      return decode(value, sc, ctxType);
    }
 
    /**
@@ -298,7 +245,8 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     * Coded value is mostly used for quick and light sizing definition for artifacts inside a drawing rectangle.
     * 
     * We have 32 bits to code most used 
-    * <li> Value is coded on 16 bits. Each function can read those bits as required
+    * <li> Value is coded on 12 bits. Each function can read those bits as required
+    * 
     * <li> mode is coded in 2 bits for the first 4 values
     *  <ol>
     *  <li> {@link ITechLayout#MODE_0_RAW_UNITS}
@@ -344,13 +292,13 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     *  <li> {@link ITechLayout#FUNCTION_OP_04_DIVIDE}
     *  <li> {@link ITechLayout#FUNCTION_OP_05_RATIO}
     *  <li> {@link ITechLayout#FUNCTION_OP_06_X_FOR_Y}
-    *  <li> {@link ITechLayout#FUNCTION_OP_06_X_FOR_Y}
+    *  <li> {@link ITechLayout#FUNCTION_OP_07_}
     *  </ol>
     * @param mode 
     * @param value 
     * @param etalon 
     * @param etype 
-    * @param efun 
+    * @param efun which value of the etalon to use.
     * @return 
     */
    public int codedSizeEncode(int mode, int value, int etalon, int etype, int efun) {
@@ -363,7 +311,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       int modV = (mode & CODED_MASK_1_MODE) << CODED_SIZE_SHIFT_1_MODE;
       int etalonV = (etalon & CODED_MASK_2_ETALON) << CODED_SIZE_SHIFT_2_ETALON;
       int etalonTypeV = (etype & CODED_MASK_3_ETALON_TYPE) << CODED_SIZE_SHIFT_3_ETALON_TYPE;
-      int etalonFunV = (efun & CODED_MASK_4_ETALON_FUN) << CODED_SIZE_SHIFT_4_ETALON_FUN;
+      int etalonFunV = (efun & CODED_MASK_5_ETALON_FUN) << CODED_SIZE_SHIFT_5_ETALON_FUN;
       return code + modV + etalonV + valueV + etalonFunV + etalonTypeV;
    }
 
@@ -374,13 +322,14 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
 
    public String codedSizeToString1Line(int codedsize) {
       String s = null;
-      if (!isCoded(codedsize)) {
+      if (!CodedUtils.isCoded(codedsize)) {
          s = "Raw Size Value = " + codedsize;
       } else {
          //we have code
-         if (isLinked(codedsize)) {
+         if (CodedUtils.isLinked(codedsize)) {
             s = "Index Link to " + getCodedValue(codedsize);
          } else {
+
             int value = getCodedValue(codedsize);
             int mode = getCodedMode(codedsize);
             int etalon = getCodedEtalon(codedsize);
@@ -441,6 +390,52 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return getSizeEtalonW(sizer, ctx);
    }
 
+   public int decode(ByteObject bo, int index, ILayoutable la, int ctx) {
+      int value = bo.get4(index);
+      if (CodedUtils.isCoded(value)) {
+         //
+         if (CodedUtils.isLinked(value)) {
+            ByteObject si = bo.getSubFirst(IBOTypesLayout.FTYPE_3_SIZER);
+            if (si != null) {
+               LayoutOperator op = lac.getLayoutOperator();
+               return op.getPixelSize(si, la, ctx);
+            } else {
+               //dev warn.. return value
+               //bad
+               throw new IllegalArgumentException();
+            }
+         } else {
+            return decodeCodePage(la, ctx, value);
+         }
+      } else {
+         return value;
+      }
+   }
+
+   public int decode(int value, ILayoutable la, int ctx) {
+      if (CodedUtils.isCoded(value)) {
+         if (CodedUtils.isLinked(value)) {
+            throw new IllegalArgumentException();
+         } else {
+            return decodeCodePage(la, ctx, value);
+         }
+      } else {
+         return value;
+      }
+   }
+
+   private int decodeCodePage(ILayoutable la, int ctx, int value) {
+      //get the code page for decoding the value
+      int codepage = CodedUtils.getCodePage(value);
+      if (codepage == CodedCodePageFigure.CODE_PAGE_1) {
+         return getCodePageFigure().decode(value, la, ctx);
+      } else if (codepage == CodedCodePageSizer.CODE_PAGE_2) {
+         return getCodePageSizer().decode(value, la, ctx);
+      }
+
+      throw new IllegalArgumentException("Unknown code page " + codepage);
+   }
+
    /**
     * 
     *
@@ -490,7 +485,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     * @return 
     */
    public int getCodedEtalonFun(int value) {
-      int etalonFunV = (value >> CODED_SIZE_SHIFT_4_ETALON_FUN) & CODED_MASK_4_ETALON_FUN;
+      int etalonFunV = (value >> CODED_SIZE_SHIFT_5_ETALON_FUN) & CODED_MASK_5_ETALON_FUN;
       return etalonFunV;
    }
 
@@ -524,6 +519,14 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     */
    public int getCodedValue(int value) {
       return CodedUtils.getCodedValue(value);
+   }
+
+   public CodedCodePageFigure getCodePageFigure() {
+      return new CodedCodePageFigure(lac);
+   }
+
+   public CodedCodePageSizer getCodePageSizer() {
+      return new CodedCodePageSizer(lac);
    }
 
    /**
@@ -743,7 +746,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     *
     * @param sizer 
     * @param layoutable 
-    * @return 
+    * @return a non null etalon. default to layoutable if not found
     */
    private ILayoutable getEtalonSizer(ByteObject sizer, ILayoutable layoutable, int ctx) {
       int etalon = sizer.get1(SIZER_OFFSET_03_ETALON1);
@@ -777,6 +780,14 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
          int param = sizer.get1(SIZER_OFFSET_07_ET_DATA2); //65k ids
          layoutableEtalon = getEtalonLink(sizer, index, param, layoutable);
          layoutableEtalon.setDependency(layoutable, ITechLayout.DEPENDENCY_1_SIZE);
+      }
+      if (layoutableEtalon == null) {
+         //#debug
+         toDLog().pNull("Etalon is null for \n" + sizer, layoutable, LayoutOperator.class, "getEtalonSizer@line786");
+         //#debug
+         toDLog().pNull("Setting etalon to input layoutable -> \n" + layoutable, layoutable, LayoutOperator.class, "getEtalonSizer@line788");
+         
+         layoutableEtalon = layoutable;
       }
       return layoutableEtalon;
    }
@@ -1560,10 +1571,6 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     */
    public int getSizeEtalonW(ByteObject sizer, ILayoutable layoutable) {
       ILayoutable layoutableEtalon = getEtalonSizer(sizer, layoutable, CTX_1_WIDTH);
-      if (layoutableEtalon == null) {
-         //#debug
-         toDLog().pNull("sizer=" + sizer.toString(), layoutable, LayoutOperator.class, "getSizeEtalonW");
-      }
       //if etalon is yourself ?
       if (layoutable != layoutableEtalon) {
          layoutableEtalon.layoutUpdateSizeCheck();

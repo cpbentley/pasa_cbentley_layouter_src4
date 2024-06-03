@@ -17,13 +17,13 @@ import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
 import pasa.cbentley.layouter.src4.tech.IBOLinker;
 import pasa.cbentley.layouter.src4.tech.IBOPozer;
 import pasa.cbentley.layouter.src4.tech.IBOSizer;
-import pasa.cbentley.layouter.src4.tech.ITechCoded;
+import pasa.cbentley.layouter.src4.tech.ITechCodedSizer;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
 
 /**
  * 
  */
-public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTypesLayout, ITechCoded, IBOSizer, IBOPozer, ITechLayout {
+public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTypesLayout, ITechCodedSizer, IBOSizer, IBOPozer, ITechLayout {
 
    /**
     * 
@@ -820,7 +820,7 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
     * @param title 
     */
    public void toStringSizer(ByteObject sizer, Dctx dc, String title) {
-      dc.rootN(sizer, "Sizer");
+      dc.rootN(sizer, "Sizer", SizerFactory.class, 823);
       if (title != null) {
          dc.appendWithSpace(title);
       }
@@ -857,22 +857,30 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
          dc.nlVar("ValueB", sizer.get2(SIZER_OFFSET_09_DATA_EXTRA2));
       }
       int etalon = sizer.get1(SIZER_OFFSET_03_ETALON1);
+      int etype = sizer.get1(SIZER_OFFSET_04_ET_SUBTYPE1);
       int prop = sizer.get1(SIZER_OFFSET_05_ET_PROPERTY1);
       int fun = sizer.get1(SIZER_OFFSET_06_ET_FUN1);
-      String strProp = "";
       dc.nlVar("Etalon", ToStringStaticLayout.toStringEtalonSizer(etalon));
+      String strSub = "";
       switch (etalon) {
-         case ETALON_0_SIZEE_CTX:
-            strProp = ToStringStaticLayout.toStringSizerProp(prop);
+         case ETALON_1_VIEWCONTEXT:
+            strSub = ToStringStaticLayout.toStringEtalonViewContext(etype);
+         case ETALON_2_FONT:
+            strSub = ToStringStaticLayout.toStringEtalonFont(etype);
             break;
+         default:
+            strSub = "No subtypes for this etalon";
+            break;
+      }
+      dc.nlVar("etype", strSub);
+      
+      String strProp = "";
+      switch (etalon) {
          case ETALON_2_FONT:
             strProp = ToStringStaticLayout.toStringFontProp(prop);
             break;
-         case ETALON_4_PARENT:
-            strProp = ToStringStaticLayout.toStringSizerProp(prop);
-            break;
-
          default:
+            strProp = ToStringStaticLayout.toStringSizerProp(prop);
             break;
       }
       dc.nlVar("prop", strProp);

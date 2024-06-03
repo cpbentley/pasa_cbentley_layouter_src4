@@ -4,7 +4,8 @@
  */
 package pasa.cbentley.layouter.src4.engine;
 
-import pasa.cbentley.layouter.src4.tech.ITechCoded;
+import pasa.cbentley.core.src4.utils.BitUtils;
+import pasa.cbentley.layouter.src4.tech.ITechCodedSizer;
 
 /**
  * Functions that can be inlined.
@@ -12,8 +13,8 @@ import pasa.cbentley.layouter.src4.tech.ITechCoded;
  * @author Charles Bentley
  *
  */
-public class CodedUtils implements ITechCoded {
-   
+public class CodedUtils implements ITechCodedSizer {
+
    /**
     * 
     *
@@ -23,7 +24,7 @@ public class CodedUtils implements ITechCoded {
    public static int codedIndexRefDecode(int ref) {
       return getCodedValue(ref);
    }
-   
+
    /**
     * 
     *
@@ -55,11 +56,11 @@ public class CodedUtils implements ITechCoded {
       int valueV = (value >> CODED_SIZE_SHIFT_0_VALUE) & CODED_MASK_0_VALUE;
       return valueV;
    }
-   
+
    /**
     * True when 
-    * <li>{@link ISizer#CODED_SIZE_FLAG_32_SIGN}
-    * <li>{@link ISizer#CODED_SIZE_FLAG_31_SIGN_CODE}.
+    * <li>{@link ITechCodedSizer#CODED_SIZE_FLAG_32_SIGN}
+    * <li>{@link ITechCodedSizer#CODED_SIZE_FLAG_31_SIGN_CODE}.
     *
     * @param value 
     * @return 
@@ -75,7 +76,11 @@ public class CodedUtils implements ITechCoded {
     * @return 
     */
    public static boolean isLinked(int value) {
-      return (value & CODED_SIZE_FLAG_30_CODED) == CODED_SIZE_FLAG_30_CODED;
+      return BitUtils.hasFlag(value, CODED_SIZE_FLAG_30_CODED);
+   }
+
+   public static int getCodePage(int value) {
+      return ((value >> CODED_SIZE_SHIFT_5_CODE_PAGE) & CODED_MASK_5_CODE_PAGE);
    }
 
 }

@@ -332,7 +332,60 @@ public class ToStringStaticLayout extends ToStringStaticBase implements ITechLay
             return "Unknown " + fun;
       }
    }
+   
+   
 
+   /**
+    * 
+    *
+    * @param fun 
+    * @return 
+    */
+   public static String toStringEtalonViewContext(int type) {
+      switch (type) {
+         case ITechLayout.ET_VIEWCONTEXT_0_ROOT:
+            return "Root";
+         case ITechLayout.ET_VIEWCONTEXT_1_APPLI:
+            return "Appli";
+         case ITechLayout.ET_VIEWCONTEXT_2_PARENT:
+            return "Parent";
+         case ITechLayout.ET_VIEWCONTEXT_3_SCREEN_MAIN:
+            return "ScreenMain";
+         case ITechLayout.ET_VIEWCONTEXT_4_SCREEN_ALL:
+            return "ScreenAll";
+         case ITechLayout.ET_VIEWCONTEXT_5_CLIP:
+            return "Clip";
+         case ITechLayout.ET_VIEWCONTEXT_6_LINK:
+            return "Link";
+         default:
+            return "Unknown " + type;
+      }
+   }
+   
+   public static String toStringEtalonFont(int type) {
+      switch (type) {
+         case ITechLayout.ET_FONT_0_DEFAULT:
+            return "Default";
+         case ITechLayout.ET_FONT_1_DEFINED:
+            return "Defined";
+         case ITechLayout.ET_FONT_2_DEBUG:
+            return "Debug";
+         case ITechLayout.ET_FONT_3_:
+            return "__";
+         case ITechLayout.ET_FONT_4_TINY:
+            return "Tiny";
+         case ITechLayout.ET_FONT_5_SMALL:
+            return "Small";
+         case ITechLayout.ET_FONT_6_MEDIUM:
+            return "Medium";
+         case ITechLayout.ET_FONT_7_LARGE:
+            return "Large";
+         case ITechLayout.ET_FONT_8_HUGE:
+            return "Huge";
+         default:
+            return "Unknown " + type;
+      }
+   }
    /**
     * 
     *
@@ -467,7 +520,7 @@ public class ToStringStaticLayout extends ToStringStaticBase implements ITechLay
             return "default";
          case ITechLayout.ET_FONT_1_DEFINED:
             return "defined";
-         case ITechLayout.ET_FONT_2_SMALL:
+         case ITechLayout.ET_FONT_5_SMALL:
             return "small";
          default:
             return "Unknown " + prop;

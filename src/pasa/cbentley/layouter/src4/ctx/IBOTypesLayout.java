@@ -12,14 +12,14 @@ import pasa.cbentley.byteobjects.src4.ctx.IBOTypesBOC;
 public interface IBOTypesLayout extends IBOTypesBOC {
 
    /**
-    * 
+    * Inclusive
     */
-   public static final int AZ_BOTYPE_FW_A   = 41;
+   public static final int AZ_BOTYPE_FW_A   = 221;
 
    /**
-    * 
+    * Inclusive
     */
-   public static final int AZ_BOTYPE_FW_Z   = 49;
+   public static final int AZ_BOTYPE_FW_Z   = 230;
 
    public static final int FTYPE_0_         = AZ_BOTYPE_FW_A + 0;
 

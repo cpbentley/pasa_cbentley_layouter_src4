@@ -25,6 +25,11 @@ public interface ITechLayout extends ITech {
    /**
     * 
     */
+   public static final int ATODO_ET_PROP_4_SIZE_FONT_RATIO       = 4;
+
+   /**
+    * 
+    */
    public static final int COMPUTE_0_INVALID                     = 0;
 
    /**
@@ -144,7 +149,7 @@ public interface ITechLayout extends ITech {
    public static final int DEPENDENCY_X_DELETE                   = -1;
 
    /**
-    * 
+    * Its usually medium
     */
    public static final int ET_FONT_0_DEFAULT                     = 0;
 
@@ -153,20 +158,34 @@ public interface ITechLayout extends ITech {
     */
    public static final int ET_FONT_1_DEFINED                     = 1;
 
-   /**
-    * 
-    */
-   public static final int ET_FONT_2_SMALL                       = 2;
+   public static final int ET_FONT_2_DEBUG                       = 2;
+
+   public static final int ET_FONT_3_                            = 3;
+
+   public static final int ET_FONT_4_TINY                        = 4;
 
    /**
     * 
     */
-   public static final int ET_FONT_3_MEDIUM                      = 3;
+   public static final int ET_FONT_5_SMALL                       = 5;
 
    /**
     * 
     */
-   public static final int ET_FONT_4_BIG                         = 4;
+   public static final int ET_FONT_6_MEDIUM                      = 6;
+
+   /**
+    * 
+    */
+   public static final int ET_FONT_7_LARGE                       = 7;
+
+   public static final int ET_FONT_8_HUGE                        = 8;
+
+   public static final int ET_FONT_PROP_0_W                      = 0;
+
+   public static final int ET_FONT_PROP_1_H                      = 1;
+
+   public static final int ET_FONT_PROP_3_ASCENT                 = 3;
 
    /**
     * Function that returns the input context value.
@@ -246,7 +265,6 @@ public interface ITechLayout extends ITech {
     */
    public static final int ET_LINK_1_NAV                         = 1;
 
-
    /**
     * Provides by a 4 byte UIID.
     */
@@ -256,11 +274,6 @@ public interface ITechLayout extends ITech {
     * 
     */
    public static final int ET_LINK_3_LAYOUTABLE                  = 3;
-
-   /**
-    * 
-    */
-   public static final int ATODO_ET_PROP_4_SIZE_FONT_RATIO             = 4;
 
    /**
     * The root view context of the application.
@@ -282,24 +295,24 @@ public interface ITechLayout extends ITech {
    public static final int ET_VIEWCONTEXT_2_PARENT               = 2;
 
    /**
-    * Custom View context must be defined using a Link.
-    */
-   public static final int ET_VIEWCONTEXT_3_LINK                 = 3;
-
-   /**
     * 
     */
-   public static final int ET_VIEWCONTEXT_4_CLIP                 = 4;
-
-   /**
-    * 
-    */
-   public static final int ET_VIEWCONTEXT_5_SCREEN_MAIN          = 5;
+   public static final int ET_VIEWCONTEXT_3_SCREEN_MAIN          = 3;
 
    /**
     * The full multi screens view context.
     */
-   public static final int ET_VIEWCONTEXT_6_SCREEN_ALL           = 6;
+   public static final int ET_VIEWCONTEXT_4_SCREEN_ALL           = 4;
+
+   /**
+    * 
+    */
+   public static final int ET_VIEWCONTEXT_5_CLIP                 = 5;
+
+   /**
+    * Custom View context must be defined using a Link.
+    */
+   public static final int ET_VIEWCONTEXT_6_LINK                 = 6;
 
    /**
     * Etalon is implicit and decided from the sizee context. 
@@ -316,7 +329,7 @@ public interface ITechLayout extends ITech {
     * 
     * For this etalon, the {@link IBOSizer#SIZER_OFFSET_05_ET_PROPERTY1} is
     * 
-    * Included in the {@link ITechCoded#CODED_BITS_2_ETALON}
+    * Included in the {@link ITechCodedSizer#CODED_BITS_2_ETALON}
     * </p>
     */
    public static final int ETALON_0_SIZEE_CTX                    = 0;
@@ -364,9 +377,9 @@ public interface ITechLayout extends ITech {
     * {@link ITechLayout#SIZER_OFFSET_06_ET_FUN1} defines which font
     * <li> {@link ITechLayout#ET_FONT_0_DEFAULT} means default font
     * <li> {@link ITechLayout#ET_FONT_1_DEFINED}
-    * <li> {@link ITechLayout#ET_FONT_2_SMALL} 
-    * <li> {@link ITechLayout#ET_FONT_3_MEDIUM}
-    * <li> {@link ITechLayout#ET_FONT_4_BIG} 
+    * <li> {@link ITechLayout#ET_FONT_5_SMALL} 
+    * <li> {@link ITechLayout#ET_FONT_6_MEDIUM}
+    * <li> {@link ITechLayout#ET_FONT_7_LARGE} 
     * <br>
     * <br>
     * <li> you want a size of the word "Welcome"
@@ -467,16 +480,26 @@ public interface ITechLayout extends ITech {
    public static final int FUN_POZER_0_DISTANCE                  = 0;
 
    /**
+    * Returns the etalon value and ignores the provided value
+    * 
+    * Equivalent to ratio 100/100
+    * 
     * {@link ToStringStaticLayout#toStringOpFun(int)}
     */
    public static final int FUNCTION_OP_00_NONE                   = 0;
 
+   /**
+    * Adds the etalon value to the provided value
+    */
    public static final int FUNCTION_OP_01_ADD                    = 1;
 
    public static final int FUNCTION_OP_02_MINUS                  = 2;
 
    public static final int FUNCTION_OP_03_MULTIPLY               = 3;
 
+   /**
+    * Computed etalon value is divided by the provided value
+    */
    public static final int FUNCTION_OP_04_DIVIDE                 = 4;
 
    /**
@@ -515,7 +538,7 @@ public interface ITechLayout extends ITech {
     * 
     * The unit is decided by  {@link IBOSizer#SIZER_OFFSET_03_ETALON1}
     * <br>
-    * Included in the {@link ITechCoded#CODED_BITS_1_MODE}
+    * Included in the {@link ITechCodedSizer#CODED_BITS_1_MODE}
     * 
     * TODO and for the Pozer?
     */
@@ -534,6 +557,24 @@ public interface ITechLayout extends ITech {
     * When a function cannot be expressed, a delegate registers
     */
    public static final int MODE_1_DELEGATE                       = 1;
+
+   /**
+    * A function on the value of etalon computed from 
+    * <li>{@link IBOSizer#SIZER_OFFSET_03_ETALON1} , 
+    * <li>{@link IBOSizer#SIZER_OFFSET_06_ET_FUN1} 
+    * <li>{@link IBOSizer#SIZER_OFFSET_05_ET_PROPERTY1} 
+    * 
+    * <li> {@link ITechLayout#FUNCTION_OP_0_NONE}
+    * <li> {@link ITechLayout#FUNCTION_OP_1_ADD}
+    * <li> {@link ITechLayout#FUNCTION_OP_2_MINUS}
+    * <li> {@link ITechLayout#FUNCTION_OP_3_MULTIPLY}
+    * <li> {@link ITechLayout#FUNCTION_OP_4_DIVIDE}
+    * <li> {@link ITechLayout#FUNCTION_OP_05_RATIO}
+    * 
+    * This etalon value is modified by value {@link IBOSizer#SIZER_OFFSET_08_VALUE2} 
+    * using operator 
+    */
+   public static final int MODE_2_FUNCTION                       = 4;
 
    /**
     *  Interprets {@link IBOSizer#SIZER_OFFSET_08_VALUE2} as belonging to the set
@@ -563,24 +604,6 @@ public interface ITechLayout extends ITech {
     * Those values are centralized
     */
    public static final int MODE_3_SCALE                          = 3;
-
-   /**
-    * A function on the value of etalon computed from 
-    * <li>{@link IBOSizer#SIZER_OFFSET_03_ETALON1} , 
-    * <li>{@link IBOSizer#SIZER_OFFSET_06_ET_FUN1} 
-    * <li>{@link IBOSizer#SIZER_OFFSET_05_ET_PROPERTY1} 
-    * 
-    * <li> {@link ITechLayout#FUNCTION_OP_0_NONE}
-    * <li> {@link ITechLayout#FUNCTION_OP_1_ADD}
-    * <li> {@link ITechLayout#FUNCTION_OP_2_MINUS}
-    * <li> {@link ITechLayout#FUNCTION_OP_3_MULTIPLY}
-    * <li> {@link ITechLayout#FUNCTION_OP_4_DIVIDE}
-    * <li> {@link ITechLayout#FUNCTION_OP_05_RATIO}
-    * 
-    * This etalon value is modified by value {@link IBOSizer#SIZER_OFFSET_08_VALUE2} 
-    * using operator 
-    */
-   public static final int MODE_2_FUNCTION                       = 4;
 
    /**
     * The sizer is a function of 2 sizers.
@@ -823,6 +846,6 @@ public interface ITechLayout extends ITech {
    /**
     * 
     */
-   public static final int Z_SIZE_FILL                           = ITechCoded.CODED_SIZE_FLAG_32_SIGN + (DELEGATE_ETALON_1_PARENT_MAX << ITechCoded.CODED_SIZE_SHIFT_1_MODE);
+   public static final int Z_SIZE_FILL                           = ITechCodedSizer.CODED_SIZE_FLAG_32_SIGN + (DELEGATE_ETALON_1_PARENT_MAX << ITechCodedSizer.CODED_SIZE_SHIFT_1_MODE);
 
 }

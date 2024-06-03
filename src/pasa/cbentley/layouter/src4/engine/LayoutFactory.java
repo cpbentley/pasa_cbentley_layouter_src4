@@ -11,7 +11,7 @@ import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.layouter.src4.ctx.IBOTypesLayout;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
 import pasa.cbentley.layouter.src4.ctx.ToStringStaticLayout;
-import pasa.cbentley.layouter.src4.tech.ITechCoded;
+import pasa.cbentley.layouter.src4.tech.ITechCodedSizer;
 import pasa.cbentley.layouter.src4.tech.ITechLayout;
 import pasa.cbentley.layouter.src4.tech.IBOLinker;
 import pasa.cbentley.layouter.src4.tech.IBOPozer;
@@ -20,7 +20,7 @@ import pasa.cbentley.layouter.src4.tech.IBOSizer;
 /**
  * 
  */
-public class LayoutFactory extends BOAbstractFactory implements IBOLinker, IBOTypesLayout, ITechCoded, IBOSizer, IBOPozer, ITechLayout {
+public class LayoutFactory extends BOAbstractFactory implements IBOLinker, IBOTypesLayout, ITechCodedSizer, IBOSizer, IBOPozer, ITechLayout {
 
    /**
     * 
@@ -69,7 +69,7 @@ public class LayoutFactory extends BOAbstractFactory implements IBOLinker, IBOTy
          int modV = (value >> CODED_SIZE_SHIFT_1_MODE) & CODED_MASK_1_MODE;
          int etalonV = (value >> CODED_SIZE_SHIFT_2_ETALON) & CODED_MASK_2_ETALON;
          int etalonTypeV = (value >> CODED_SIZE_SHIFT_3_ETALON_TYPE) & CODED_MASK_3_ETALON_TYPE;
-         int etalonFunV = (value >> CODED_SIZE_SHIFT_4_ETALON_FUN) & CODED_MASK_4_ETALON_FUN;
+         int etalonFunV = (value >> CODED_SIZE_SHIFT_5_ETALON_FUN) & CODED_MASK_5_ETALON_FUN;
          return "val=" + valueV + " mod=" + modV + " etalon=" + etalonV + " etype=" + etalonTypeV + " efun=" + etalonFunV;
       } else {
          return "Not a coded value " + coded;
@@ -118,7 +118,7 @@ public class LayoutFactory extends BOAbstractFactory implements IBOLinker, IBOTy
          int modV = (value >> CODED_SIZE_SHIFT_1_MODE) & CODED_MASK_1_MODE;
          int etalonV = (value >> CODED_SIZE_SHIFT_2_ETALON) & CODED_MASK_2_ETALON;
          int etalonTypeV = (value >> CODED_SIZE_SHIFT_3_ETALON_TYPE) & CODED_MASK_3_ETALON_TYPE;
-         int etalonFunV = (value >> CODED_SIZE_SHIFT_4_ETALON_FUN) & CODED_MASK_4_ETALON_FUN;
+         int etalonFunV = (value >> CODED_SIZE_SHIFT_5_ETALON_FUN) & CODED_MASK_5_ETALON_FUN;
          return "val=" + valueV + " mod=" + modV + " etalon=" + etalonV + " etype=" + etalonTypeV + " efun=" + etalonFunV;
       } else {
          if (CodedUtils.isLinked(coded)) {
