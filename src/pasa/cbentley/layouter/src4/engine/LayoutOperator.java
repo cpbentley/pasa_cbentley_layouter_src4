@@ -150,6 +150,14 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return 0;
    }
 
+   public int codedSizeDecodeW(ByteObject bo, int index, int w, int h) {
+      return codedSizeDecode(bo, index, w, h, CTX_1_WIDTH);
+   }
+
+   public int codedSizeDecodeH(ByteObject bo, int index, int w, int h) {
+      return codedSizeDecode(bo, index, w, h, CTX_2_HEIGHT);
+   }
+
    /**
     * 
     *
@@ -786,7 +794,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
          toDLog().pNull("Etalon is null for \n" + sizer, layoutable, LayoutOperator.class, "getEtalonSizer@line786");
          //#debug
          toDLog().pNull("Setting etalon to input layoutable -> \n" + layoutable, layoutable, LayoutOperator.class, "getEtalonSizer@line788");
-         
+
          layoutableEtalon = layoutable;
       }
       return layoutableEtalon;

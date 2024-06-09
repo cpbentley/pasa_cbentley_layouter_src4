@@ -15,13 +15,12 @@ import pasa.cbentley.layouter.src4.tech.ITechLayout;
 
 public abstract class LayoutableAbstract extends ObjectLC implements ILayoutable {
 
-   private ILayoutDelegate     delegate;
+   private ILayoutDelegate      delegate;
 
-   protected LayouterEngineRead     engine;
+   protected LayouterEngineRead engine;
 
-   private ILayoutable         parent;
+   private ILayoutable          parent;
 
-  
    public LayoutableAbstract(LayouterCtx lac) {
       super(lac);
       engine = new LayouterEngineRead(lac, this);
@@ -234,16 +233,16 @@ public abstract class LayoutableAbstract extends ObjectLC implements ILayoutable
 
    //#mdebug
    public void toString(Dctx dc) {
-      dc.root(this, LayoutableAbstract.class);
+      dc.root(this, LayoutableAbstract.class, 237);
       toStringPrivate(dc);
       super.toString(dc);
-      dc.nlLvl(engine);
-      dc.nlLvl(delegate, "LayoutDelegate");
+      dc.nlLvl(engine,"engine of LayoutableAbstract");
+      dc.nlLvl(delegate, "delegate of LayoutableAbstract");
    }
 
    private void toStringPrivate(Dctx dc) {
    }
-   
+
    public void toString1Line(Dctx dc) {
       dc.root1Line(this, LayoutableAbstract.class);
       toStringPrivate(dc);

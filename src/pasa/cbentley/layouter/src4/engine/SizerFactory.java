@@ -150,7 +150,7 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       bo.set1(SIZER_OFFSET_10_OP_FUN1, opfun);
       return bo;
    }
-   
+
    public void setEtalonData(ByteObject bo, int etalon, int esub, int etype, int efun) {
       bo.set1(SIZER_OFFSET_03_ETALON1, etalon);
       bo.set1(SIZER_OFFSET_04_ET_SUBTYPE1, esub);
@@ -532,6 +532,16 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       return bo;
    }
 
+   public ByteObject getSizerRatioTimes(int timesValue, int etalon, int esub, int eprop, int efun) {
+      ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
+      setSizerRatioTimes(bo, timesValue);
+      bo.set1(SIZER_OFFSET_03_ETALON1, etalon);
+      bo.set1(SIZER_OFFSET_04_ET_SUBTYPE1, esub);
+      bo.set1(SIZER_OFFSET_05_ET_PROPERTY1, eprop);
+      bo.set1(SIZER_OFFSET_06_ET_FUN1, efun);
+      return bo;
+   }
+
    /**
     * Size value is a ratio of the preferred size
     * @return
@@ -753,6 +763,12 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       sizer.set2(SIZER_OFFSET_09_FRACTION_BOT2, 100);
    }
 
+   public void setSizerRatioTimes(ByteObject sizer, int times) {
+      sizer.set1(SIZER_OFFSET_02_MODE1, MODE_2_FUNCTION);
+      sizer.set1(SIZER_OFFSET_10_OP_FUN1, FUNCTION_OP_03_MULTIPLY);
+      sizer.set2(SIZER_OFFSET_08_FRACTION_TOP2, times);
+   }
+
    /**
     * 
     *
@@ -873,7 +889,7 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
             break;
       }
       dc.nlVar("etype", strSub);
-      
+
       String strProp = "";
       switch (etalon) {
          case ETALON_2_FONT:
@@ -901,14 +917,26 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
    }
 
    /**
+    * A 100 ratio of the height of the given font
+    * esub
     * 
-    * @param ratio
+    * <li>{@link ITechLayout#ET_FONT_0_DEFAULT}
+    * <li>{@link ITechLayout#ET_FONT_1_DEFINED}
+    * <li>{@link ITechLayout#ET_FONT_2_DEBUG}
+    * <li>{@link ITechLayout#ET_FONT_4_TINY}
+    * <li>{@link ITechLayout#ET_FONT_5_SMALL}
+    * <li>{@link ITechLayout#ET_FONT_6_MEDIUM}
+    * <li>{@link ITechLayout#ET_FONT_7_LARGE}
+    * 
+    * @param ratio 1 to 100, 200 means 2 times the height
     * @param esub
-    * @param efun
     * @return
     */
    public ByteObject getSizerFontHeightRatio(int ratio, int esub) {
       return getSizerRatio100(ratio, ETALON_2_FONT, esub, SIZER_PROP_03_FONT, ET_FUN_2_HEIGHT);
    }
 
+   public ByteObject getSizerFontHeightTimes(int ratio, int esub) {
+      return getSizerRatio100(ratio, ETALON_2_FONT, esub, SIZER_PROP_03_FONT, ET_FUN_2_HEIGHT);
+   }
 }
