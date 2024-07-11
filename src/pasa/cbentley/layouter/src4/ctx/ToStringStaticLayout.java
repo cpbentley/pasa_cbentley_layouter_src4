@@ -402,7 +402,7 @@ public class ToStringStaticLayout extends ToStringStaticBase implements ITechLay
             return "UnitLogic";
          case ITechLayout.SIZER_PROP_03_FONT:
             return "Font";
-         case ITechLayout.SIZER_PROP_04_:
+         case ITechLayout.SIZER_PROP_04_INIT:
             return "4";
          case ITechLayout.SIZER_PROP_05_CONTENT:
             return "Content";

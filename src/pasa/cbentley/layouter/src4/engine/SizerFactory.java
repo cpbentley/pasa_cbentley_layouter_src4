@@ -6,7 +6,6 @@ package pasa.cbentley.layouter.src4.engine;
 
 import pasa.cbentley.byteobjects.src4.core.BOAbstractFactory;
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
-import pasa.cbentley.core.src4.interfaces.C;
 import pasa.cbentley.core.src4.interfaces.ITechNav;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.layouter.src4.ctx.IBOTypesLayout;
@@ -46,6 +45,11 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
     * 
     */
    private ByteObject  sizerMatchParentCtx;
+   
+   /**
+    * 
+    */
+   private ByteObject  sizerMatchViewContextCtx;
 
    /**
     * 
@@ -313,6 +317,18 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
          sizerMatchParentCtx.setImmutable();
       }
       return sizerMatchParentCtx;
+   }
+
+   public ByteObject getSizerFitViewContextLazy() {
+      if (sizerMatchViewContextCtx == null) {
+         ByteObject bo = getSizerFitParentProp(SIZER_PROP_00_DRAWN);
+         bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_1_VIEWCONTEXT);
+         bo.set1(SIZER_OFFSET_05_ET_PROPERTY1, SIZER_PROP_00_DRAWN);
+         bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_0_CTX); //when computing W, take parent's W, 
+         sizerMatchViewContextCtx = bo;
+         sizerMatchViewContextCtx.setImmutable();
+      }
+      return sizerMatchViewContextCtx;
    }
 
    public ByteObject getSizerFitParentProp(int prop) {

@@ -423,8 +423,9 @@ public interface ITechLayout extends ITech {
    public static final int ETALON_3_RATIO                        = 3;
 
    /**
-    * The etalon on which to fetch the property is {@link ILayoutable#getLayoutableParent()}
-    * on the input {@link ILayoutable} 
+    * The etalon on which to fetch the property is {@link ILayoutable#getLayoutableParent()} on the input {@link ILayoutable}.
+    * 
+    * When Parent is null, uses the ViewContext
     */
    public static final int ETALON_4_PARENT                       = 4;
 
@@ -725,8 +726,16 @@ public interface ITechLayout extends ITech {
    public static final int SIZE_5_BIGGEST                        = 5;
 
    /**
-    * The 4 main are coded on 2 bits.
-    * Size actually drawn
+    * Size actually drawn on screen.
+    * 
+    * <p>
+    * Located in {@link IBOSizer#SIZER_OFFSET_05_ET_PROPERTY1}
+    * </p>
+    * 
+    * <p>
+    * Modules creates as many properties as they wish to suit their structure.
+    * 
+    * </p>
     */
    public static final int SIZER_PROP_00_DRAWN                   = 0;
 
@@ -752,7 +761,10 @@ public interface ITechLayout extends ITech {
     */
    public static final int SIZER_PROP_03_FONT                    = 3;
 
-   public static final int SIZER_PROP_04_                        = 4;
+   /**
+    * Size which was used as the starting point for the layout
+    */
+   public static final int SIZER_PROP_04_INIT                    = 4;
 
    /**
     * Size of content. ie drawn size minus margin,border and padding

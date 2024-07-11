@@ -36,7 +36,6 @@ public class LayoutableChain extends LayoutableGhost implements ILayoutable {
 
    private Area2DConfigurator configurator;
 
-
    protected int              type;
 
    /**
@@ -44,12 +43,15 @@ public class LayoutableChain extends LayoutableGhost implements ILayoutable {
     */
    protected ILayoutable      alignReference;
 
+   private Zer2DArea          area;
+
    public LayoutableChain(LayouterCtx lac) {
       super(lac);
       chainData = new BufferObject(lac.getUC());
       alignLogic = C.LOGIC_2_CENTER;
       type = C.LINE_0_HORIZONTAL;
-      configurator = new Area2DConfigurator(lac);
+      area = new Zer2DArea(lac);
+      configurator = new Area2DConfigurator(lac, area);
    }
 
    /**
@@ -177,7 +179,7 @@ public class LayoutableChain extends LayoutableGhost implements ILayoutable {
    public int getChainHeight() {
       if (isHorizontal()) {
          //vertical -> take the max
-         if(alignLogic == C.LOGIC_0_UNDEFINED) {
+         if (alignLogic == C.LOGIC_0_UNDEFINED) {
             alignReference.layoutUpdateSizeHCheck();
             return alignReference.getSizeDrawnHeight();
          }
@@ -209,7 +211,7 @@ public class LayoutableChain extends LayoutableGhost implements ILayoutable {
     * @return
     */
    public int getChainWidth() {
-      if(isEmpty()) {
+      if (isEmpty()) {
          return 0;
       }
       // Method must avoid loops depending 
@@ -225,7 +227,7 @@ public class LayoutableChain extends LayoutableGhost implements ILayoutable {
          return width;
       } else {
          //
-         if(alignLogic == C.LOGIC_0_UNDEFINED) {
+         if (alignLogic == C.LOGIC_0_UNDEFINED) {
             alignReference.layoutUpdateSizeWCheck();
             return alignReference.getSizeDrawnWidth();
          }
@@ -275,7 +277,7 @@ public class LayoutableChain extends LayoutableGhost implements ILayoutable {
    public void setChainElementAlignment(int align) {
       this.alignLogic = align;
    }
-   
+
    public int getChainElementAlignment() {
       return alignLogic;
    }
@@ -287,7 +289,6 @@ public class LayoutableChain extends LayoutableGhost implements ILayoutable {
    public void setChainType(int type) {
       this.type = type;
    }
-
 
    //#mdebug
    public void toString(Dctx dc) {

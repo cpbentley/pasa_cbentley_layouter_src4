@@ -48,8 +48,6 @@ public class LayouterEngine extends ObjectLC implements IStringable, ITechLayout
 
    private int                 cycleCounterY;
 
-   private Area2DConfigurator  areaConfigurator;
-
    private ILayoutDependencies dependencies;
 
    private boolean             isManualOverrideH;
@@ -80,6 +78,12 @@ public class LayouterEngine extends ObjectLC implements IStringable, ITechLayout
 
    protected Zer2DRect         rect;
 
+   protected int               originalOverrideW;
+
+   protected int               originalOverrideH;
+
+   private Zer2DArea           area;
+
    /**
     * 
     * @param lac
@@ -92,11 +96,20 @@ public class LayouterEngine extends ObjectLC implements IStringable, ITechLayout
       lac.toStringCheckNull(layoutable);
 
       this.layoutable = layoutable;
-      areaConfigurator = new Area2DConfigurator(lac);
+      area = new Zer2DArea(lac);
       rect = new Zer2DRect(lac);
 
       //#debug
       //toDLog().pInit("LayEngine created for ", layoutable, LayEngine.class, "LayEngine", LVL_04_FINER, true);
+   }
+
+   /**
+    * Creates an {@link Area2DConfigurator} for configuration of the {@link Zer2DArea}
+    * of this engine.
+    * @return
+    */
+   public Area2DConfigurator getLay() {
+      return new Area2DConfigurator(lac, area);
    }
 
    /**
@@ -134,7 +147,7 @@ public class LayouterEngine extends ObjectLC implements IStringable, ITechLayout
    }
 
    public Zer2DArea getArea() {
-      return areaConfigurator.getArea();
+      return area;
    }
 
    public ILayoutable[] getDependencies() {
@@ -144,16 +157,21 @@ public class LayouterEngine extends ObjectLC implements IStringable, ITechLayout
       return null;
    }
 
-   public Area2DConfigurator getLay() {
-      return areaConfigurator;
+   public void setSizerW(ByteObject sizer) {
+      area.setSizerW(sizer);
    }
+
+   public void setSizerH(ByteObject sizer) {
+      area.setSizerH(sizer);
+   }
+
 
    /**
     * Current {@link IBOSizer} for the Height.
     * @return {@link ByteObject} could be null when not defined or 
     */
    public ByteObject getSizerH() {
-      return getLay().getArea().getSizerH();
+      return area.getSizerH();
    }
 
    /**
@@ -161,7 +179,7 @@ public class LayouterEngine extends ObjectLC implements IStringable, ITechLayout
     * @return {@link ByteObject} could be null.
     */
    public ByteObject getSizerW() {
-      return getLay().getArea().getSizerW();
+      return area.getSizerW();
    }
 
    public ILayoutWillListener getLayoutListener() {
@@ -209,7 +227,7 @@ public class LayouterEngine extends ObjectLC implements IStringable, ITechLayout
     * @return
     */
    public boolean isContextualH() {
-      ByteObject sizerH = areaConfigurator.getArea().getSizerH();
+      ByteObject sizerH = area.getSizerH();
       return isContextual(sizerH);
    }
 
@@ -223,7 +241,7 @@ public class LayouterEngine extends ObjectLC implements IStringable, ITechLayout
     * @return
     */
    public boolean isContextualW() {
-      ByteObject sizerW = areaConfigurator.getArea().getSizerW();
+      ByteObject sizerW = area.getSizerW();
       return isContextual(sizerW);
    }
 
@@ -232,8 +250,8 @@ public class LayouterEngine extends ObjectLC implements IStringable, ITechLayout
     * @return
     */
    public boolean isNoCtxSize() {
-      ByteObject sizerW = areaConfigurator.getArea().getSizerW();
-      ByteObject sizerH = areaConfigurator.getArea().getSizerH();
+      ByteObject sizerW = area.getSizerW();
+      ByteObject sizerH = area.getSizerH();
       boolean noCtxW = sizerW == null || sizerW.hasFlag(SIZER_OFFSET_01_FLAG, SIZER_FLAG_7_DEFINED);
       boolean noCtxH = sizerH == null || sizerH.hasFlag(SIZER_OFFSET_01_FLAG, SIZER_FLAG_7_DEFINED);
       return noCtxW && noCtxH;
@@ -485,6 +503,10 @@ public class LayouterEngine extends ObjectLC implements IStringable, ITechLayout
     * When layout size is invalid do
     * <li> {@link LayouterEngine#layoutUpdateSizeWCheck()}
     * <li> {@link LayouterEngine#layoutUpdateSizeHCheck()}
+    * 
+    * <p>
+    * That will update the dw and dh of {@link ILayoutable}
+    * </p>
     */
    public void layoutUpdateSizeCheck() {
       if (layoutIsValidSize()) {
@@ -681,11 +703,13 @@ public class LayouterEngine extends ObjectLC implements IStringable, ITechLayout
    }
 
    public void setOverrideH(int h) {
+      originalOverrideH = h;
       setManualOverrideH(true);
       rect.setH(h);
    }
 
    public void setOverrideW(int w) {
+      originalOverrideW = w;
       setManualOverrideW(true);
       rect.setW(w);
    }
@@ -736,7 +760,6 @@ public class LayouterEngine extends ObjectLC implements IStringable, ITechLayout
 
       //we want nice message
       dc.nlLvl(rect, "Rect");
-      dc.nlLvl(areaConfigurator, "Laydata");
       //objects that depend on this for layout
       dc.nlLvl(dependencies, "Dependencies: Objects that depend on " + layoutable.toStringName() + " for layout");
    }

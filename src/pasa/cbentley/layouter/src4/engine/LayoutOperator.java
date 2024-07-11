@@ -867,7 +867,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       }
       if (sizer.hasFlag(SIZER_OFFSET_01_FLAG, hasFlag)) {
          int typeByteObject = IBOTypesBOC.TYPE_019_RELATIONSHIP;
-         ByteObject relationMin = sizer.getSubFirst(typeByteObject, ITechRelation.RELATION_OFFSET_02_TYPE1, 1, relationType);
+         ByteObject relationMin = sizer.getSubSubFirst(typeByteObject, relationType, ITechRelation.RELATION_OFFSET_02_TYPE1, 1);
          if (relationMin == null) {
             //#debug
             toDLogMalformedMinMax(sizer, relationType);
@@ -1650,7 +1650,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       int type = tblr.get1(TBLR_OFFSET_02_TYPE1);
       int value = 0;
       if (type == TYPE_0_PIXEL_VALUE) {
-         value = tblr.get4(TBLR_OFFSET_03_DATA4);
+         return getTBLRValue(tblr, pos);
       } else if (type == TYPE_1_CODED_VALUE) {
          int codedsize = tblr.get4(TBLR_OFFSET_03_DATA4);
          if (pos == C.POS_0_TOP || pos == C.POS_1_BOT) {

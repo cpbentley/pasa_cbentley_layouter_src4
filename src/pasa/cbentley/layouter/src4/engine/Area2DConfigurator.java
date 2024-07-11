@@ -28,10 +28,6 @@ public class Area2DConfigurator extends ObjectLC implements IStringable {
 
    private Zer2DArea area;
 
-   public Area2DConfigurator(LayouterCtx lac) {
-      super(lac);
-      area = new Zer2DArea(lac);
-   }
 
    public Area2DConfigurator(LayouterCtx lac, Zer2DArea area) {
       super(lac);
