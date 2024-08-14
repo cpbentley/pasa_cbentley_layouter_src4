@@ -17,6 +17,73 @@ public class CodedCodePageFigure extends ObjectLC implements ITechCodedFigure, I
       super(lac);
    }
 
+   /**
+    * 
+    * @param ratio
+    * @return
+    */
+   public int encodeRatioMinWHSizee(int ratio) {
+      int value = ratio;
+      int fun = FUNCTION_FIG_05_RATIO;
+      int funaux = RATIO_TYPE_0_FOR_100;
+      int etalon = ETALON_0_SIZEE_CTX;
+      int efun = ET_FUN_03_MIN;
+      return encode(value, fun, funaux, etalon, efun);
+   }
+
+   public int encodeDivSizeWH(int divider) {
+      int value = divider;
+      int fun = FUNCTION_FIG_04_DIVIDE;
+      int funaux = RATIO_TYPE_0_FOR_100;
+      int etalon = ETALON_0_SIZEE_CTX;
+      int efun = ET_FUN_00_CTX;
+      return encode(value, fun, funaux, etalon, efun);
+   }
+
+   public int encodeRatioSizeWH(int ratio) {
+      int value = ratio;
+      int fun = FUNCTION_FIG_05_RATIO;
+      int funaux = RATIO_TYPE_0_FOR_100;
+      int etalon = ETALON_0_SIZEE_CTX;
+      int efun = ET_FUN_00_CTX;
+      return encode(value, fun, funaux, etalon, efun);
+   }
+
+   /**
+    *  <li> Fun 3 bits
+    *  <ol>
+    *  <li>{@link ITechCodedFigure#FUNCTION_FIG_00_NONE}
+    *  <li>{@link ITechCodedFigure#FUNCTION_FIG_01_ADD}
+    *  <li>{@link ITechCodedFigure#FUNCTION_FIG_03_MULTIPLY}
+    *  <li>{@link ITechCodedFigure#FUNCTION_FIG_04_DIVIDE}
+    *  <li>{@link ITechCodedFigure#FUNCTION_FIG_05_RATIO}
+    *  </ol>
+    *  <li> Fun aux 2 bits
+    *  <ol>
+    *  <li>{@link ITechCodedFigure#RATIO_TYPE_0_FOR_100}
+    *  <li>{@link ITechCodedFigure#RATIO_TYPE_1_FOR_1000}
+    *  <li>{@link ITechCodedFigure#RATIO_TYPE_2_FOR_10}
+    *  </ol>
+    *   
+    * 
+    *  <li> Etalon Fun 3 bits
+    *  <ol>
+    *  <li>{@link ITechLayout#ET_FUN_00_CTX}
+    *  <li>{@link ITechLayout#ET_FUN_01_WIDTH}
+    *  <li>{@link ITechLayout#ET_FUN_02_HEIGHT}
+    *  <li>{@link ITechLayout#ET_FUN_03_MIN}
+    *  <li>{@link ITechLayout#ET_FUN_04_MAX}
+    *  <li>{@link ITechLayout#ET_FUN_05_ADD}
+    *  <li>{@link ITechLayout#ET_FUN_06_DIFF}
+    *  <li> 
+    *  </ol>
+    * @param value
+    * @param fun
+    * @param funaux
+    * @param etalon
+    * @param efun
+    * @return
+    */
    public int encode(int value, int fun, int funaux, int etalon, int efun) {
       if (value > 10000 || value < 0) {
          throw new IllegalArgumentException();
@@ -109,21 +176,21 @@ public class CodedCodePageFigure extends ObjectLC implements ITechCodedFigure, I
       int h = la.getSizeDrawnHeight();
       if (et == ETALON_0_RECT) {
          int ef = getEtalonFun(data);
-         if (ef == ET_FUN_1_WIDTH) {
+         if (ef == ET_FUN_01_WIDTH) {
             return w;
-         } else if (ef == ET_FUN_2_HEIGHT) {
+         } else if (ef == ET_FUN_02_HEIGHT) {
             return h;
-         } else if (ef == ET_FUN_3_MIN) {
+         } else if (ef == ET_FUN_03_MIN) {
             int v = Math.min(w, h);
             return v;
-         } else if (ef == ET_FUN_4_MAX) {
+         } else if (ef == ET_FUN_04_MAX) {
             int v = Math.max(w, h);
             return v;
-         } else if (ef == ET_FUN_5_ADD) {
+         } else if (ef == ET_FUN_05_ADD) {
             return w + h;
-         } else if (ef == ET_FUN_6_DIFF) {
+         } else if (ef == ET_FUN_06_DIFF) {
             return Math.abs(w - h);
-         }
+         } 
       }
       if (ctx == CTX_1_WIDTH) {
          return w;

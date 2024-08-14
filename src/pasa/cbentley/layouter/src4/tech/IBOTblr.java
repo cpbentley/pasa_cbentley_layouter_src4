@@ -5,7 +5,7 @@
 package pasa.cbentley.layouter.src4.tech;
 
 import pasa.cbentley.byteobjects.src4.core.interfaces.IByteObject;
-import pasa.cbentley.byteobjects.src4.objects.pointer.MergeMaskFactory;
+import pasa.cbentley.byteobjects.src4.objects.pointer.MergeFactory;
 import pasa.cbentley.core.src4.interfaces.C;
 
 public interface IBOTblr extends IByteObject {
@@ -20,24 +20,31 @@ public interface IBOTblr extends IByteObject {
 
    public static final int TBLR_FLAG_1_USING_ARRAY = 1 << 0;
 
+   public static final int TBLR_FLAG_2_            = 1 << 1;
+
+   /**
+    * Incomplete that uses the root to compute its values with a IBOF
+    */
+   public static final int TBLR_FLAG_3_TRANS_FUN      = 1 << 2;
+
    /**
     * Same when all TBLR have the same value
     */
    public static final int TBLR_FLAG_4_SAME_VALUE  = 1 << 3;
 
    /**
-    * 4 bits mask to tell {@link MergeMaskFactory} if Top is transparent/not defined. So no need of a merge mask
+    * 4 bits mask to tell {@link MergeFactory} if Top is transparent/not defined. So no need of a merge mask
     */
-   public static final int TBLR_FLAG_5_TRANS_TOP     = 1 << 4;
+   public static final int TBLR_FLAG_5_TRANS_TOP   = 1 << 4;
 
    /**
-    * 1 bit to tell {@link MergeMaskFactory} that a {@link C#POS_1_BOT} is defined.
+    * 1 bit to tell {@link MergeFactory} that a {@link C#POS_1_BOT} is defined.
     */
-   public static final int TBLR_FLAG_6_TRANS_BOT     = 1 << 5;
+   public static final int TBLR_FLAG_6_TRANS_BOT   = 1 << 5;
 
-   public static final int TBLR_FLAG_7_TRANS_LEFT    = 1 << 6;
+   public static final int TBLR_FLAG_7_TRANS_LEFT  = 1 << 6;
 
-   public static final int TBLR_FLAG_8_TRANS_RIGHT   = 1 << 7;
+   public static final int TBLR_FLAG_8_TRANS_RIGHT = 1 << 7;
 
    public static final int TBLR_OFFSET_01_FLAG     = A_OBJECT_BASIC_SIZE;
 

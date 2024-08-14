@@ -10,9 +10,9 @@ import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
 import pasa.cbentley.layouter.src4.engine.ByteObjectLayoutDelegate;
 import pasa.cbentley.layouter.src4.engine.LayouterEngine;
 import pasa.cbentley.layouter.src4.engine.Zer2DArea;
-import pasa.cbentley.layouter.src4.tech.ITechLayout;
 import pasa.cbentley.layouter.src4.tech.IBOPozer;
 import pasa.cbentley.layouter.src4.tech.IBOSizer;
+import pasa.cbentley.layouter.src4.tech.ITechLayout;
 
 /**
  * 2D UI object injectable in the Layouter engine.
@@ -365,8 +365,6 @@ public interface ILayoutable extends IStringable {
     */
    public void repaintLayoutable();
 
-   //#enddebug
-
    /**
     * Completely change the area of this {@link ILayoutable}
     * 
@@ -411,4 +409,5 @@ public interface ILayoutable extends IStringable {
     * @return 
     */
    public String toStringName();
+   //#enddebug
 }

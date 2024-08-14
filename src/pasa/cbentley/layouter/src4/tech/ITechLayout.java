@@ -70,7 +70,7 @@ public interface ITechLayout extends ITech {
    /**
     * implicit width or height.
     */
-   public static final int CTX_0_                                = 0;
+   public static final int CTX_0_NONE                            = 0;
 
    /**
     * Use the width of the etalon.
@@ -81,6 +81,8 @@ public interface ITechLayout extends ITech {
     * use the height.
     */
    public static final int CTX_2_HEIGHT                          = 2;
+
+   public static final int CTX_3_BOTH                            = 3;
 
    /**
     * 
@@ -195,7 +197,7 @@ public interface ITechLayout extends ITech {
     * <li> When computing a height size, returns  the height of the etalon
     * 
     */
-   public static final int ET_FUN_0_CTX                          = 0;
+   public static final int ET_FUN_00_CTX                         = 0;
 
    /**
     * Take the width of the contextual etalon.
@@ -204,42 +206,46 @@ public interface ITechLayout extends ITech {
     * When etalon is {@link ITechLayout#ETALON_1_VIEWCONTEXT},
     * the etalon is the width of the View.
     */
-   public static final int ET_FUN_1_WIDTH                        = 1;
+   public static final int ET_FUN_01_WIDTH                       = 1;
 
    /**
     * 
     */
-   public static final int ET_FUN_2_HEIGHT                       = 2;
+   public static final int ET_FUN_02_HEIGHT                      = 2;
 
    /**
     * Take the minimum between W and H of etalon.
     */
-   public static final int ET_FUN_3_MIN                          = 3;
+   public static final int ET_FUN_03_MIN                         = 3;
 
    /**
     * Take the maximum between W and H.
     */
-   public static final int ET_FUN_4_MAX                          = 4;
+   public static final int ET_FUN_04_MAX                         = 4;
 
    /**
     * Add w and h.
     */
-   public static final int ET_FUN_5_ADD                          = 5;
+   public static final int ET_FUN_05_ADD                         = 5;
 
    /**
     * Take the difference between w and h.
     */
-   public static final int ET_FUN_6_DIFF                         = 6;
+   public static final int ET_FUN_06_DIFF                        = 6;
 
    /**
     * Inverse of context.
     */
-   public static final int ET_FUN_7_CTX_INVERSE                  = 7;
+   public static final int ET_FUN_07_CTX_INVERSE                 = 7;
 
    /**
     * things are computed by the delegate
     */
-   public static final int ET_FUN_8_DELEGATE                     = 8;
+   public static final int ET_FUN_08_DELEGATE                    = 8;
+
+   public static final int ET_FUN_10_MIN_HALF                    = 10;
+
+   public static final int ET_FUN_11_MAX_HALF                    = 11;
 
    /**
     * Etalon link type {@link IBOSizer#SIZER_OFFSET_05_ET_PROPERTY1}.

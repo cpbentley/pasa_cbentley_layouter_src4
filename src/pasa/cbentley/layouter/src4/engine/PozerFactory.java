@@ -11,16 +11,15 @@ import pasa.cbentley.core.src4.interfaces.C;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.core.src4.logging.ToStringStaticC;
 import pasa.cbentley.layouter.src4.ctx.IBOTypesLayout;
-import pasa.cbentley.layouter.src4.ctx.LayoutException;
 import pasa.cbentley.layouter.src4.ctx.LayouterCtx;
 import pasa.cbentley.layouter.src4.ctx.ToStringStaticLayout;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutDelegate;
 import pasa.cbentley.layouter.src4.interfaces.ILayoutable;
-import pasa.cbentley.layouter.src4.tech.ITechCodedSizer;
-import pasa.cbentley.layouter.src4.tech.ITechLayout;
 import pasa.cbentley.layouter.src4.tech.IBOLinker;
 import pasa.cbentley.layouter.src4.tech.IBOPozer;
 import pasa.cbentley.layouter.src4.tech.IBOSizer;
+import pasa.cbentley.layouter.src4.tech.ITechCodedSizer;
+import pasa.cbentley.layouter.src4.tech.ITechLayout;
 
 /**
  * 
@@ -64,22 +63,6 @@ public class PozerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       bo.setFlag(POS_OFFSET_01_FLAG, POS_FLAG_1_SIZER, true);
       bo.addSub(sizer);
       return bo;
-   }
-
-   /**
-    * 
-    * @param pozer
-    * @param posFunction
-    * @param sizer
-    * @return
-    */
-   public ByteObject setPoserWithSizer(ByteObject pozer, int posFunction, ByteObject sizer) {
-      pozer.checkType(FTYPE_4_POSITION);
-      sizer.checkType(FTYPE_3_SIZER);
-      pozer.set1(POS_OFFSET_10_SIZER_FUN1, posFunction);
-      pozer.setFlag(POS_OFFSET_01_FLAG, POS_FLAG_1_SIZER, true);
-      pozer.addSub(sizer);
-      return pozer;
    }
 
    /**
@@ -135,23 +118,6 @@ public class PozerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       return pozerAtPixel0Lazy;
    }
 
-   /**
-    * The delegate decides a point
-    * @param delegate
-    * @return
-    */
-   public ByteObject getPozerDelegatePoint(ILayoutDelegate delegate, int alignSrc) {
-      ByteObject bo = getBOFactory().createByteObject(FTYPE_4_POSITION, POS_BASIC_SIZE);
-      bo.set1(POS_OFFSET_02_ETALON1, POS_ETALON_0_POINT);
-      bo.set1(POS_OFFSET_07_ANCHOR_POZEE1, alignSrc);
-      //special value for delegate call
-      bo.set4(POS_OFFSET_03_ANCHOR_ETALON_POINT_VALUE4, ITechLayout.DELEGATE_POINT_VALUE);
-      
-      ByteObjectLayoutDelegate delegateBO = new ByteObjectLayoutDelegate(lc.getBOC(), delegate);
-      bo.addByteObject(delegateBO);
-
-      return bo;
-   }
    /**
     * Position the top of the pozee at the pixel value
     * Position the start of the pozee at the pixel value.
@@ -253,12 +219,20 @@ public class PozerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
    }
 
    /**
-    * Position end of the end of a {@link ILayoutable} dynamically provided by the {@link ILayoutDelegate}
+    * The delegate decides a point
     * @param delegate
     * @return
     */
-   public ByteObject getPozerEndToEndDelegate(ILayoutDelegate delegate) {
-      ByteObject bo = getPozerOnDelegateAt(delegate, C.LOGIC_3_BOTTOM_RIGHT, C.LOGIC_3_BOTTOM_RIGHT, ITechLayout.VIEW_STYLE_00_VIEW_FULL);
+   public ByteObject getPozerDelegatePoint(ILayoutDelegate delegate, int alignSrc) {
+      ByteObject bo = getBOFactory().createByteObject(FTYPE_4_POSITION, POS_BASIC_SIZE);
+      bo.set1(POS_OFFSET_02_ETALON1, POS_ETALON_0_POINT);
+      bo.set1(POS_OFFSET_07_ANCHOR_POZEE1, alignSrc);
+      //special value for delegate call
+      bo.set4(POS_OFFSET_03_ANCHOR_ETALON_POINT_VALUE4, ITechLayout.DELEGATE_POINT_VALUE);
+
+      ByteObjectLayoutDelegate delegateBO = new ByteObjectLayoutDelegate(lc.getBOC(), delegate);
+      bo.addByteObject(delegateBO);
+
       return bo;
    }
 
@@ -279,6 +253,16 @@ public class PozerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
     */
    public ByteObject getPozerEndToEnd() {
       return getPozerOnParentAt(C.LOGIC_3_BOTTOM_RIGHT, C.LOGIC_3_BOTTOM_RIGHT, ITechLayout.VIEW_STYLE_00_VIEW_FULL);
+   }
+
+   /**
+    * Position end of the end of a {@link ILayoutable} dynamically provided by the {@link ILayoutDelegate}
+    * @param delegate
+    * @return
+    */
+   public ByteObject getPozerEndToEndDelegate(ILayoutDelegate delegate) {
+      ByteObject bo = getPozerOnDelegateAt(delegate, C.LOGIC_3_BOTTOM_RIGHT, C.LOGIC_3_BOTTOM_RIGHT, ITechLayout.VIEW_STYLE_00_VIEW_FULL);
+      return bo;
    }
 
    public ByteObject getPozerEndToEndVC() {
@@ -375,6 +359,30 @@ public class PozerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
    }
 
    /**
+    * The anchor is decided dynamically by the {@link ILayoutDelegate}
+    * @param delegate
+    * @param anchorSrc
+    * @param anchorDest
+    * @param atStyle
+    * @return
+    */
+   public ByteObject getPozerOnDelegateAt(ILayoutDelegate delegate, int anchorSrc, int anchorDest, int atStyle) {
+      ByteObject bo = getBOFactory().createByteObject(FTYPE_4_POSITION, POS_BASIC_SIZE);
+      bo.set1(POS_OFFSET_02_ETALON1, IBOPozer.POS_ETALON_7_DELEGATE);
+      bo.set1(POS_OFFSET_04_ANCHOR_ETALON1, anchorDest);
+      bo.set1(POS_OFFSET_05_ANCHOR_ETALON_STRUCT1, ITechLayout.VIEW_STRUCT_00_ALL_VISIBLE);
+      bo.set1(POS_OFFSET_06_ANCHOR_ETALON_STYLE1, atStyle);
+      bo.set1(POS_OFFSET_07_ANCHOR_POZEE1, anchorSrc);
+      bo.set1(POS_OFFSET_08_ANCHOR_POZEE_STRUCT1, ITechLayout.VIEW_STRUCT_00_ALL_VISIBLE);
+      bo.set1(POS_OFFSET_09_ANCHOR_POZEE_STYLE1, atStyle);
+
+      ByteObjectLayoutDelegate delegateBO = new ByteObjectLayoutDelegate(lc.getBOC(), delegate);
+      bo.addByteObject(delegateBO);
+
+      return bo;
+   }
+
+   /**
     * At located where on the parent style element
     * <li> {@link ITechLayout#VIEW_STYLE_00_VIEW_FULL}
     * <li> {@link ITechLayout#ET_DRW_11_BORDER}
@@ -408,30 +416,6 @@ public class PozerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       bo.set1(POS_OFFSET_07_ANCHOR_POZEE1, anchorSrc);
       bo.set1(POS_OFFSET_08_ANCHOR_POZEE_STRUCT1, ITechLayout.VIEW_STRUCT_00_ALL_VISIBLE);
       bo.set1(POS_OFFSET_09_ANCHOR_POZEE_STYLE1, atStyle);
-      return bo;
-   }
-
-   /**
-    * The anchor is decided dynamically by the {@link ILayoutDelegate}
-    * @param delegate
-    * @param anchorSrc
-    * @param anchorDest
-    * @param atStyle
-    * @return
-    */
-   public ByteObject getPozerOnDelegateAt(ILayoutDelegate delegate, int anchorSrc, int anchorDest, int atStyle) {
-      ByteObject bo = getBOFactory().createByteObject(FTYPE_4_POSITION, POS_BASIC_SIZE);
-      bo.set1(POS_OFFSET_02_ETALON1, IBOPozer.POS_ETALON_7_DELEGATE);
-      bo.set1(POS_OFFSET_04_ANCHOR_ETALON1, anchorDest);
-      bo.set1(POS_OFFSET_05_ANCHOR_ETALON_STRUCT1, ITechLayout.VIEW_STRUCT_00_ALL_VISIBLE);
-      bo.set1(POS_OFFSET_06_ANCHOR_ETALON_STYLE1, atStyle);
-      bo.set1(POS_OFFSET_07_ANCHOR_POZEE1, anchorSrc);
-      bo.set1(POS_OFFSET_08_ANCHOR_POZEE_STRUCT1, ITechLayout.VIEW_STRUCT_00_ALL_VISIBLE);
-      bo.set1(POS_OFFSET_09_ANCHOR_POZEE_STYLE1, atStyle);
-
-      ByteObjectLayoutDelegate delegateBO = new ByteObjectLayoutDelegate(lc.getBOC(), delegate);
-      bo.addByteObject(delegateBO);
-
       return bo;
    }
 
@@ -583,12 +567,21 @@ public class PozerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
 
    /**
     * 
-    *
-    * @param object 
-    * @param viewStruct 
-    * @param viewStyle 
-    * @return 
+    * @param pozer
+    * @param posFunction
+    * @param sizer
+    * @return
     */
+   public ByteObject setPoserWithSizer(ByteObject pozer, int posFunction, ByteObject sizer) {
+      pozer.checkType(FTYPE_4_POSITION);
+      sizer.checkType(FTYPE_3_SIZER);
+      pozer.set1(POS_OFFSET_10_SIZER_FUN1, posFunction);
+      pozer.setFlag(POS_OFFSET_01_FLAG, POS_FLAG_1_SIZER, true);
+      pozer.addSub(sizer);
+      return pozer;
+   }
+
+   //#mdebug
    public String toStringAnchorStructStyle(String object, int viewStruct, int viewStyle) {
       if (viewStruct == ITechLayout.VIEW_STRUCT_00_ALL_VISIBLE && viewStyle == ITechLayout.VIEW_STYLE_00_VIEW_FULL) {
          return object;
@@ -1035,5 +1028,5 @@ public class PozerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
    private void toStringPrivatePozerY(ByteObject pozer, Dctx dc) {
       toStringPrivatePozerXY(pozer, dc, false);
    }
-
+   //#enddebug
 }

@@ -150,19 +150,11 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return 0;
    }
 
-   public int codedSizeDecodeW(ByteObject bo, int index, int w, int h) {
-      return codedSizeDecode(bo, index, w, h, CTX_1_WIDTH);
-   }
-
-   public int codedSizeDecodeH(ByteObject bo, int index, int w, int h) {
-      return codedSizeDecode(bo, index, w, h, CTX_2_HEIGHT);
-   }
-
    /**
     * 
     *
-    * @param bo 
-    * @param index 
+    * @param bo The {@link ByteObject} from which to read the 4 bytes value
+    * @param index the offset at which to read the 4 bytes value.
     * @param w 
     * @param h 
     * @param ctx 
@@ -226,6 +218,10 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return codedSizeDecode(value, sc, ctx);
    }
 
+   public int codedSizeDecodeH(ByteObject bo, int index, int w, int h) {
+      return codedSizeDecode(bo, index, w, h, CTX_2_HEIGHT);
+   }
+
    /**
     * 
     *
@@ -235,6 +231,10 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     */
    public int codedSizeDecodeH(int codedsize, ILayoutable sc) {
       return codedSizeDecode(codedsize, sc, CTX_2_HEIGHT);
+   }
+
+   public int codedSizeDecodeW(ByteObject bo, int index, int w, int h) {
+      return codedSizeDecode(bo, index, w, h, CTX_1_WIDTH);
    }
 
    /**
@@ -282,13 +282,13 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     *  </ol>
     *  <li> Etalon Fun 3 bits
     *  <ol>
-    *  <li>{@link ITechLayout#ET_FUN_0_CTX}
-    *  <li>{@link ITechLayout#ET_FUN_1_WIDTH}
-    *  <li>{@link ITechLayout#ET_FUN_2_HEIGHT}
-    *  <li>{@link ITechLayout#ET_FUN_3_MIN}
-    *  <li>{@link ITechLayout#ET_FUN_4_MAX}
-    *  <li>{@link ITechLayout#ET_FUN_5_ADD}
-    *  <li>{@link ITechLayout#ET_FUN_6_DIFF}
+    *  <li>{@link ITechLayout#ET_FUN_00_CTX}
+    *  <li>{@link ITechLayout#ET_FUN_01_WIDTH}
+    *  <li>{@link ITechLayout#ET_FUN_02_HEIGHT}
+    *  <li>{@link ITechLayout#ET_FUN_03_MIN}
+    *  <li>{@link ITechLayout#ET_FUN_04_MAX}
+    *  <li>{@link ITechLayout== ET_FUN_05_D}
+    *  <li>{@link ITechLayout#ET_FUN_06_DIFF}
     *  <li> 
     *  </ol>
     *  <li> 4 Bits for Function Function
@@ -323,11 +323,6 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       return code + modV + etalonV + valueV + etalonFunV + etalonTypeV;
    }
 
-   public int codedSizeEncodeRatioDefEtalon(int ratio) {
-      // TODO Auto-generated method stub
-      return 0;
-   }
-
    public String codedSizeToString1Line(int codedsize) {
       String s = null;
       if (!CodedUtils.isCoded(codedsize)) {
@@ -352,7 +347,9 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
 
    /**
     * 
-    *
+    * <li> {@link ITechLayout#CTX_1_WIDTH}
+    * <li> {@link ITechLayout#CTX_2_HEIGHT}
+    * 
     * @param fun 
     * @param ctx 
     * @param sizer 
@@ -361,38 +358,54 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     */
    private int computeEtalonInPixels(ILayoutable ctx, ByteObject sizer, int ctxType) {
       int fun = sizer.get1(SIZER_OFFSET_06_ET_FUN1);
-      if (fun == ET_FUN_0_CTX) {
+      if (fun == ET_FUN_00_CTX) {
          //context... caller knows what it is supposed to be
          if (ctxType == CTX_1_WIDTH) {
             return getSizeEtalonW(sizer, ctx);
          } else if (ctxType == CTX_2_HEIGHT) {
             return getSizeEtalonH(sizer, ctx);
          } else {
+            //#debug
             toDLogMalformedSizer(sizer, "Unknown Sizer ctxType " + ctxType);
          }
-      } else if (fun == ET_FUN_1_WIDTH) {
+      } else if (fun == ET_FUN_01_WIDTH) {
          return getSizeEtalonW(sizer, ctx);
-      } else if (fun == ET_FUN_2_HEIGHT) {
+      } else if (fun == ET_FUN_02_HEIGHT) {
          return getSizeEtalonH(sizer, ctx);
-      } else if (fun == ET_FUN_3_MIN) {
+      } else if (fun == ET_FUN_03_MIN) {
          int v = Math.min(getSizeEtalonW(sizer, ctx), getSizeEtalonH(sizer, ctx));
          return v;
-      } else if (fun == ET_FUN_4_MAX) {
+      } else if (fun == ET_FUN_04_MAX) {
          int v = Math.max(getSizeEtalonW(sizer, ctx), getSizeEtalonH(sizer, ctx));
          return v;
-      } else if (fun == ET_FUN_5_ADD) {
+      } else if (fun == ET_FUN_05_ADD) {
          return getSizeEtalonW(sizer, ctx) + getSizeEtalonH(sizer, ctx);
-      } else if (fun == ET_FUN_6_DIFF) {
+      } else if (fun == ET_FUN_06_DIFF) {
          return Math.abs(getSizeEtalonW(sizer, ctx) - getSizeEtalonH(sizer, ctx));
-      } else if (fun == ET_FUN_7_CTX_INVERSE) {
+      } else if (fun == ET_FUN_07_CTX_INVERSE) {
          if (ctxType == CTX_1_WIDTH) {
             return getSizeEtalonH(sizer, ctx);
          } else if (ctxType == CTX_2_HEIGHT) {
             return getSizeEtalonW(sizer, ctx);
          } else {
+            //#debug
             toDLogMalformedSizer(sizer, "Unknown Sizer ctxType " + ctxType);
          }
-      } else {
+      } else if (fun == ET_FUN_08_DELEGATE) {
+         int ew = getSizeEtalonW(sizer, ctx);
+         int eh = getSizeEtalonH(sizer, ctx);
+         int v = ctx.getLayoutDelegate().getDelegateEtalonFun(sizer, ctx, ew, eh);
+         return v;
+      } else if (fun == ET_FUN_10_MIN_HALF) {
+         int v = Math.min(getSizeEtalonW(sizer, ctx), getSizeEtalonH(sizer, ctx));
+         return v / 2;
+      } else if (fun == ET_FUN_11_MAX_HALF) {
+         int v = Math.max(getSizeEtalonW(sizer, ctx), getSizeEtalonH(sizer, ctx));
+         return v / 2;
+      }
+
+      else {
+         //#debug
          toDLogMalformedSizer(sizer, "Unknown Sizer Etalon Function " + fun);
       }
       return getSizeEtalonW(sizer, ctx);
@@ -432,13 +445,28 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       }
    }
 
+   public int decode(int value, int w, int h, int ctx) {
+      if (CodedUtils.isCoded(value)) {
+         if (CodedUtils.isLinked(value)) {
+            throw new IllegalArgumentException();
+         } else {
+            LayoutableRect la = new LayoutableRect(lac, w, h);
+            return decodeCodePage(la, ctx, value);
+         }
+      } else {
+         return value;
+      }
+   }
+
    private int decodeCodePage(ILayoutable la, int ctx, int value) {
       //get the code page for decoding the value
       int codepage = CodedUtils.getCodePage(value);
       if (codepage == CodedCodePageFigure.CODE_PAGE_1) {
-         return getCodePageFigure().decode(value, la, ctx);
+         CodedCodePageFigure codePageFigure = getCodePageFigure();
+         return codePageFigure.decode(value, la, ctx);
       } else if (codepage == CodedCodePageSizer.CODE_PAGE_2) {
-         return getCodePageSizer().decode(value, la, ctx);
+         CodedCodePageSizer codePageSizer = getCodePageSizer();
+         return codePageSizer.decode(value, la, ctx);
       }
 
       throw new IllegalArgumentException("Unknown code page " + codepage);
@@ -585,18 +613,22 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
     * @return 
     */
    private int getEtalonFun(int type, int w, int h) {
-      if (type == ET_FUN_1_WIDTH) {
+      if (type == ET_FUN_01_WIDTH) {
          return w;
-      } else if (type == ET_FUN_2_HEIGHT) {
+      } else if (type == ET_FUN_02_HEIGHT) {
          return h;
-      } else if (type == ET_FUN_3_MIN) {
+      } else if (type == ET_FUN_03_MIN) {
          return Math.min(w, h);
-      } else if (type == ET_FUN_4_MAX) {
+      } else if (type == ET_FUN_04_MAX) {
          return Math.max(w, h);
-      } else if (type == ET_FUN_5_ADD) {
+      } else if (type == ET_FUN_05_ADD) {
          return w + h;
-      } else if (type == ET_FUN_6_DIFF) {
+      } else if (type == ET_FUN_06_DIFF) {
          return Math.abs(w - h);
+      } else if (type == ET_FUN_10_MIN_HALF) {
+         return Math.min(w, h) / 2;
+      } else if (type == ET_FUN_11_MAX_HALF) {
+         return Math.max(w, h) / 2;
       } else {
          //contextual or otherwise.. return w
          return w;
@@ -690,10 +722,13 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
          throw new IllegalArgumentException(message);
       }
       if (layoutableEtalon == null) {
-         String message = "null etalon (" + etalon + ") for pozer ->" + lac.getFactoryPozer().toStringPozer1Line(pozer, ctx);
-         //#debug
-         toDLog().pNull(message + " \n" + lac.getFactoryPozer().toStringPozer(pozer, ctx), layoutable, LayoutOperator.class, "getEtalonPozer", LVL_05_FINE, false);
+         String message = "null etalon (" + etalon + ") for pozer ->";
 
+         //#mdebug
+         message += lac.getFactoryPozer().toStringPozer1Line(pozer, ctx);
+         toDLog().pNull(message + " \n" + lac.getFactoryPozer().toStringPozer(pozer, ctx), layoutable, LayoutOperator.class, "getEtalonPozer", LVL_05_FINE, false);
+         //#enddebug
+         
          throw new LayoutException(lac, message);
       }
       return layoutableEtalon;
@@ -1050,6 +1085,7 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
          int val1 = getPixelSize(sizer1, layoutable, ctx);
          int val2 = getPixelSize(sizer2, layoutable, ctx);
          int fun = sizer.get1(SIZER_OFFSET_06_ET_FUN1);
+
          result = getEtalonFun(fun, val1, val2);
       } else if (mode == MODE_6_POZERS) {
          return getPixelSizePozerDistance(sizer, layoutable, ctx);
@@ -1071,8 +1107,24 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
    }
 
    /**
+    * No context. etalon Ctx function in sizer cannot be implicit
+    * @param s
+    * @param w
+    * @param h
+    * @return
+    */
+   public int getPixelSize(ByteObject s, int w, int h) {
+      LayoutableRect sc = new LayoutableRect(lac, w, h);
+      return getPixelSize(s, sc, CTX_1_WIDTH);
+   }
+
+   /**
+    *  Ctx
+    *  
+    * <li> {@link ITechLayout#CTX_0_NONE}
+    * <li> {@link ITechLayout#CTX_1_WIDTH}
+    * <li> {@link ITechLayout#CTX_2_HEIGHT}
     * 
-    *
     * @param s 
     * @param w 
     * @param h 
@@ -1754,6 +1806,17 @@ public class LayoutOperator extends BOAbstractOperator implements IBOTypesLayout
       int in = obj.addByteObject(sizer);
       int val = getEncodedIndex(in);
       obj.set4(index, val);
+   }
+
+   public ByteObject mergeSizer(ByteObject root, ByteObject merge) {
+      if (root == null) {
+         return merge;
+      }
+      if (merge == null) {
+         return root;
+      }
+      //we don't have code for incomplete sizer right now.. might in the future
+      return merge;
    }
 
    //#mdebug

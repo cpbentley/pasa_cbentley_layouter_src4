@@ -68,6 +68,15 @@ public interface ILayoutDelegate extends IStringable {
     */
    public int getDelegateSizeHeight(ByteObject sizer, ILayoutable layoutable);
 
+   /**
+    * Delegate the computation of etalon size from ew and eh
+    * @param sizer
+    * @param layoutable
+    * @param ew
+    * @param eh
+    * @return
+    */
+   public int getDelegateEtalonFun(ByteObject sizer, ILayoutable layoutable, int ew, int eh);
 
    /**
     * Delegate computes the size width of {@link ILayoutDelegate}.

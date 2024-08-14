@@ -45,7 +45,7 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
     * 
     */
    private ByteObject  sizerMatchParentCtx;
-   
+
    /**
     * 
     */
@@ -124,7 +124,7 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
     * @param value any value
     * @param etalon {@link IBOSizer#ETALON_1_VIEWCONTEXT}
     * @param etype {@link IBOSizer#ET_VIEWCONTEXT_1_APPLI}
-    * @param efun {@link IBOSizer#ET_FUN_3_MIN}
+    * @param efun {@link IBOSizer#ET_FUN_03_MIN}
     * @return 
     */
    public ByteObject getSizer(int mode, int value, int etalon, int etype, int efun) {
@@ -141,6 +141,18 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       return bo;
    }
 
+   public ByteObject getSizer(int mode, int op, int value, int etalon, int esub, int etype, int efun) {
+      ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
+      setEtalonData(bo, etalon, esub, etype, efun);
+
+      bo.set1(SIZER_OFFSET_02_MODE1, mode);
+      bo.set1(SIZER_OFFSET_10_OP_FUN1, op);
+
+      bo.set2(SIZER_OFFSET_08_FRACTION_TOP2, value);
+      bo.set2(SIZER_OFFSET_09_FRACTION_BOT2, 100);
+      return bo;
+   }
+
    public ByteObject getSizer(int mode, int etalon, int esub, int eprop, int efun, int opfun, int v1, int v2) {
       ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
       bo.set1(SIZER_OFFSET_02_MODE1, mode);
@@ -152,30 +164,6 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       bo.set2(SIZER_OFFSET_08_FRACTION_TOP2, v1);
       bo.set2(SIZER_OFFSET_09_FRACTION_BOT2, v2);
       bo.set1(SIZER_OFFSET_10_OP_FUN1, opfun);
-      return bo;
-   }
-
-   public void setEtalonData(ByteObject bo, int etalon, int esub, int etype, int efun) {
-      bo.set1(SIZER_OFFSET_03_ETALON1, etalon);
-      bo.set1(SIZER_OFFSET_04_ET_SUBTYPE1, esub);
-      bo.set1(SIZER_OFFSET_05_ET_PROPERTY1, etype);
-      bo.set1(SIZER_OFFSET_06_ET_FUN1, efun);
-   }
-
-   public void setEtalonData(ByteObject bo, int etalon, int esub, int etype, int efun, int edata) {
-      setEtalonData(bo, etalon, esub, etype, efun);
-      bo.set2(SIZER_OFFSET_07_ET_DATA2, edata);
-   }
-
-   public ByteObject getSizer(int mode, int op, int value, int etalon, int esub, int etype, int efun) {
-      ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
-      setEtalonData(bo, etalon, esub, etype, efun);
-
-      bo.set1(SIZER_OFFSET_02_MODE1, mode);
-      bo.set1(SIZER_OFFSET_10_OP_FUN1, op);
-
-      bo.set2(SIZER_OFFSET_08_FRACTION_TOP2, value);
-      bo.set2(SIZER_OFFSET_09_FRACTION_BOT2, 100);
       return bo;
    }
 
@@ -195,6 +183,15 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       return bo;
    }
 
+   public ByteObject getSizerDivide(int diviser) {
+      ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
+      setSizerFunDiv(bo, diviser);
+      bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_0_SIZEE_CTX);
+      bo.set1(SIZER_OFFSET_05_ET_PROPERTY1, SIZER_PROP_00_DRAWN);
+      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_00_CTX);
+      return bo;
+   }
+
    /**
     * Raw sizer whose value is 0
     * @return
@@ -207,6 +204,53 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
    }
 
    /**
+    * Size is the full size minus margin, border and padding.
+    *
+    * @return 
+    */
+   public ByteObject getSizerFitParentContentLazy() {
+      if (sizerMatchParentContentCtx == null) {
+         ByteObject bo = getSizerFitParentProp(SIZER_PROP_05_CONTENT);
+         sizerMatchParentContentCtx = bo;
+         sizerMatchParentContentCtx.setImmutable();
+      }
+      return sizerMatchParentContentCtx;
+   }
+
+   /**
+    * 
+    * @return
+    */
+   public ByteObject getSizerFitParentLazy() {
+      if (sizerMatchParentCtx == null) {
+         ByteObject bo = getSizerFitParentProp(SIZER_PROP_00_DRAWN);
+         sizerMatchParentCtx = bo;
+         sizerMatchParentCtx.setImmutable();
+      }
+      return sizerMatchParentCtx;
+   }
+
+   public ByteObject getSizerFitParentProp(int prop) {
+      ByteObject bo = getSizerFunEtalonDef(FUNCTION_OP_00_NONE);
+      bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_4_PARENT);
+      bo.set1(SIZER_OFFSET_05_ET_PROPERTY1, prop);
+      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_00_CTX); //when computing W, take parent's W, 
+      return bo;
+   }
+
+   public ByteObject getSizerFitViewContextLazy() {
+      if (sizerMatchViewContextCtx == null) {
+         ByteObject bo = getSizerFitParentProp(SIZER_PROP_00_DRAWN);
+         bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_1_VIEWCONTEXT);
+         bo.set1(SIZER_OFFSET_05_ET_PROPERTY1, SIZER_PROP_00_DRAWN);
+         bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_00_CTX); //when computing W, take parent's W, 
+         sizerMatchViewContextCtx = bo;
+         sizerMatchViewContextCtx.setImmutable();
+      }
+      return sizerMatchViewContextCtx;
+   }
+
+   /**
     * 
     * @return
     */
@@ -214,7 +258,7 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
       setSizerRatio1(bo, 1);
       bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_0_SIZEE_CTX);
-      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_0_CTX);
+      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_00_CTX);
       bo.set1(SIZER_OFFSET_05_ET_PROPERTY1, SIZER_PROP_03_FONT);
       return bo;
    }
@@ -228,15 +272,39 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
       setSizerRatio1(bo, 1);
       bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_2_FONT);
-      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_2_HEIGHT);
+      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_02_HEIGHT);
       bo.set1(SIZER_OFFSET_05_ET_PROPERTY1, SIZER_PROP_03_FONT);
       return bo;
    }
 
    /**
+    * A 100 ratio of the height of the given font
+    * esub
+    * 
+    * <li>{@link ITechLayout#ET_FONT_0_DEFAULT}
+    * <li>{@link ITechLayout#ET_FONT_1_DEFINED}
+    * <li>{@link ITechLayout#ET_FONT_2_DEBUG}
+    * <li>{@link ITechLayout#ET_FONT_4_TINY}
+    * <li>{@link ITechLayout#ET_FONT_5_SMALL}
+    * <li>{@link ITechLayout#ET_FONT_6_MEDIUM}
+    * <li>{@link ITechLayout#ET_FONT_7_LARGE}
+    * 
+    * @param ratio 1 to 100, 200 means 2 times the height
+    * @param esub
+    * @return
+    */
+   public ByteObject getSizerFontHeightRatio(int ratio, int esub) {
+      return getSizerRatio100(ratio, ETALON_2_FONT, esub, SIZER_PROP_03_FONT, ET_FUN_02_HEIGHT);
+   }
+
+   public ByteObject getSizerFontHeightTimes(int ratio, int esub) {
+      return getSizerRatio100(ratio, ETALON_2_FONT, esub, SIZER_PROP_03_FONT, ET_FUN_02_HEIGHT);
+   }
+
+   /**
     * Function is
-    * <li> {@link IBOSizer#ET_FUN_6_DIFF}
-    * <li> {@link IBOSizer#ET_FUN_5_ADD}.
+    * <li> {@link IBOSizer#ET_FUN_06_DIFF}
+    * <li> {@link IBOSizer#ET_FUN_05_ADD}.
     * @param sizer1 
     * @param sizer2 
     * @param function 
@@ -288,6 +356,62 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       return bo;
    }
 
+   public ByteObject getSizerFunAdd(int add) {
+      return getSizerFunEtalonDef(FUNCTION_OP_01_ADD, add);
+   }
+
+   public ByteObject getSizerFunAddDiff(int add) {
+      ByteObject bo = getSizerFunEtalonDef(FUNCTION_OP_01_ADD, add);
+      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_06_DIFF);
+      return bo;
+   }
+
+   public ByteObject getSizerFunAddMax(int add) {
+      ByteObject bo = getSizerFunEtalonDef(FUNCTION_OP_01_ADD, add);
+      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_04_MAX);
+      return bo;
+   }
+
+   public ByteObject getSizerFunDivide(int divideBy) {
+      return getSizerFunEtalonDef(FUNCTION_OP_04_DIVIDE, divideBy);
+   }
+
+   public ByteObject getSizerFunEtalonDef(int funOp) {
+      ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
+      bo.set1(SIZER_OFFSET_02_MODE1, MODE_2_FUNCTION);
+      bo.set1(SIZER_OFFSET_10_OP_FUN1, funOp);
+      return bo;
+   }
+
+   public ByteObject getSizerFunEtalonDef(int funOp, int value) {
+      ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
+      bo.set1(SIZER_OFFSET_02_MODE1, MODE_2_FUNCTION);
+      bo.set1(SIZER_OFFSET_10_OP_FUN1, funOp);
+      bo.set2(SIZER_OFFSET_08_VALUE2, value);
+      return bo;
+   }
+
+   public ByteObject getSizerFunEtalonDef(int funOp, int value1, int value2) {
+      ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
+      bo.set1(SIZER_OFFSET_02_MODE1, MODE_2_FUNCTION);
+      bo.set1(SIZER_OFFSET_10_OP_FUN1, funOp);
+      bo.set2(SIZER_OFFSET_08_VALUE2, value1);
+      bo.set2(SIZER_OFFSET_09_DATA_EXTRA2, value2);
+      return bo;
+   }
+
+   public ByteObject getSizerFunMinus(int minus) {
+      return getSizerFunEtalonDef(FUNCTION_OP_02_MINUS, minus);
+   }
+
+   public ByteObject getSizerFunMultiply(int x) {
+      return getSizerFunEtalonDef(FUNCTION_OP_03_MULTIPLY, x);
+   }
+
+   public ByteObject getSizerFunXforY(int x, int y) {
+      return getSizerFunEtalonDef(FUNCTION_OP_06_X_FOR_Y, x, y);
+   }
+
    /**
     * Default etalon {@link ITechLayout#ETALON_0_SIZEE_CTX} with logic property {@link ITechLayout#SIZER_PROP_02_UNIT_LOGIC}
     * 
@@ -300,57 +424,10 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       bo.set1(SIZER_OFFSET_10_OP_FUN1, FUNCTION_OP_05_RATIO);
       bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_0_SIZEE_CTX);
       bo.set1(SIZER_OFFSET_05_ET_PROPERTY1, SIZER_PROP_02_UNIT_LOGIC);
-      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_0_CTX);
+      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_00_CTX);
       bo.set2(SIZER_OFFSET_08_FRACTION_TOP2, times);
       bo.set2(SIZER_OFFSET_09_FRACTION_BOT2, 1);
       return bo;
-   }
-
-   /**
-    * 
-    * @return
-    */
-   public ByteObject getSizerFitParentLazy() {
-      if (sizerMatchParentCtx == null) {
-         ByteObject bo = getSizerFitParentProp(SIZER_PROP_00_DRAWN);
-         sizerMatchParentCtx = bo;
-         sizerMatchParentCtx.setImmutable();
-      }
-      return sizerMatchParentCtx;
-   }
-
-   public ByteObject getSizerFitViewContextLazy() {
-      if (sizerMatchViewContextCtx == null) {
-         ByteObject bo = getSizerFitParentProp(SIZER_PROP_00_DRAWN);
-         bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_1_VIEWCONTEXT);
-         bo.set1(SIZER_OFFSET_05_ET_PROPERTY1, SIZER_PROP_00_DRAWN);
-         bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_0_CTX); //when computing W, take parent's W, 
-         sizerMatchViewContextCtx = bo;
-         sizerMatchViewContextCtx.setImmutable();
-      }
-      return sizerMatchViewContextCtx;
-   }
-
-   public ByteObject getSizerFitParentProp(int prop) {
-      ByteObject bo = getSizerFunEtalonDef(FUNCTION_OP_00_NONE);
-      bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_4_PARENT);
-      bo.set1(SIZER_OFFSET_05_ET_PROPERTY1, prop);
-      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_0_CTX); //when computing W, take parent's W, 
-      return bo;
-   }
-
-   /**
-    * Size is the full size minus margin, border and padding.
-    *
-    * @return 
-    */
-   public ByteObject getSizerFitParentContentLazy() {
-      if (sizerMatchParentContentCtx == null) {
-         ByteObject bo = getSizerFitParentProp(SIZER_PROP_05_CONTENT);
-         sizerMatchParentContentCtx = bo;
-         sizerMatchParentContentCtx.setImmutable();
-      }
-      return sizerMatchParentContentCtx;
    }
 
    /**
@@ -397,7 +474,7 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       ByteObject bo = getSizerFunEtalonDef(FUNCTION_OP_00_NONE);
 
       bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_4_PARENT);
-      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_0_CTX);
+      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_00_CTX);
       bo.set1(SIZER_OFFSET_05_ET_PROPERTY1, SIZER_PROP_05_CONTENT);
 
       ByteObject sizerPref = getSizerPref(bo);
@@ -417,7 +494,7 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       ByteObject bo = getSizerFunEtalonDef(FUNCTION_OP_00_NONE);
       bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_1_VIEWCONTEXT);
       bo.set1(SIZER_OFFSET_04_ET_SUBTYPE1, ET_VIEWCONTEXT_0_ROOT);
-      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_0_CTX);
+      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_00_CTX);
       bo.set1(SIZER_OFFSET_05_ET_PROPERTY1, SIZER_PROP_00_DRAWN);
       return bo;
    }
@@ -491,10 +568,19 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
       setSizerRatio100(bo, ratioValue);
       bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_7_DELEGATE);
-      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_0_CTX);
+      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_00_CTX);
       bo.set1(SIZER_OFFSET_05_ET_PROPERTY1, SIZER_PROP_00_DRAWN);
       ByteObjectLayoutable boLayoutable = new ByteObjectLayoutable(lac.getBOC(), etalon);
       bo.addByteObject(boLayoutable);
+      return bo;
+   }
+
+   public ByteObject getSizerRatio100(int ratio) {
+      ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
+      setSizerRatio100(bo, ratio);
+      bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_0_SIZEE_CTX);
+      bo.set1(SIZER_OFFSET_05_ET_PROPERTY1, SIZER_PROP_00_DRAWN);
+      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_00_CTX);
       return bo;
    }
 
@@ -508,16 +594,7 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       setSizerRatio100(bo, ratio);
       bo.set1(SIZER_OFFSET_03_ETALON1, etalon);
       bo.set1(SIZER_OFFSET_05_ET_PROPERTY1, SIZER_PROP_00_DRAWN);
-      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_0_CTX);
-      return bo;
-   }
-
-   public ByteObject getSizerRatio100(int ratio) {
-      ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
-      setSizerRatio100(bo, ratio);
-      bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_0_SIZEE_CTX);
-      bo.set1(SIZER_OFFSET_05_ET_PROPERTY1, SIZER_PROP_00_DRAWN);
-      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_0_CTX);
+      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_00_CTX);
       return bo;
    }
 
@@ -525,7 +602,7 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
     * 
     * @param ratioValue
     * @param etalon
-    * @param efun {@link IBOSizer#SIZER_OFFSET_06_ET_FUN1} {@link ITechLayout#ET_FUN_0_CTX}
+    * @param efun {@link IBOSizer#SIZER_OFFSET_06_ET_FUN1} {@link ITechLayout#ET_FUN_00_CTX}
     * @param etalonType
     * @return
     */
@@ -548,12 +625,37 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       return bo;
    }
 
-   public ByteObject getSizerRatioTimes(int timesValue, int etalon, int esub, int eprop, int efun) {
+   /**
+    * Def etalon
+    * <li> {@link ITechLayout#ETALON_0_SIZEE_CTX}
+    * <li> {@link ITechLayout#ET_FUN_00_CTX}
+    * <li> {@link ITechLayout#SIZER_PROP_00_DRAWN}
+    * @param ratio100
+    * @return
+    */
+   public ByteObject getSizerRatio100Def(int ratio100) {
+      return null;
+   }
+
+   /**
+    * Chooses which etalon dimension to use 
+    * <li> {@link ITechLayout#ET_FUN_00_CTX}
+    * <li> {@link ITechLayout#ET_FUN_01_WIDTH}
+    * <li> {@link ITechLayout#ET_FUN_02_HEIGHT}
+    * <li> {@link ITechLayout#ET_FUN_03_MIN}
+    * <li> {@link ITechLayout#ET_FUN_04_MAX}
+    * <li> {@link ITechLayout#ET_FUN_05_ADD}
+    * <li> {@link ITechLayout#ET_FUN_06_DIFF}
+    * <li> {@link ITechLayout#ET_FUN_07_CTX_INVERSE}
+    * @param ratio
+    * @param efun
+    * @return
+    */
+   public ByteObject getSizerRatio100EtalonFun(int ratio, int efun) {
       ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
-      setSizerRatioTimes(bo, timesValue);
-      bo.set1(SIZER_OFFSET_03_ETALON1, etalon);
-      bo.set1(SIZER_OFFSET_04_ET_SUBTYPE1, esub);
-      bo.set1(SIZER_OFFSET_05_ET_PROPERTY1, eprop);
+      setSizerRatio100(bo, ratio);
+      bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_0_SIZEE_CTX);
+      bo.set1(SIZER_OFFSET_05_ET_PROPERTY1, SIZER_PROP_00_DRAWN);
       bo.set1(SIZER_OFFSET_06_ET_FUN1, efun);
       return bo;
    }
@@ -566,7 +668,7 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
       bo.set1(SIZER_OFFSET_02_MODE1, MODE_0_RAW_UNITS);
       bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_0_SIZEE_CTX);
-      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_0_CTX); //when computing w, use pw
+      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_00_CTX); //when computing w, use pw
       bo.set1(SIZER_OFFSET_05_ET_PROPERTY1, SIZER_PROP_01_PREFERRED); //when computing w, use pw
       setSizerRatio100(bo, percent);
       return bo;
@@ -596,7 +698,7 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
    }
 
    /**
-    * with {@link ITechLayout#ET_FUN_0_CTX}
+    * with {@link ITechLayout#ET_FUN_00_CTX}
     * so that we computing width, it takes the width
     * @param ratioValue
     * @return
@@ -609,7 +711,7 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
       setSizerRatio100(bo, ratioValue);
       bo.set1(SIZER_OFFSET_03_ETALON1, etalon);
-      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_1_WIDTH);
+      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_01_WIDTH);
       bo.set1(SIZER_OFFSET_05_ET_PROPERTY1, SIZER_PROP_00_DRAWN);
       return bo;
    }
@@ -626,9 +728,19 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       bo.set1(SIZER_OFFSET_02_MODE1, MODE_2_FUNCTION);
       bo.set1(SIZER_OFFSET_10_OP_FUN1, FUNCTION_OP_05_RATIO);
       bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_0_SIZEE_CTX);
-      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_7_CTX_INVERSE);
+      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_07_CTX_INVERSE);
       bo.set2(SIZER_OFFSET_08_FRACTION_TOP2, fracTop);
       bo.set2(SIZER_OFFSET_09_FRACTION_BOT2, fracBot);
+      return bo;
+   }
+
+   public ByteObject getSizerRatioTimes(int timesValue, int etalon, int esub, int eprop, int efun) {
+      ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
+      setSizerRatioTimes(bo, timesValue);
+      bo.set1(SIZER_OFFSET_03_ETALON1, etalon);
+      bo.set1(SIZER_OFFSET_04_ET_SUBTYPE1, esub);
+      bo.set1(SIZER_OFFSET_05_ET_PROPERTY1, eprop);
+      bo.set1(SIZER_OFFSET_06_ET_FUN1, efun);
       return bo;
    }
 
@@ -650,68 +762,12 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       bo.set1(SIZER_OFFSET_03_ETALON1, ETALON_1_VIEWCONTEXT);
       bo.set1(SIZER_OFFSET_04_ET_SUBTYPE1, ET_VIEWCONTEXT_1_APPLI);
       bo.set1(SIZER_OFFSET_05_ET_PROPERTY1, SIZER_PROP_00_DRAWN);
-      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_0_CTX);
+      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_00_CTX);
       return bo;
    }
 
    public ByteObject getSizerXPixelForYPixel(int x, int y, int efun) {
       return getSizerXPixelForYPixel(x, y, ETALON_0_SIZEE_CTX, SIZER_PROP_00_DRAWN, efun);
-   }
-
-   public ByteObject getSizerFunAddMax(int add) {
-      ByteObject bo = getSizerFunEtalonDef(FUNCTION_OP_01_ADD, add);
-      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_4_MAX);
-      return bo;
-   }
-
-   public ByteObject getSizerFunAddDiff(int add) {
-      ByteObject bo = getSizerFunEtalonDef(FUNCTION_OP_01_ADD, add);
-      bo.set1(SIZER_OFFSET_06_ET_FUN1, ET_FUN_6_DIFF);
-      return bo;
-   }
-
-   public ByteObject getSizerFunAdd(int add) {
-      return getSizerFunEtalonDef(FUNCTION_OP_01_ADD, add);
-   }
-
-   public ByteObject getSizerFunMinus(int minus) {
-      return getSizerFunEtalonDef(FUNCTION_OP_02_MINUS, minus);
-   }
-
-   public ByteObject getSizerFunMultiply(int x) {
-      return getSizerFunEtalonDef(FUNCTION_OP_03_MULTIPLY, x);
-   }
-
-   public ByteObject getSizerFunXforY(int x, int y) {
-      return getSizerFunEtalonDef(FUNCTION_OP_06_X_FOR_Y, x, y);
-   }
-
-   public ByteObject getSizerFunEtalonDef(int funOp) {
-      ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
-      bo.set1(SIZER_OFFSET_02_MODE1, MODE_2_FUNCTION);
-      bo.set1(SIZER_OFFSET_10_OP_FUN1, funOp);
-      return bo;
-   }
-
-   public ByteObject getSizerFunEtalonDef(int funOp, int value) {
-      ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
-      bo.set1(SIZER_OFFSET_02_MODE1, MODE_2_FUNCTION);
-      bo.set1(SIZER_OFFSET_10_OP_FUN1, funOp);
-      bo.set2(SIZER_OFFSET_08_VALUE2, value);
-      return bo;
-   }
-
-   public ByteObject getSizerFunEtalonDef(int funOp, int value1, int value2) {
-      ByteObject bo = getBOFactory().createByteObject(FTYPE_3_SIZER, SIZER_BASIC_SIZE);
-      bo.set1(SIZER_OFFSET_02_MODE1, MODE_2_FUNCTION);
-      bo.set1(SIZER_OFFSET_10_OP_FUN1, funOp);
-      bo.set2(SIZER_OFFSET_08_VALUE2, value1);
-      bo.set2(SIZER_OFFSET_09_DATA_EXTRA2, value2);
-      return bo;
-   }
-
-   public ByteObject getSizerFunDivide(int divideBy) {
-      return getSizerFunEtalonDef(FUNCTION_OP_04_DIVIDE, divideBy);
    }
 
    public ByteObject getSizerXPixelForYPixel(int x, int y, int etalon, int eprop, int efun) {
@@ -753,6 +809,25 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       return zer;
    }
 
+   public void setEtalonData(ByteObject bo, int etalon, int esub, int etype, int efun) {
+      bo.set1(SIZER_OFFSET_03_ETALON1, etalon);
+      bo.set1(SIZER_OFFSET_04_ET_SUBTYPE1, esub);
+      bo.set1(SIZER_OFFSET_05_ET_PROPERTY1, etype);
+      bo.set1(SIZER_OFFSET_06_ET_FUN1, efun);
+   }
+
+   public void setEtalonData(ByteObject bo, int etalon, int esub, int etype, int efun, int edata) {
+      setEtalonData(bo, etalon, esub, etype, efun);
+      bo.set2(SIZER_OFFSET_07_ET_DATA2, edata);
+   }
+
+   public void setSizerFunDiv(ByteObject sizer, int div) {
+      sizer.set1(SIZER_OFFSET_02_MODE1, MODE_2_FUNCTION);
+      sizer.set1(SIZER_OFFSET_10_OP_FUN1, FUNCTION_OP_04_DIVIDE);
+      sizer.set2(SIZER_OFFSET_08_FRACTION_TOP2, div);
+      sizer.set2(SIZER_OFFSET_09_FRACTION_BOT2, 0);
+   }
+
    /**
     * 
     *
@@ -785,12 +860,7 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       sizer.set2(SIZER_OFFSET_08_FRACTION_TOP2, times);
    }
 
-   /**
-    * 
-    *
-    * @param sizer 
-    * @param dc 
-    */
+   //#mdebug
    public void toString1Line(ByteObject sizer, Dctx dc) {
       dc.root(sizer, "Sizer");
       if (dc.isCompact()) {
@@ -919,40 +989,5 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
       String strFun = ToStringStaticLayout.toStringFun(fun);
       dc.nlVar("fun", strFun);
    }
-
-   /**
-    * Def etalon
-    * <li> {@link ITechLayout#ETALON_0_SIZEE_CTX}
-    * <li> {@link ITechLayout#ET_FUN_0_CTX}
-    * <li> {@link ITechLayout#SIZER_PROP_00_DRAWN}
-    * @param ratio100
-    * @return
-    */
-   public ByteObject getSizerRatio100Def(int ratio100) {
-      return null;
-   }
-
-   /**
-    * A 100 ratio of the height of the given font
-    * esub
-    * 
-    * <li>{@link ITechLayout#ET_FONT_0_DEFAULT}
-    * <li>{@link ITechLayout#ET_FONT_1_DEFINED}
-    * <li>{@link ITechLayout#ET_FONT_2_DEBUG}
-    * <li>{@link ITechLayout#ET_FONT_4_TINY}
-    * <li>{@link ITechLayout#ET_FONT_5_SMALL}
-    * <li>{@link ITechLayout#ET_FONT_6_MEDIUM}
-    * <li>{@link ITechLayout#ET_FONT_7_LARGE}
-    * 
-    * @param ratio 1 to 100, 200 means 2 times the height
-    * @param esub
-    * @return
-    */
-   public ByteObject getSizerFontHeightRatio(int ratio, int esub) {
-      return getSizerRatio100(ratio, ETALON_2_FONT, esub, SIZER_PROP_03_FONT, ET_FUN_2_HEIGHT);
-   }
-
-   public ByteObject getSizerFontHeightTimes(int ratio, int esub) {
-      return getSizerRatio100(ratio, ETALON_2_FONT, esub, SIZER_PROP_03_FONT, ET_FUN_2_HEIGHT);
-   }
+   //#enddebug
 }

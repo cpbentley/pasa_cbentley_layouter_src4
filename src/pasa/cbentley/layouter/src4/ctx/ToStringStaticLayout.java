@@ -240,23 +240,23 @@ public class ToStringStaticLayout extends ToStringStaticBase implements ITechLay
     */
    public static String toStringFun(int fun) {
       switch (fun) {
-         case ITechLayout.ET_FUN_0_CTX:
+         case ITechLayout.ET_FUN_00_CTX:
             return "Ctx";
-         case ITechLayout.ET_FUN_1_WIDTH:
+         case ITechLayout.ET_FUN_01_WIDTH:
             return "Width";
-         case ITechLayout.ET_FUN_2_HEIGHT:
+         case ITechLayout.ET_FUN_02_HEIGHT:
             return "Height";
-         case ITechLayout.ET_FUN_3_MIN:
+         case ITechLayout.ET_FUN_03_MIN:
             return "Min";
-         case ITechLayout.ET_FUN_4_MAX:
+         case ITechLayout.ET_FUN_04_MAX:
             return "Max";
-         case ITechLayout.ET_FUN_5_ADD:
+         case ITechLayout.ET_FUN_05_ADD:
             return "Add";
-         case ITechLayout.ET_FUN_6_DIFF:
+         case ITechLayout.ET_FUN_06_DIFF:
             return "Diff";
-         case ITechLayout.ET_FUN_7_CTX_INVERSE:
+         case ITechLayout.ET_FUN_07_CTX_INVERSE:
             return "CtxInverse";
-         case ITechLayout.ET_FUN_8_DELEGATE:
+         case ITechLayout.ET_FUN_08_DELEGATE:
             return "Delegate";
          default:
             return "Unknown " + fun;
@@ -314,19 +314,19 @@ public class ToStringStaticLayout extends ToStringStaticBase implements ITechLay
     */
    public static String toStringFunShort(int fun) {
       switch (fun) {
-         case ITechLayout.ET_FUN_0_CTX:
+         case ITechLayout.ET_FUN_00_CTX:
             return "ctx";
-         case ITechLayout.ET_FUN_1_WIDTH:
+         case ITechLayout.ET_FUN_01_WIDTH:
             return "w";
-         case ITechLayout.ET_FUN_2_HEIGHT:
+         case ITechLayout.ET_FUN_02_HEIGHT:
             return "h";
-         case ITechLayout.ET_FUN_3_MIN:
+         case ITechLayout.ET_FUN_03_MIN:
             return "min";
-         case ITechLayout.ET_FUN_4_MAX:
+         case ITechLayout.ET_FUN_04_MAX:
             return "max";
-         case ITechLayout.ET_FUN_5_ADD:
+         case ITechLayout.ET_FUN_05_ADD:
             return "+";
-         case ITechLayout.ET_FUN_6_DIFF:
+         case ITechLayout.ET_FUN_06_DIFF:
             return "-";
          default:
             return "Unknown " + fun;

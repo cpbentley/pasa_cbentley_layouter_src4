@@ -6,6 +6,8 @@ package pasa.cbentley.layouter.src4.engine;
 
 import pasa.cbentley.byteobjects.src4.core.BOAbstractFactory;
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
+import pasa.cbentley.byteobjects.src4.ctx.IBOTypesBOC;
+import pasa.cbentley.byteobjects.src4.objects.function.Function;
 import pasa.cbentley.core.src4.interfaces.C;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.core.src4.utils.BitUtils;
@@ -32,85 +34,38 @@ public class TblrFactory extends BOAbstractFactory implements IBOTblr, IBOTypesL
       this.lac = lac;
    }
 
+   private ByteObject createTBLR() {
+      return getBOFactory().createByteObject(FTYPE_2_TBLR, TBLR_BASIC_SIZE);
+   }
+
+   public ByteObject getTBLR_T_Function(ByteObject funDef) {
+      ByteObject p = createTBLR();
+      p.setFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_3_TRANS_FUN, true);
+      
+      p.setFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_5_TRANS_TOP, true);
+      p.setFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_6_TRANS_BOT, true);
+      p.setFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_7_TRANS_LEFT, true);
+      p.setFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_8_TRANS_RIGHT, true);
+      
+      p.addByteObject(funDef);
+      
+      return p;
+   }
+
    /**
-    * Called by {@link BOModuleDrawx#merge(ByteObject, ByteObject)}
+    * During a merge operation,
+    * This TBLR will imprint take the value of the root in a reverse merge.
     * 
-    * Merging can change the type of tblr
-    * @param root
-    * @param merge
+    * The merged will keep its original TBLR reference
     * @return
     */
-   public ByteObject mergeTBLR(ByteObject root, ByteObject merge) {
-      if (merge.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_4_SAME_VALUE)) {
-         return merge;
-      } else {
-         LayoutOperator layoutOperator = lac.getLayoutOperator();
-         int mergeType = merge.get1(TBLR_OFFSET_02_TYPE1);
-         if (mergeType == TYPE_0_PIXEL_VALUE) {
-            int top = -1;
-            if (!merge.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_5_TRANS_TOP)) {
-               top = layoutOperator.getTBLRValue(merge, C.POS_0_TOP);
-            } else {
-               top = layoutOperator.getTBLRValue(root, C.POS_0_TOP);
-            }
-            int bot = -1;
-            if (!merge.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_6_TRANS_BOT)) {
-               bot = layoutOperator.getTBLRValue(merge, C.POS_1_BOT);
-            } else {
-               bot = layoutOperator.getTBLRValue(root, C.POS_1_BOT);
-            }
-            int left = -1;
-            if (!merge.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_7_TRANS_LEFT)) {
-               left = layoutOperator.getTBLRValue(merge, C.POS_2_LEFT);
-            } else {
-               left = layoutOperator.getTBLRValue(root, C.POS_2_LEFT);
-            }
-            int right = -1;
-            if (!merge.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_8_TRANS_RIGHT)) {
-               right = layoutOperator.getTBLRValue(merge, C.POS_3_RIGHT);
-            } else {
-               right = layoutOperator.getTBLRValue(root, C.POS_3_RIGHT);
-            }
-            ByteObject nt = getTBLRPixel(top, bot, left, right);
-            return nt;
-         } else if (mergeType == TYPE_2_SIZER) {
-            //depends on root
-            ByteObject sizerTop = null;
-            ByteObject sizerBot = null;
-            ByteObject sizerLeft = null;
-            ByteObject sizerRight = null;
-            if (root.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_4_SAME_VALUE)) {
-               ByteObject sizer = root.getSubFirst(IBOTypesLayout.FTYPE_3_SIZER);
-               sizerTop = sizer;
-               sizerBot = sizer;
-               sizerLeft = sizer;
-               sizerRight = sizer;
-            } else {
-               sizerTop = root.getSubAtIndexNull(0);
-               sizerBot = root.getSubAtIndexNull(1);
-               sizerLeft = root.getSubAtIndexNull(2);
-               sizerRight = root.getSubAtIndexNull(3);
-
-            }
-            if (!merge.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_5_TRANS_TOP)) {
-               sizerTop = merge.getSubAtIndexNull(0);
-            }
-            if (!merge.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_6_TRANS_BOT)) {
-               sizerBot = merge.getSubAtIndexNull(1);
-            }
-            if (!merge.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_7_TRANS_LEFT)) {
-               sizerLeft = merge.getSubAtIndexNull(2);
-            }
-            if (!merge.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_8_TRANS_RIGHT)) {
-               sizerRight = merge.getSubAtIndexNull(3);
-            }
-            ByteObject result = getTBLRSizers(sizerTop, sizerBot, sizerLeft, sizerRight);
-            return result;
-         } else {
-            //other tblr don't have
-            return merge;
-         }
-      }
+   public ByteObject getTBLRCarbon() {
+      ByteObject p = createTBLR();
+      p.setFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_5_TRANS_TOP, true);
+      p.setFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_6_TRANS_BOT, true);
+      p.setFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_7_TRANS_LEFT, true);
+      p.setFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_8_TRANS_RIGHT, true);
+      return p;
    }
 
    /**
@@ -121,15 +76,24 @@ public class TblrFactory extends BOAbstractFactory implements IBOTblr, IBOTypesL
     * @return
     */
    public ByteObject getTBLRCoded(int samevalue) {
-      ByteObject p = getBOFactory().createByteObject(FTYPE_2_TBLR, TBLR_BASIC_SIZE);
+      ByteObject p = createTBLR();
       p.set1(TBLR_OFFSET_02_TYPE1, TYPE_1_CODED_VALUE);
       p.setFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_4_SAME_VALUE, true);
       p.set4(TBLR_OFFSET_03_DATA4, samevalue);
       return p;
    }
 
+   public ByteObject getTBLRIncomplete() {
+      ByteObject p = createTBLR();
+      p.setFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_5_TRANS_TOP, true);
+      p.setFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_6_TRANS_BOT, true);
+      p.setFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_7_TRANS_LEFT, true);
+      p.setFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_8_TRANS_RIGHT, true);
+      return p;
+   }
+
    public ByteObject getTBLRPixel(int samevalue) {
-      ByteObject p = getBOFactory().createByteObject(FTYPE_2_TBLR, TBLR_BASIC_SIZE);
+      ByteObject p = createTBLR();
       p.set4(TBLR_OFFSET_03_DATA4, samevalue);
       p.setFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_4_SAME_VALUE, true);
       p.set1(TBLR_OFFSET_02_TYPE1, TYPE_0_PIXEL_VALUE);
@@ -150,7 +114,7 @@ public class TblrFactory extends BOAbstractFactory implements IBOTblr, IBOTypesL
          return getTBLRCoded(top);
       }
 
-      ByteObject p = getBOFactory().createByteObject(FTYPE_2_TBLR, TBLR_BASIC_SIZE);
+      ByteObject p = createTBLR();
       p.set1(TBLR_OFFSET_02_TYPE1, TYPE_0_PIXEL_VALUE);
       int flag = 0;
       boolean useArray = false;
@@ -199,8 +163,24 @@ public class TblrFactory extends BOAbstractFactory implements IBOTblr, IBOTypesL
       return p;
    }
 
+   /**
+    * a TBLR with a unique sizer for all the elements.
+    * <br>
+    * 
+    * @param mod
+    * @param sizer defines the unit. when null. sero
+    * @return
+    */
+   public ByteObject getTBLRSizer(ByteObject sizer) {
+      ByteObject bo = createTBLR();
+      bo.setFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_4_SAME_VALUE, true);
+      bo.set1(TBLR_OFFSET_02_TYPE1, TYPE_2_SIZER);
+      bo.addSub(sizer);
+      return bo;
+   }
+
    public ByteObject getTBLRSizers(ByteObject sizerTop, ByteObject sizerBot, ByteObject sizerLeft, ByteObject sizerRight) {
-      ByteObject p = getBOFactory().createByteObject(FTYPE_2_TBLR, TBLR_BASIC_SIZE);
+      ByteObject p = createTBLR();
       p.set1(TBLR_OFFSET_02_TYPE1, TYPE_2_SIZER);
       p.setFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_5_TRANS_TOP, sizerTop == null);
       p.setFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_6_TRANS_BOT, sizerBot == null);
@@ -213,21 +193,104 @@ public class TblrFactory extends BOAbstractFactory implements IBOTblr, IBOTypesL
    }
 
    /**
-    * a TBLR with a unique sizer for all the elements.
-    * <br>
+    * Called by {@link BOModuleDrawx#merge(ByteObject, ByteObject)}
     * 
-    * @param mod
-    * @param sizer defines the unit. when null. sero
+    * Merging can change the type of tblr
+    * @param root
+    * @param merge
     * @return
     */
-   public ByteObject getTBLRSizer(ByteObject sizer) {
-      ByteObject bo = getBOFactory().createByteObject(FTYPE_2_TBLR, TBLR_BASIC_SIZE);
-      bo.setFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_4_SAME_VALUE, true);
-      bo.set1(TBLR_OFFSET_02_TYPE1, TYPE_2_SIZER);
-      bo.addSub(sizer);
-      return bo;
+   public ByteObject mergeTBLR(ByteObject root, ByteObject merge) {
+      LayoutOperator layoutOperator = lac.getLayoutOperator();
+      if (merge.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_4_SAME_VALUE)) {
+         return merge;
+      } else {
+         Function f = null;
+         if (merge.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_3_TRANS_FUN)) {
+            ByteObject fun = merge.getSubFirst(IBOTypesBOC.TYPE_021_FUNCTION);
+            f = boc.getFunctionFactory().createFunction(fun);
+         }
+         int mergeType = merge.get1(TBLR_OFFSET_02_TYPE1);
+         if (mergeType == TYPE_0_PIXEL_VALUE) {
+            int top = -1;
+            if (!merge.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_5_TRANS_TOP)) {
+               top = layoutOperator.getTBLRValue(merge, C.POS_0_TOP);
+            } else {
+               top = layoutOperator.getTBLRValue(root, C.POS_0_TOP);
+               if (f != null) {
+                  top = f.fx(top);
+               }
+            }
+            int bot = -1;
+            if (!merge.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_6_TRANS_BOT)) {
+               bot = layoutOperator.getTBLRValue(merge, C.POS_1_BOT);
+            } else {
+               bot = layoutOperator.getTBLRValue(root, C.POS_1_BOT);
+               if (f != null) {
+                  bot = f.fx(bot);
+               }
+            }
+            int left = -1;
+            if (!merge.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_7_TRANS_LEFT)) {
+               left = layoutOperator.getTBLRValue(merge, C.POS_2_LEFT);
+            } else {
+               left = layoutOperator.getTBLRValue(root, C.POS_2_LEFT);
+               if (f != null) {
+                  left = f.fx(left);
+               }
+            }
+            int right = -1;
+            if (!merge.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_8_TRANS_RIGHT)) {
+               right = layoutOperator.getTBLRValue(merge, C.POS_3_RIGHT);
+            } else {
+               right = layoutOperator.getTBLRValue(root, C.POS_3_RIGHT);
+               if (f != null) {
+                  right = f.fx(right);
+               }
+            }
+            ByteObject nt = getTBLRPixel(top, bot, left, right);
+            return nt;
+         } else if (mergeType == TYPE_2_SIZER) {
+            //depends on root
+            ByteObject sizerTop = null;
+            ByteObject sizerBot = null;
+            ByteObject sizerLeft = null;
+            ByteObject sizerRight = null;
+            if (root.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_4_SAME_VALUE)) {
+               ByteObject sizer = root.getSubFirst(IBOTypesLayout.FTYPE_3_SIZER);
+               sizerTop = sizer;
+               sizerBot = sizer;
+               sizerLeft = sizer;
+               sizerRight = sizer;
+            } else {
+               sizerTop = root.getSubAtIndexNull(0);
+               sizerBot = root.getSubAtIndexNull(1);
+               sizerLeft = root.getSubAtIndexNull(2);
+               sizerRight = root.getSubAtIndexNull(3);
+
+            }
+            if (!merge.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_5_TRANS_TOP)) {
+               sizerTop = merge.getSubAtIndexNull(0);
+            }
+            if (!merge.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_6_TRANS_BOT)) {
+               sizerBot = merge.getSubAtIndexNull(1);
+            }
+            if (!merge.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_7_TRANS_LEFT)) {
+               sizerLeft = merge.getSubAtIndexNull(2);
+            }
+            if (!merge.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_8_TRANS_RIGHT)) {
+               sizerRight = merge.getSubAtIndexNull(3);
+            }
+            ByteObject result = getTBLRSizers(sizerTop, sizerBot, sizerLeft, sizerRight);
+            return result;
+         } else {
+            //other tblr don't have
+            return merge;
+         }
+      }
    }
 
+   //#mdebug
    /**
     * Descriptive. no context needed.
     * @param bo
@@ -241,6 +304,8 @@ public class TblrFactory extends BOAbstractFactory implements IBOTblr, IBOTypesL
       if (bo.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_4_SAME_VALUE)) {
          dc.append(" Value = " + operator.getTBLRValue(bo, C.POS_0_TOP));
       } else {
+
+         dc.nl();
          dc.appendVarWithSpace("top", bo.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_5_TRANS_TOP));
          dc.appendVarWithSpace("bot", bo.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_6_TRANS_BOT));
          dc.appendVarWithSpace("left", bo.hasFlag(TBLR_OFFSET_01_FLAG, TBLR_FLAG_7_TRANS_LEFT));
@@ -252,5 +317,5 @@ public class TblrFactory extends BOAbstractFactory implements IBOTblr, IBOTypesL
          dc.append(" Right=" + operator.getTBLRValue(bo, C.POS_3_RIGHT));
       }
    }
-
+//#enddebug
 }

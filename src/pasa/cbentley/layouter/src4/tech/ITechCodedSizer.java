@@ -87,10 +87,10 @@ public interface ITechCodedSizer extends ITechCodedHeader {
 
    /**
     * 2 bits for 4 modes 
-    * <li> {@link ITechLayout#ET_FUN_0_CTX} Call must be made with {@link ISizable#codedSizeDecode(int,public static final int)}
-    * <li> {@link ITechLayout#ET_FUN_1_WIDTH}
-    * <li> {@link ITechLayout#ET_FUN_2_HEIGHT}
-    * <li> {@link ITechLayout#ET_FUN_3_MIN}
+    * <li> {@link ITechLayout#ET_FUN_00_CTX} Call must be made with {@link ISizable#codedSizeDecode(int,public static final int)}
+    * <li> {@link ITechLayout#ET_FUN_01_WIDTH}
+    * <li> {@link ITechLayout#ET_FUN_02_HEIGHT}
+    * <li> {@link ITechLayout#ET_FUN_03_MIN}
     */
    public static final int CODED_BITS_5_ETALON_FUN         = 2;
 

@@ -60,13 +60,13 @@ public interface ITechCodedFigure extends ITechCodedHeader {
     * Used to compute a value from the 2D etalon.
     * 
     * 4 bits for 7 modes 
-    * <li> {@link ITechLayout#ET_FUN_0_CTX} Call must be made with {@link ISizable#codedSizeDecode(int,public static final int)}
-    * <li> {@link ITechLayout#ET_FUN_1_WIDTH}
-    * <li> {@link ITechLayout#ET_FUN_2_HEIGHT}
-    * <li> {@link ITechLayout#ET_FUN_3_MIN}
-    * <li> {@link ITechLayout#ET_FUN_4_MAX}
-    * <li> {@link ITechLayout#ET_FUN_5_ADD}
-    * <li> {@link ITechLayout#ET_FUN_6_DIFF}.
+    * <li> {@link ITechLayout#ET_FUN_00_CTX} Call must be made with {@link ISizable#codedSizeDecode(int,public static final int)}
+    * <li> {@link ITechLayout#ET_FUN_01_WIDTH}
+    * <li> {@link ITechLayout#ET_FUN_02_HEIGHT}
+    * <li> {@link ITechLayout#ET_FUN_03_MIN}
+    * <li> {@link ITechLayout#ET_FUN_04_MAX}
+    * <li> {@link ITechLayout#ET_FUN_05_ADD}
+    * <li> {@link ITechLayout#ET_FUN_06_DIFF}.
     */
    public static final int CODED_BITS_4_ETALON_FUN               = 4;
 

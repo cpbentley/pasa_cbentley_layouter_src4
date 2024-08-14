@@ -227,14 +227,14 @@ public interface IBOSizer extends IByteObject {
     * <p>
     * 
     * <br>
-    * <li> {@link ITechLayout#ET_FUN_0_CTX}
-    * <li> {@link ITechLayout#ET_FUN_1_WIDTH}
-    * <li> {@link ITechLayout#ET_FUN_2_HEIGHT}
-    * <li> {@link ITechLayout#ET_FUN_3_MIN}
-    * <li> {@link ITechLayout#ET_FUN_4_MAX}
-    * <li> {@link ITechLayout#ET_FUN_5_ADD}
-    * <li> {@link ITechLayout#ET_FUN_6_DIFF}
-    * <li> {@link ITechLayout#ET_FUN_7_CTX_INVERSE}
+    * <li> {@link ITechLayout#ET_FUN_00_CTX}
+    * <li> {@link ITechLayout#ET_FUN_01_WIDTH}
+    * <li> {@link ITechLayout#ET_FUN_02_HEIGHT}
+    * <li> {@link ITechLayout#ET_FUN_03_MIN}
+    * <li> {@link ITechLayout#ET_FUN_04_MAX}
+    * <li> {@link ITechLayout#ET_FUN_05_ADD}
+    * <li> {@link ITechLayout#ET_FUN_06_DIFF}
+    * <li> {@link ITechLayout#ET_FUN_07_CTX_INVERSE}
     * 
     * </p>
     * The sizer is a function.

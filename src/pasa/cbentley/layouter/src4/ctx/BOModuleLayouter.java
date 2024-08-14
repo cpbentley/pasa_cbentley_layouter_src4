@@ -38,6 +38,9 @@ public class BOModuleLayouter extends BOModuleAbstract implements IBOTypesLayout
       switch (type) {
          case FTYPE_2_TBLR:
             return lac.getTblrFactory().mergeTBLR(root, merge);
+         case FTYPE_3_SIZER:
+            return lac.getLayoutOperator().mergeSizer(root, merge);
+        
          default:
             //not found here
             return null;

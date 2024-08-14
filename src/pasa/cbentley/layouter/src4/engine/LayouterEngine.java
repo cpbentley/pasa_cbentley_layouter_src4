@@ -139,10 +139,13 @@ public class LayouterEngine extends ObjectLC implements IStringable, ITechLayout
       if (isW) {
          sizerStr = "SizerW";
       }
+      String msg = sizerStr + " is not defined";
+      //#mdebug
       //we have a loop
-      String msg = sizerStr + " is not defined for " + layoutable.toString1Line() + " " + layoutable.toStringName();
-      //#debug
+      msg += "for DebugName=[" + layoutable.toStringName() + "] -> toString1Line=" + layoutable.toString1Line();
       toDLog().pNull(msg, this, LayouterEngine.class, "generateSizerException", LVL_10_SEVERE, false);
+      //#enddebug
+
       throw new IllegalStateException(msg);
    }
 
@@ -164,7 +167,6 @@ public class LayouterEngine extends ObjectLC implements IStringable, ITechLayout
    public void setSizerH(ByteObject sizer) {
       area.setSizerH(sizer);
    }
-
 
    /**
     * Current {@link IBOSizer} for the Height.
@@ -206,7 +208,10 @@ public class LayouterEngine extends ObjectLC implements IStringable, ITechLayout
 
    /**
     * True when Etalon is {@link ITechLayout#ETALON_0_SIZEE_CTX}
-    * <br>
+    * 
+    * The sizer requests a value on the object it is sizing. 
+    * This can be tricky by leading to a loop.
+    * 
     * @param sizer
     * @return
     */
@@ -260,9 +265,13 @@ public class LayouterEngine extends ObjectLC implements IStringable, ITechLayout
    private void layoutCheckLoopH() {
       if (cycleCounterH != 0) {
          //we have a loop
-         String msg = "UI layout has a loop cycle while computing Height of " + this.toString1Line();
-         //#debug
+         String msg = "UI layout has a loop cycle while computing Height of ";
+
+         //#mdebug
+         msg += this.toString1Line();
          toDLog().pNull(msg, this, LayouterEngine.class, "layoutCheckLoopH@line197", LVL_10_SEVERE, false);
+         //#enddebug
+
          throw new IllegalStateException(msg);
       }
       cycleCounterH++;
@@ -275,9 +284,13 @@ public class LayouterEngine extends ObjectLC implements IStringable, ITechLayout
             throw new IllegalStateException("Calling layout Width on an already valid width. Consider using check");
          }
          //we have a loop
-         String msg = "UI layout has a loop cycle while computing Width of " + this.toString1Line();
-         //#debug
+         String msg = "UI layout has a loop cycle while computing Width of ";
+
+         //#mdebug
+         msg += this.toString1Line();
          toDLog().pNull(msg, this, LayouterEngine.class, "layoutCheckLoopW@line217", LVL_10_SEVERE, false);
+         //#enddebug
+
          throw new IllegalStateException(msg);
       }
       cycleCounterW++;
@@ -286,9 +299,13 @@ public class LayouterEngine extends ObjectLC implements IStringable, ITechLayout
    private void layoutCheckLoopX() {
       if (cycleCounterX != 0) {
          //we have a loop
-         String msg = "UI layout has a loop cycle while computing X of " + this.toString1Line();
-         //#debug
+         String msg = "UI layout has a loop cycle while computing X of ";
+
+         //#mdebug
+         msg += this.toString1Line();
          toDLog().pNull(msg, this, LayouterEngine.class, "layoutCheckLoopX@line228", LVL_10_SEVERE, false);
+         //#enddebug
+
          throw new IllegalStateException(msg);
       }
       cycleCounterX++;
@@ -297,9 +314,11 @@ public class LayouterEngine extends ObjectLC implements IStringable, ITechLayout
    private void layoutCheckLoopY() {
       if (cycleCounterY != 0) {
          //we have a loop
-         String msg = "UI layout has a loop cycle while computing Y of " + this.toString1Line();
-         //#debug
+         String msg = "UI layout has a loop cycle while computing Y of ";
+         //#mdebug
+         msg += this.toString1Line();
          toDLog().pNull(msg, this, LayouterEngine.class, "layoutCheckLoopY@line239", LVL_10_SEVERE, false);
+         //#enddebug
          throw new IllegalStateException(msg);
       }
       cycleCounterY++;
@@ -743,6 +762,7 @@ public class LayouterEngine extends ObjectLC implements IStringable, ITechLayout
       rect.setY(y);
    }
 
+   //#mdebug
    public void toString(Dctx dc) {
       dc.root(this, LayouterEngine.class, 642);
       toStringPrivate(dc);
