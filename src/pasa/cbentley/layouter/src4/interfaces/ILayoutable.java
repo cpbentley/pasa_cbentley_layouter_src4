@@ -96,7 +96,7 @@ public interface ILayoutable extends IStringable {
    /**
     * Which {@link ILayoutable} is positioned in the nav graph
     *  
-    * null if no object positioned on top, {@link ITechNav#NAV_1_UP}.
+    * null if no object positioned on top, {@link ITechNav#NAV_01_UP}.
     *
     * @param dir code from {@link ITechNav}
     * @return {@link ILayoutable}

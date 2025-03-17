@@ -434,9 +434,9 @@ public class SizerFactory extends BOAbstractFactory implements IBOLinker, IBOTyp
     * When the size is defined by an external topology of navigation.
     * 
     * Direction being
-    * <li> {@link ITechNav#NAV_1_UP}
-    * <li> {@link ITechNav#NAV_2_DOWN}
-    * <li> {@link ITechNav#NAV_3_LEFT}
+    * <li> {@link ITechNav#NAV_01_UP}
+    * <li> {@link ITechNav#NAV_02_DOWN}
+    * <li> {@link ITechNav#NAV_03_LEFT}
     * <li> {@link ITechNav#NAV8_5_BOT_BOT}
     * 
     * @param ratio
